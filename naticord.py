@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, QAction
+from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, QAction, QListWidgetItem, QTabWidget
 from PyQt5.QtCore import QTimer, Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QColor
 import requests
@@ -10,11 +10,14 @@ class Naticord(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Naticord")
-        self.layout = QHBoxLayout()
+        self.layout = QVBoxLayout()
 
         self.config = configparser.ConfigParser()
         self.config.read('settings.ini')
         self.mode = self.config['Settings']['mode']
+
+        self.top_bar_layout = QHBoxLayout()
+        self.layout.addLayout(self.top_bar_layout)
 
         self.left_layout = QVBoxLayout()
 
@@ -37,9 +40,31 @@ class Naticord(QWidget):
         self.user_info_layout.addWidget(self.label_avatar, alignment=Qt.AlignCenter)
         self.left_layout.addLayout(self.user_info_layout)
 
-        self.friends_list = QListWidget()
+        self.tabs = QTabWidget()
+
+        self.friends_tab = QWidget()
+        self.friends_layout = QVBoxLayout(self.friends_tab)
+        self.friends_search_input = QLineEdit()
+        self.friends_search_input.setPlaceholderText("Search Friends...")
+        self.friends_search_input.textChanged.connect(self.search_friends)
+        self.friends_layout.addWidget(self.friends_search_input)
+        self.friends_list = QListWidget(self.friends_tab)
+        self.friends_layout.addWidget(self.friends_list)
         self.friends_list.itemClicked.connect(self.load_dm)
-        self.left_layout.addWidget(self.friends_list)
+        self.tabs.addTab(self.friends_tab, "Friends")
+
+        self.servers_tab = QWidget()
+        self.servers_layout = QVBoxLayout(self.servers_tab)
+        self.servers_search_input = QLineEdit()
+        self.servers_search_input.setPlaceholderText("Search Servers...")
+        self.servers_search_input.textChanged.connect(self.search_servers)
+        self.servers_layout.addWidget(self.servers_search_input)
+        self.servers_list = QListWidget(self.servers_tab)
+        self.servers_layout.addWidget(self.servers_list)
+        self.servers_list.itemClicked.connect(self.load_channels)
+        self.tabs.addTab(self.servers_tab, "Servers")
+
+        self.left_layout.addWidget(self.tabs)
 
         self.layout.addLayout(self.left_layout)
 
@@ -70,6 +95,7 @@ class Naticord(QWidget):
         self.login_screen.show()
 
         self.current_channel_id = None
+        self.current_server_id = None
         self.resized_once = False
 
         self.refresh_timer = QTimer(self)
@@ -80,10 +106,13 @@ class Naticord(QWidget):
 
     def create_settings_menu(self):
         self.settings_button = QPushButton()
-        self.settings_button.setIcon(QIcon("settings.svg"))
+        if self.mode == "light":
+            self.settings_button.setIcon(QIcon("settings.svg"))
+        elif self.mode == "dark":
+            self.settings_button.setIcon(QIcon("settings_white.svg"))
         self.settings_button.setFixedSize(30, 30)
         self.settings_button.clicked.connect(self.show_settings_menu)
-        self.layout.addWidget(self.settings_button)
+        self.top_bar_layout.addWidget(self.settings_button, alignment=Qt.AlignRight)
 
         self.settings_menu = QMenu(self)
         self.light_mode_action = QAction("Light Mode", self)
@@ -107,11 +136,39 @@ class Naticord(QWidget):
 
     def apply_style(self):
         if self.mode == "light":
-            self.setStyleSheet("")
-            self.setStyleSheet("background-color: white; color: black;")
+            self.setStyleSheet("""
+                QWidget {
+                    background-color: white;
+                    color: black;
+                }
+                QLineEdit, QTextEdit, QListWidget {
+                    border: 1px solid #444;
+                }
+                QTabBar::tab {
+                    background-color: #ddd;
+                }
+                QTabBar::tab:selected {
+                    background-color: #ccc;
+                }
+            """)
+            self.settings_button.setIcon(QIcon("settings.svg"))
         elif self.mode == "dark":
-            self.setStyleSheet("")
-            self.setStyleSheet("background-color: black; color: white;")
+            self.setStyleSheet("""
+                QWidget {
+                    background-color: #333;
+                    color: white;
+                }
+                QLineEdit, QTextEdit, QListWidget {
+                    border: 1px solid #444;
+                }
+                QTabBar::tab {
+                    background-color: #555;
+                }
+                QTabBar::tab:selected {
+                    background-color: #777;
+                }
+            """)
+            self.settings_button.setIcon(QIcon("settings_white.svg"))
 
         self.config['Settings']['mode'] = self.mode
         with open('settings.ini', 'w') as configfile:
@@ -161,11 +218,12 @@ class Naticord(QWidget):
         self.label_avatar.setPixmap(pixmap)
         self.label_avatar.show()
 
-        self.loading_label.setText("Loading friend list...")
+        self.loading_label.setText("Loading friend and server lists...")
         self.progress_bar.setValue(80)
-        QTimer.singleShot(1000, lambda: self.populate_friends_list(token))
+        QTimer.singleShot(1000, lambda: self.populate_friends_and_servers(token))
 
-    def populate_friends_list(self, token):
+    def populate_friends_and_servers(self, token):
+        # Load friends
         headers = {"Authorization": f"{token}"}
         response = requests.get("https://discord.com/api/v9/users/@me/relationships", headers=headers)
         if response.status_code == 200:
@@ -174,13 +232,19 @@ class Naticord(QWidget):
                 friend_name = friend.get("user", {}).get("username")
                 self.friends_list.addItem(friend_name)
 
-            self.progress_bar.setValue(100)
-            self.loading_label.setText("Loading complete!")
-            self.loading_screen.hide()
-            self.friends_list.show()
-            self.label_avatar.show()
-        else:
-            print("Failed to fetch friends list.")
+        # Load servers
+        response = requests.get("https://discord.com/api/v9/users/@me/guilds", headers=headers)
+        if response.status_code == 200:
+            servers_data = response.json()
+            for server in servers_data:
+                server_name = server.get("name")
+                self.servers_list.addItem(server_name)
+
+        self.progress_bar.setValue(100)
+        self.loading_label.setText("Loading complete!")
+        self.loading_screen.hide()
+        self.friends_list.show()
+        self.servers_list.show()
 
     def load_dm(self, item):
         friend_name = item.text()
@@ -207,6 +271,47 @@ class Naticord(QWidget):
                         break
         else:
             QMessageBox.warning(self, "Error", "Failed to fetch DM channels.")
+
+    def load_channels(self, item):
+        server_name = item.text()
+        headers = {"Authorization": f"{self.token}"}
+        response = requests.get(f"https://discord.com/api/v9/users/@me/guilds", headers=headers)
+        if response.status_code == 200:
+            servers_data = response.json()
+            for server in servers_data:
+                if server.get("name") == server_name:
+                    self.current_server_id = server.get("id")
+                    response = requests.get(f"https://discord.com/api/v9/guilds/{self.current_server_id}/channels", headers=headers)
+                    if response.status_code == 200:
+                        channels_data = response.json()
+                        self.servers_list.clear()
+                        back_item = QListWidgetItem("⮜ Go Back")
+                        back_item.setData(Qt.UserRole, "back")
+                        self.servers_list.addItem(back_item)
+                        for channel in channels_data:
+                            channel_name = channel.get("name")
+                            self.servers_list.addItem(channel_name)
+                            self.servers_list.item(self.servers_list.count() - 1).setData(Qt.UserRole, channel.get("id"))
+                        self.servers_list.itemClicked.connect(self.load_messages)
+                    break
+
+    def load_messages(self, item):
+        channel_id = item.data(Qt.UserRole)
+        if channel_id == "back":
+            self.servers_list.show()
+            self.friends_list.clear()
+            return
+        if channel_id != self.current_channel_id:
+            messages = self.fetch_messages(channel_id)
+            if messages:
+                self.display_messages(messages)
+                self.messages_text_edit.show()
+                if not getattr(self, 'resized_once', False):
+                    self.resize_once()
+                    self.resized_once = True
+                self.current_channel_id = channel_id
+            else:
+                QMessageBox.warning(self, "Error", "Failed to fetch messages.")
 
     def resize_once(self):
         new_width = self.calculate_new_width()
@@ -253,6 +358,16 @@ class Naticord(QWidget):
             messages = self.fetch_messages(self.current_channel_id)
             if messages:
                 self.display_messages(messages)
+
+    def search_friends(self, text):
+        for i in range(self.friends_list.count()):
+            item = self.friends_list.item(i)
+            item.setHidden(text.lower() not in item.text().lower())
+
+    def search_servers(self, text):
+        for i in range(self.servers_list.count()):
+            item = self.servers_list.item(i)
+            item.setHidden(text.lower() not in item.text().lower())
 
 class LoginScreen(QWidget):
     login_signal = pyqtSignal(str)
