@@ -1,5 +1,11 @@
 # naticord
 Naticord / Native-cord is a native Discord client made in Python.
+# Installation
+First of all, install the PyQt5 and requests library using
+```
+pip install PyQt5 requests
+```
+And then just run `naticord.py`
 # What's working
 - Logging in with a token
 - Friends
