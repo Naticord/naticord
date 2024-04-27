@@ -33,12 +33,11 @@ class Naticord(QWidget):
         self.loading_layout.addWidget(self.progress_bar)
         self.left_layout.addWidget(self.loading_screen)
 
-        self.user_info_layout = QVBoxLayout()
-        self.label_username = QLabel()
-        self.user_info_layout.addWidget(self.label_username, alignment=Qt.AlignCenter)
+        self.user_info_layout = QHBoxLayout()
         self.label_avatar = QLabel()
-        self.user_info_layout.addWidget(self.label_avatar, alignment=Qt.AlignCenter)
+        self.user_info_layout.addWidget(self.label_avatar)
         self.left_layout.addLayout(self.user_info_layout)
+
 
         self.tabs = QTabWidget()
 
@@ -72,12 +71,10 @@ class Naticord(QWidget):
         self.messages_text_edit = QTextEdit()
         self.messages_text_edit.setReadOnly(True)
         self.right_layout.addWidget(self.messages_text_edit)
-        self.messages_text_edit.hide()
 
         self.message_input = QLineEdit()
         self.message_input.returnPressed.connect(self.send_message)
         self.right_layout.addWidget(self.message_input)
-        self.message_input.hide()
 
         self.layout.addLayout(self.right_layout)
 
@@ -86,7 +83,6 @@ class Naticord(QWidget):
         self.progress_step = 0
 
         self.label_avatar.hide()
-        self.label_username.hide()
         self.friends_list.hide()
         self.messages_text_edit.hide()
 
@@ -202,11 +198,7 @@ class Naticord(QWidget):
             self.load_client()
 
     def update_user_info(self, user_data, token):
-        username = user_data.get("username")
         avatar_url = f"https://cdn.discordapp.com/avatars/{user_data.get('id')}/{user_data.get('avatar')}.png"
-
-        self.label_username.setText(username)
-        self.label_username.show()
 
         self.loading_label.setText("Loading profile picture...")
         self.progress_bar.setValue(50)
@@ -214,7 +206,7 @@ class Naticord(QWidget):
 
         pixmap = QPixmap()
         pixmap.loadFromData(avatar_data)
-
+        pixmap = pixmap.scaled(48, 48, Qt.KeepAspectRatio)
         self.label_avatar.setPixmap(pixmap)
         self.label_avatar.show()
 
@@ -222,8 +214,8 @@ class Naticord(QWidget):
         self.progress_bar.setValue(80)
         QTimer.singleShot(1000, lambda: self.populate_friends_and_servers(token))
 
+
     def populate_friends_and_servers(self, token):
-        # Load friends
         headers = {"Authorization": f"{token}"}
         response = requests.get("https://discord.com/api/v9/users/@me/relationships", headers=headers)
         if response.status_code == 200:
@@ -232,7 +224,6 @@ class Naticord(QWidget):
                 friend_name = friend.get("user", {}).get("username")
                 self.friends_list.addItem(friend_name)
 
-        # Load servers
         response = requests.get("https://discord.com/api/v9/users/@me/guilds", headers=headers)
         if response.status_code == 200:
             servers_data = response.json()
@@ -253,7 +244,7 @@ class Naticord(QWidget):
         if response.status_code == 200:
             channels_data = response.json()
             for channel in channels_data:
-                if channel.get("type") == 1: 
+                if channel.get("type") == 1:
                     recipients = channel.get("recipients", [])
                     if len(recipients) == 1 and recipients[0].get("username") == friend_name:
                         channel_id = channel.get("id")
@@ -262,6 +253,7 @@ class Naticord(QWidget):
                             if messages:
                                 self.display_messages(messages)
                                 self.messages_text_edit.show()
+                                self.message_input.show()
                                 if not getattr(self, 'resized_once', False):
                                     self.resize_once()
                                     self.resized_once = True
@@ -306,6 +298,7 @@ class Naticord(QWidget):
             if messages:
                 self.display_messages(messages)
                 self.messages_text_edit.show()
+                self.message_input.show()
                 if not getattr(self, 'resized_once', False):
                     self.resize_once()
                     self.resized_once = True
