@@ -12,8 +12,12 @@ And then just run `naticord.py`
 - DMs
 - Sending messages in DMs
 # Todo
-- Server functionality
+- ~~Server functionality~~
 - Profile pictures in friend list
-- Better UI
+- Fix servers
+- ~~Better UI~~
+# Bugs
+- Servers glitch out when you select another channel
+- Dark mode is a bit finniky
 # Screenshots
 ![image](https://github.com/n1d3v/naticord/assets/135556230/e877644e-a4be-4926-bde1-9614a20f212b)
