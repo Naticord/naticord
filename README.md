@@ -15,6 +15,7 @@ And then just run `naticord.py`
 - Friends
 - DMs
 - Sending messages in DMs
+- Basic server functionality
 # Todo
 - ~~Server functionality~~
 - Profile pictures in friend list
