@@ -1,5 +1,7 @@
 # naticord
 Naticord / Native-cord is a native Discord client made in Python.
+
+Why make a native client or even a custom client at all? Well, it's because Discord's half baked web app is **shit**. I want to have a simple yet good experience while having my RAM not being taken by Discord. So this was the answer.
 # Installation
 First of all, install the PyQt5 and requests library using
 ```
