@@ -1,4 +1,7 @@
 # naticord
+![fuck](https://img.shields.io/badge/fuck-web%20apps-blue?style=plastic)
+![work](https://img.shields.io/badge/work-in%20progress-green?style=plastic)
+
 Naticord / Native-cord is a native Discord client made in Python.
 
 Why make a native client or even a custom client at all? Well, it's because Discord's half baked web app is **shit**. I want to have a simple yet good experience while having my RAM not being taken by Discord. So this was the answer.
