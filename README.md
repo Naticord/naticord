@@ -22,9 +22,12 @@ And then just run `naticord.py`
 - Basic server functionality
 # Todo
 - ~~Server functionality~~
+- ~~Better UI~~
 - Profile pictures in friend list
 - Fix servers
-- ~~Better UI~~
+- Add editing, reply and delete
+- Image support
+- Voice calling (might not happen)
 # Bugs
 - Servers glitch out when you select another channel
 - Dark mode is a bit finniky
