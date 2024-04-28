@@ -1,10 +1,14 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, QAction, QListWidgetItem, QTabWidget
-from PyQt5.QtCore import QTimer, Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QIcon, QPalette, QColor
-import requests
 import os
 import configparser
+import requests
+from PyQt6.QtWidgets import (
+    QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, 
+    QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, 
+    QListWidgetItem, QTabWidget, QFontDialog, QInputDialog
+)
+from PyQt6.QtCore import QTimer, Qt, QVariant, pyqtSignal
+from PyQt6.QtGui import QPixmap, QIcon, QAction
 
 class Naticord(QWidget):
     def __init__(self):
@@ -25,7 +29,8 @@ class Naticord(QWidget):
         self.loading_screen.setFixedSize(200, 150)
         self.loading_layout = QVBoxLayout(self.loading_screen)
         self.loading_label = QLabel("Initializing...")
-        self.loading_label.setAlignment(Qt.AlignCenter)
+        self.loading_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         self.loading_layout.addWidget(self.loading_label)
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
@@ -108,7 +113,7 @@ class Naticord(QWidget):
             self.settings_button.setIcon(QIcon("settings_white.svg"))
         self.settings_button.setFixedSize(30, 30)
         self.settings_button.clicked.connect(self.show_settings_menu)
-        self.top_bar_layout.addWidget(self.settings_button, alignment=Qt.AlignRight)
+        self.top_bar_layout.addWidget(self.settings_button, alignment=Qt.AlignmentFlag.AlignRight)
 
         self.settings_menu = QMenu(self)
         self.light_mode_action = QAction("Light Mode", self)
@@ -118,6 +123,10 @@ class Naticord(QWidget):
         self.dark_mode_action = QAction("Dark Mode", self)
         self.dark_mode_action.triggered.connect(self.set_dark_mode)
         self.settings_menu.addAction(self.dark_mode_action)
+
+        self.font_selection_action = QAction("Select Font", self)
+        self.font_selection_action.triggered.connect(self.select_font)
+        self.settings_menu.addAction(self.font_selection_action)
 
     def show_settings_menu(self):
         self.settings_menu.popup(self.settings_button.mapToGlobal(self.settings_button.rect().bottomRight()))
@@ -206,7 +215,7 @@ class Naticord(QWidget):
 
         pixmap = QPixmap()
         pixmap.loadFromData(avatar_data)
-        pixmap = pixmap.scaled(48, 48, Qt.KeepAspectRatio)
+        pixmap = pixmap.scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio)
         self.label_avatar.setPixmap(pixmap)
         self.label_avatar.show()
 
@@ -264,6 +273,12 @@ class Naticord(QWidget):
         else:
             QMessageBox.warning(self, "Error", "Failed to fetch DM channels.")
 
+    def refresh_dm(self):
+        if self.current_channel_id is not None:
+            messages = self.fetch_messages(self.current_channel_id)
+            if messages:
+                self.display_messages(messages)
+
     def load_channels(self, item):
         server_name = item.text()
         headers = {"Authorization": f"{self.token}"}
@@ -278,17 +293,17 @@ class Naticord(QWidget):
                         channels_data = response.json()
                         self.servers_list.clear()
                         back_item = QListWidgetItem("⮜ Go Back")
-                        back_item.setData(Qt.UserRole, "back")
+                        back_item.setData(Qt.ItemDataRole.UserRole, "back")
                         self.servers_list.addItem(back_item)
                         for channel in channels_data:
                             channel_name = channel.get("name")
                             self.servers_list.addItem(channel_name)
-                            self.servers_list.item(self.servers_list.count() - 1).setData(Qt.UserRole, channel.get("id"))
+                            self.servers_list.item(self.servers_list.count() - 1).setData(Qt.ItemDataRole.UserRole, channel.get("id"))
                         self.servers_list.itemClicked.connect(self.load_messages)
                     break
 
     def load_messages(self, item):
-        channel_id = item.data(Qt.UserRole)
+        channel_id = item.data(Qt.ItemDataRole.UserRole)
         if channel_id == "back":
             self.servers_list.show()
             self.friends_list.clear()
@@ -316,7 +331,7 @@ class Naticord(QWidget):
 
     def fetch_messages(self, channel_id):
         headers = {"Authorization": f"{self.token}"}
-        response = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=headers, params={"limit": 20})
+        response = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=headers, params={"limit": 5})
         if response.status_code == 200:
             messages_data = response.json()
             return messages_data
@@ -324,43 +339,112 @@ class Naticord(QWidget):
             return None
 
     def display_messages(self, messages):
-        formatted_messages = ""
+        self.messages_text_edit.clear()
         for message in reversed(messages):
             author = message.get("author", {}).get("username")
             content = message.get("content")
-            formatted_messages += f"{author}: {content}\n"
-        self.messages_text_edit.setPlainText(formatted_messages)
 
-    def send_message(self):
-        if self.current_channel_id is not None:
-            message_content = self.message_input.text().strip()
-            if message_content:
+            # Create a menu for each message
+            menu = QMenu()
+            edit_action = QAction("Edit")
+            edit_action.triggered.connect(lambda _, msg_id=message.get("id"): self.edit_message(msg_id))
+            menu.addAction(edit_action)
+
+            delete_action = QAction("Delete")
+            delete_action.triggered.connect(lambda _, msg_id=message.get("id"): self.delete_message(msg_id))
+            menu.addAction(delete_action)
+
+            reply_action = QAction("Reply")
+            reply_action.triggered.connect(lambda _, author=author: self.reply_to_author(author))
+            menu.addAction(reply_action)
+
+            # Create a list widget item to hold the message content
+            message_item = QListWidgetItem(f"{author}: {content}")
+            message_item.setIcon(QIcon("hamburger.svg"))  # Set the hamburger icon
+
+            # Set the menu as an item data
+            message_item.setData(Qt.ItemDataRole.UserRole, QVariant(menu))
+
+            # Add the message item to the list widget
+            self.messages_text_edit.append(f"{author}: {content}")
+
+    def edit_message(self, message_id):
+        # Update message logic
+        message_text = self.get_message_text_by_id(message_id)
+        if message_text:
+            new_message_text, ok = QInputDialog.getText(self, "Edit Message", "Enter the new message:", QLineEdit.Normal, message_text)
+            if ok:
+                # Send the update to the server
+                url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages/{message_id}"
                 headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
-                data = {"content": message_content}
-                response = requests.post(f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages", headers=headers, json=data)
+                data = {"content": new_message_text}
+                response = requests.patch(url, headers=headers, json=data)
                 if response.status_code == 200:
-                    print("Message sent successfully!")
-                    self.message_input.clear()
+                    QMessageBox.information(self, "Success", "Message edited successfully.")
+                    # Refresh messages
+                    self.refresh_messages()
                 else:
-                    print("Failed to send message.")
-            else:
-                print("Message content is empty.")
+                    QMessageBox.warning(self, "Error", "Failed to edit message.")
 
-    def refresh_dm(self):
-        if self.current_channel_id is not None:
+    def delete_message(self, message_id):
+        # Delete message logic
+        confirm = QMessageBox.question(self, "Delete Message", "Are you sure you want to delete this message?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if confirm == QMessageBox.StandardButton.Yes:
+            # Send delete request to the server
+            url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages/{message_id}"
+            headers = {"Authorization": f"{self.token}"}
+            response = requests.delete(url, headers=headers)
+            if response.status_code == 204:
+                QMessageBox.information(self, "Success", "Message deleted successfully.")
+                # Refresh messages
+                self.refresh_messages()
+            else:
+                QMessageBox.warning(self, "Error", "Failed to delete message.")
+
+    def refresh_messages(self):
+        if self.current_channel_id:
             messages = self.fetch_messages(self.current_channel_id)
             if messages:
                 self.display_messages(messages)
 
+    def reply_to_author(self, author):
+        self.message_input.setText(f"@{author} ")
+        self.message_input.setFocus()
+
+    def send_message(self):
+        if self.message_input.text():
+            message = self.message_input.text()
+            headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
+            data = {"content": message}
+            url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages"
+            response = requests.post(url, headers=headers, json=data)
+            if response.status_code == 200:
+                self.message_input.clear()
+                # Refresh messages
+                self.refresh_messages()
+            else:
+                QMessageBox.warning(self, "Error", "Failed to send message.")
+
     def search_friends(self, text):
-        for i in range(self.friends_list.count()):
-            item = self.friends_list.item(i)
-            item.setHidden(text.lower() not in item.text().lower())
+        items = self.friends_list.findItems("*", Qt.MatchFlag.MatchWildcard | Qt.MatchFlag.MatchWrap)
+        for item in items:
+            if text.lower() not in item.text().lower():
+                item.setHidden(True)
+            else:
+                item.setHidden(False)
 
     def search_servers(self, text):
-        for i in range(self.servers_list.count()):
-            item = self.servers_list.item(i)
-            item.setHidden(text.lower() not in item.text().lower())
+        items = self.servers_list.findItems("*", Qt.MatchFlag.MatchWildcard | Qt.MatchFlag.MatchWrap)
+        for item in items:
+            if text.lower() not in item.text().lower():
+                item.setHidden(True)
+            else:
+                item.setHidden(False)
+
+    def select_font(self):
+        font, ok = QFontDialog.getFont()
+        if ok:
+            self.messages_text_edit.setFont(font)
 
 class LoginScreen(QWidget):
     login_signal = pyqtSignal(str)
@@ -368,35 +452,22 @@ class LoginScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Login")
-        self.layout = QVBoxLayout()
+        layout = QVBoxLayout()
+        self.token_input = QLineEdit()
+        self.token_input.setPlaceholderText("Enter your token")
+        layout.addWidget(self.token_input)
+        login_button = QPushButton("Login")
+        login_button.clicked.connect(self.login)
+        layout.addWidget(login_button)
+        self.setLayout(layout)
 
-        self.token_label = QLabel("Token:")
-        self.layout.addWidget(self.token_label)
-
-        self.token_edit = QLineEdit()
-        self.layout.addWidget(self.token_edit)
-
-        self.login_button = QPushButton("Login")
-        self.login_button.clicked.connect(self.on_login_clicked)
-        self.layout.addWidget(self.login_button)
-
-        self.setLayout(self.layout)
-
-    def on_login_clicked(self):
-        token = self.token_edit.text().strip()
+    def login(self):
+        token = self.token_input.text().strip()
         if token:
-            token_file_path = os.path.join(os.path.dirname(__file__), "token.txt")
-            with open(token_file_path, "w") as f:
-                f.write(token)
             self.login_signal.emit(token)
-        else:
-            QMessageBox.critical(self, "Error", "Please enter a token.")
-
-def main():
-    app = QApplication(sys.argv)
-    client = Naticord()
-    client.show()
-    sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    main()
+    app = QApplication(sys.argv)
+    window = Naticord()
+    window.show()
+    sys.exit(app.exec())
