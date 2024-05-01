@@ -1,12 +1,11 @@
 import sys
 import requests
 import configparser
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QTextEdit, QLineEdit, QPushButton, QTabWidget, QMessageBox, QDialog, QListWidgetItem, QCompleter
-from PyQt5.QtCore import Qt, QTimer, QStringListModel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QTextEdit, QLineEdit, QPushButton, QTabWidget, QMessageBox, QDialog, QListWidgetItem
+from PyQt5.QtCore import Qt, QTimer
 
 class LoginScreen(QDialog):
     def __init__(self):
-        # login screen ui
         super().__init__()
         self.setWindowTitle("Login")
         self.layout = QVBoxLayout()
@@ -21,7 +20,6 @@ class LoginScreen(QDialog):
 
         self.setLayout(self.layout)
 
-    # token login through config.ini
     def login(self):
         token = self.token_input.text().strip()
         if token:
@@ -33,15 +31,8 @@ class LoginScreen(QDialog):
         else:
             QMessageBox.critical(self, "Error", "Please enter a valid Discord token.")
 
-class CustomCompleter(QCompleter):
-    def __init__(self):
-        super().__init__()
-        self.setCaseSensitivity(Qt.CaseInsensitive)
-        self.setCompletionMode(QCompleter.PopupCompletion)
-
 class Naticord(QWidget):
     def __init__(self):
-        # ui code
         super().__init__()
         self.setWindowTitle("Naticord")
         self.layout = QHBoxLayout()
@@ -90,6 +81,7 @@ class Naticord(QWidget):
         self.right_panel_layout.addWidget(self.messages_text_edit)
 
         self.message_input = QLineEdit()
+        self.message_input.returnPressed.connect(self.send_message)
         self.right_panel_layout.addWidget(self.message_input)
 
         self.layout.addWidget(self.right_panel)
@@ -100,24 +92,10 @@ class Naticord(QWidget):
         else:
             self.load_data()
 
-        # dm refresher, someone please improve this through a pr
         self.refresh_timer = QTimer(self)
         self.refresh_timer.timeout.connect(self.refresh_messages)
         self.refresh_timer.start(3000)
 
-        # Custom completer for message input field
-        self.completer = CustomCompleter()
-        self.message_input.setCompleter(self.completer)
-
-        # Initialize completer model with empty list
-        self.completer.setModel(QStringListModel([]))
-
-        # Start the timer to refresh the completer's model
-        self.refresh_completer_timer = QTimer(self)
-        self.refresh_completer_timer.timeout.connect(self.load_usernames_completer)
-        self.refresh_completer_timer.start(3000)
-
-    # shows token input screen
     def show_login_screen(self):
         login_screen = LoginScreen()
         if login_screen.exec_() == QDialog.Accepted:
@@ -126,19 +104,16 @@ class Naticord(QWidget):
         else:
             sys.exit()
 
-    # gets token from a file called 'config.ini'
     def get_token(self):
         config = configparser.ConfigParser()
         config.read('config.ini')
         return config['Auth']['Token'] if 'Auth' in config and 'Token' in config['Auth'] else None
     
-    # loads all friends servers info etc
     def load_data(self):
         self.load_user_info()
         self.load_friends()
         self.load_servers()
 
-    # gets user info and welcomes the user 
     def load_user_info(self):
         headers = {"Authorization": f"{self.token}"}
         response = requests.get("https://discord.com/api/v9/users/@me", headers=headers)
@@ -148,17 +123,18 @@ class Naticord(QWidget):
         else:
             QMessageBox.warning(self, "Error", "Failed to fetch user information.")
 
-    # loads friends and servers through the api
     def load_friends(self):
         headers = {"Authorization": f"{self.token}"}
         response = requests.get("https://discord.com/api/v9/users/@me/channels", headers=headers)
         if response.status_code == 200:
             channels_data = response.json()
             for channel in channels_data:
-                friend_name = channel.get("recipients", [{}])[0].get("username", "Unknown")
-                item = QListWidgetItem(friend_name)
-                item.setData(Qt.UserRole, channel.get("id"))
-                self.friends_list.addItem(item)
+                recipients = channel.get("recipients", [])
+                if recipients:
+                    friend_name = recipients[0].get("username", "Unknown")
+                    item = QListWidgetItem(friend_name)
+                    item.setData(Qt.UserRole, channel.get("id"))
+                    self.friends_list.addItem(item)
             self.friends_list.itemDoubleClicked.connect(self.load_channel_messages)
         else:
             QMessageBox.warning(self, "Error", "Failed to fetch friends.")
@@ -178,20 +154,16 @@ class Naticord(QWidget):
             QMessageBox.warning(self, "Error", "Failed to fetch servers.")
 
     def load_server_channels(self, item):
-        # Clear messages text edit when changing channels
         self.messages_text_edit.clear()
-
-        # Fetch and display messages for the selected server channel
         channel_id = item.data(Qt.UserRole)
         if channel_id:
             headers = {"Authorization": f"{self.token}"}
             response = requests.get(f"https://discord.com/api/v9/guilds/{channel_id}/channels", headers=headers)
             if response.status_code == 200:
                 channels_data = response.json()
-                # Filter to get text channels only
                 text_channels = [channel for channel in channels_data if channel["type"] == 0]
                 if text_channels:
-                    channel = text_channels[0]  # Select the first text channel
+                    channel = text_channels[0]
                     channel_id = channel["id"]
                     self.load_channel_messages(QListWidgetItem(channel["name"], self.servers_list), channel_id)
                 else:
@@ -199,10 +171,7 @@ class Naticord(QWidget):
             else:
                 QMessageBox.warning(self, "Error", "Failed to fetch server channels.")
 
-    # loads server messages in a specific channel
-    def load_channel_messages(self, item, channel_id=None):
-        if not channel_id:
-            channel_id = item.data(Qt.UserRole)
+    def load_channel_messages(self, item, channel_id):
         if channel_id:
             headers = {"Authorization": f"{self.token}"}
             response = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=headers, params={"limit": 20})
@@ -212,7 +181,6 @@ class Naticord(QWidget):
             else:
                 QMessageBox.warning(self, "Error", "Failed to fetch messages.")
     
-    # displays messages in the message box on the right
     def display_messages(self, messages):
         self.messages_text_edit.clear()
         for message in reversed(messages):
@@ -220,30 +188,28 @@ class Naticord(QWidget):
             content = self.format_message_content(message.get("content", ""))
             self.messages_text_edit.append(f"{author}: {content}")
 
-    # formats message content with user mentions highlighted
     def format_message_content(self, content):
         headers = {"Authorization": f"{self.token}"}
         while "<@!" in content:
-            start_index = content.index("<@!")  # Get the index of the start of the mention
-            end_index = content.index(">", start_index)  # Get the index of the end of the mention
-            user_id = content[start_index + 3:end_index]  # Extract the user ID
-            username = self.get_username(user_id)  # Get the username associated with the user ID
+            start_index = content.index("<@!")
+            end_index = content.index(">", start_index)
+            user_id = content[start_index + 3:end_index]
+            username = self.get_username(user_id)
             if username:
-                content = content.replace(f"<@!{user_id}>", f"<span style=\"color: blue;\">@{username}</span>")  # Replace the mention with formatted username
+                content = content.replace(f"<@!{user_id}>", f"<span style=\"color: blue;\">@{username}</span>")
             else:
-                content = content.replace(f"<@!{user_id}>", f"<@!{user_id}>")  # If username not found, keep the original mention
+                content = content.replace(f"<@!{user_id}>", f"<@!{user_id}>")
         while "<@" in content:
-            start_index = content.index("<@")  # Get the index of the start of the mention
-            end_index = content.index(">", start_index)  # Get the index of the end of the mention
-            user_id = content[start_index + 2:end_index]  # Extract the user ID
-            username = self.get_username(user_id)  # Get the username associated with the user ID
+            start_index = content.index("<@")
+            end_index = content.index(">", start_index)
+            user_id = content[start_index + 2:end_index]
+            username = self.get_username(user_id)
             if username:
-                content = content.replace(f"<@{user_id}>", f"<span style=\"color: blue;\">@{username}</span>")  # Replace the mention with formatted username
+                content = content.replace(f"<@{user_id}>", f"<span style=\"color: blue;\">@{username}</span>")
             else:
-                content = content.replace(f"<@{user_id}>", f"<@{user_id}>")  # If username not found, keep the original mention
+                content = content.replace(f"<@{user_id}>", f"<@{user_id}>")
         return content
 
-    # gets username from user ID
     def get_username(self, user_id):
         headers = {"Authorization": f"{self.token}"}
         response = requests.get(f"https://discord.com/api/v9/users/{user_id}", headers=headers)
@@ -253,17 +219,16 @@ class Naticord(QWidget):
         else:
             return None
 
-    # code to send messages, communicates with the discord api and is quite basic
     def send_message(self):
         message = self.message_input.text()
         selected_tab_index = self.tabs.currentIndex()
         
-        if selected_tab_index == 0:  # Friends tab
+        if selected_tab_index == 0:
             selected_item = self.friends_list.currentItem()
             if selected_item:
                 recipient_id = selected_item.data(Qt.UserRole)
                 self.send_direct_message(recipient_id, message)
-        elif selected_tab_index == 1:  # Servers tab
+        elif selected_tab_index == 1:
             selected_item = self.servers_list.currentItem()
             if selected_item:
                 channel_id = selected_item.data(Qt.UserRole)
@@ -291,24 +256,11 @@ class Naticord(QWidget):
         elif selected_tab_index == 1:
             selected_item = self.servers_list.currentItem()
         if selected_item:
-            self.load_channel_messages(selected_item)
-
-    def load_usernames_completer(self):
-        # Fetch usernames from friends and servers list
-        usernames = []
-        for index in range(self.friends_list.count()):
-            item = self.friends_list.item(index)
-            username = item.text()
-            if username:
-                usernames.append(username)
-        for index in range(self.servers_list.count()):
-            item = self.servers_list.item(index)
-            username = item.text()
-            if username:
-                usernames.append(username)
-        # Update the completer model with the usernames
-        model = QStringListModel(usernames)
-        self.completer.setModel(model)
+            if selected_tab_index == 0:
+                channel_id = selected_item.data(Qt.UserRole)
+                self.load_channel_messages(selected_item, channel_id)
+            elif selected_tab_index == 1:
+                self.load_server_channels(selected_item)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
