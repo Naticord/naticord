@@ -9,6 +9,8 @@ Why make a native client or even a custom client at all? Well, it's because Disc
 
 The official Discord app goes to 400MB idle while this can go all the way low to 25MB!
 
+Also feel free to make changes to the source! Make my code better as mine is pretty shit as it is, so I accept any PRs I get.
+
 ![image 17](https://github.com/n1d3v/naticord/assets/135556230/36efa6b4-6c7c-48a2-b82d-c842ed688a5b)
 
 The UI is also sort of inspired Windows Live Messenger (long live WLM)
