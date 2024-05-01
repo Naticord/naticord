@@ -24,6 +24,7 @@ And then just run `naticord.py`
 - DMs
 - Sending messages in DMs
 - Basic server functionality
+- Ping support
 # Todo
 - ~~Server functionality~~
 - ~~Better UI~~
