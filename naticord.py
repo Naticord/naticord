@@ -1,345 +1,179 @@
-from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, \
-    QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, \
-    QAction, QListWidgetItem, QTabWidget, QFontDialog, QInputDialog, QCheckBox, QDialog, QGridLayout, QPushButton, QSizePolicy, QScrollArea
-from PyQt5.QtCore import QTimer, Qt, pyqtSignal, QSize
-from PyQt5.QtGui import QPixmap, QIcon
 import sys
-import os
-import configparser
 import requests
-from threading import Thread
+import configparser
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QTextEdit, QLineEdit, QPushButton, QTabWidget, QMessageBox, QDialog, QListWidgetItem
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt, QTimer
+
+class LoginScreen(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Login")
+        self.layout = QVBoxLayout()
+
+        self.token_input = QLineEdit()
+        self.token_input.setPlaceholderText("Enter your Discord token...")
+        self.layout.addWidget(self.token_input)
+
+        self.login_button = QPushButton("Login")
+        self.login_button.clicked.connect(self.login)
+        self.layout.addWidget(self.login_button)
+
+        self.setLayout(self.layout)
+
+    def login(self):
+        token = self.token_input.text().strip()
+        if token:
+            # Save token to config file
+            config = configparser.ConfigParser()
+            config['Auth'] = {'Token': token}
+            with open('config.ini', 'w') as configfile:
+                config.write(configfile)
+            self.accept()
+        else:
+            QMessageBox.critical(self, "Error", "Please enter a valid Discord token.")
 
 class Naticord(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Naticord")
-        self.layout = QVBoxLayout()
-
-        self.config = configparser.ConfigParser()
-        self.config.read('settings.ini')
-        self.mode = self.config['Settings']['mode']
-
-        self.top_bar_layout = QHBoxLayout()
-        self.layout.addLayout(self.top_bar_layout)
-
-        self.left_layout = QVBoxLayout()
-
-        self.loading_screen = QWidget()
-        self.loading_screen.setFixedSize(200, 150)
-        self.loading_layout = QVBoxLayout(self.loading_screen)
-        self.loading_label = QLabel("Initializing...")
-        self.loading_label.setAlignment(Qt.AlignCenter)
-        self.loading_layout.addWidget(self.loading_label)
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setRange(0, 100)
-        self.progress_bar.setTextVisible(False)
-        self.loading_layout.addWidget(self.progress_bar)
-        self.left_layout.addWidget(self.loading_screen)
-
-        self.user_info_layout = QHBoxLayout()
-        self.label_avatar = QLabel()
-        self.user_info_layout.addWidget(self.label_avatar)
-        self.left_layout.addLayout(self.user_info_layout)
-
-        self.tabs = QTabWidget()
-
-        self.friends_tab = QWidget()
-        self.friends_layout = QVBoxLayout(self.friends_tab)
-        self.friends_search_input = QLineEdit()
-        self.friends_search_input.setPlaceholderText("Search Friends...")
-        self.friends_search_input.textChanged.connect(self.search_friends)
-        self.friends_layout.addWidget(self.friends_search_input)
-        self.friends_list = QListWidget(self.friends_tab)
-        self.friends_layout.addWidget(self.friends_list)
-        self.friends_list.itemClicked.connect(self.load_dm)
-        self.tabs.addTab(self.friends_tab, "Friends")
-
-        self.servers_tab = QWidget()
-        self.servers_layout = QVBoxLayout(self.servers_tab)
-        self.servers_search_input = QLineEdit()
-        self.servers_search_input.setPlaceholderText("Search Servers...")
-        self.servers_search_input.textChanged.connect(self.search_servers)
-        self.servers_layout.addWidget(self.servers_search_input)
-        self.servers_list = QListWidget(self.servers_tab)
-        self.servers_layout.addWidget(self.servers_list)
-        self.servers_list.itemClicked.connect(self.load_channels)
-        self.tabs.addTab(self.servers_tab, "Servers")
-
-        self.left_layout.addWidget(self.tabs)
-
-        self.layout.addLayout(self.left_layout)
-
-        self.right_layout = QVBoxLayout()
-        self.messages_text_edit = QTextEdit()
-        self.messages_text_edit.setReadOnly(True)
-        self.right_layout.addWidget(self.messages_text_edit)
-
-        self.message_input = QLineEdit()
-        self.message_input.returnPressed.connect(self.send_message)
-        self.right_layout.addWidget(self.message_input)
-
-        self.emoji_button = QPushButton("😀")
-        self.emoji_button.clicked.connect(self.open_emoji_dialog)
-        self.right_layout.addWidget(self.emoji_button)
-
-        self.layout.addLayout(self.right_layout)
-
+        self.layout = QHBoxLayout()
         self.setLayout(self.layout)
 
-        self.progress_step = 0
+        # Left Panel
+        self.left_panel = QWidget()
+        self.left_panel_layout = QVBoxLayout()
+        self.left_panel.setLayout(self.left_panel_layout)
 
-        self.label_avatar.hide()
-        self.friends_list.hide()
-        self.messages_text_edit.hide()
+        self.friends_tab = QWidget()
+        self.servers_tab = QWidget()
 
-        self.login_screen = LoginScreen()
-        self.login_screen.login_signal.connect(self.load_client)
-        self.login_screen.show()
+        self.tabs = QTabWidget()
+        self.tabs.addTab(self.friends_tab, "Friends")
+        self.tabs.addTab(self.servers_tab, "Servers")
 
-        self.current_channel_id = None
-        self.current_server_id = None
-        self.resized_once = False
+        self.friends_layout = QVBoxLayout(self.friends_tab)
+        self.servers_layout = QVBoxLayout(self.servers_tab)
 
-        self.refresh_timer = QTimer(self)
-        self.refresh_timer.timeout.connect(self.refresh_dm)
-        self.refresh_timer.start(3000)
+        self.user_info_label = QLabel("User Info")
+        self.friends_label = QLabel("Friends")
+        self.servers_label = QLabel("Servers")
 
-        self.create_settings_menu()
+        self.friends_list = QListWidget()
+        self.servers_list = QListWidget()
 
-        self.load_emojis_thread = Thread(target=self.load_emojis)
-        self.load_emojis_thread.start()
+        self.friends_layout.addWidget(self.friends_label)
+        self.friends_layout.addWidget(self.friends_list)
 
-    def create_settings_menu(self):
-        self.settings_button = QPushButton()
-        if self.mode == "light":
-            self.settings_button.setIcon(QIcon("settings.svg"))
-        elif self.mode == "dark":
-            self.settings_button.setIcon(QIcon("settings_white.svg"))
-        self.settings_button.setFixedSize(30, 30)
-        self.settings_button.clicked.connect(self.show_settings_menu)
-        self.top_bar_layout.addWidget(self.settings_button, alignment=Qt.AlignRight)
+        self.servers_layout.addWidget(self.servers_label)
+        self.servers_layout.addWidget(self.servers_list)
 
-        self.settings_menu = QMenu(self)
-        self.light_mode_action = QAction("Light Mode", self)
-        self.light_mode_action.triggered.connect(self.set_light_mode)
-        self.settings_menu.addAction(self.light_mode_action)
+        self.left_panel_layout.addWidget(self.user_info_label)
+        self.left_panel_layout.addWidget(self.tabs)
 
-        self.dark_mode_action = QAction("Dark Mode", self)
-        self.dark_mode_action.triggered.connect(self.set_dark_mode)
-        self.settings_menu.addAction(self.dark_mode_action)
+        self.layout.addWidget(self.left_panel)
 
-        self.font_selection_action = QAction("Select Font", self)
-        self.font_selection_action.triggered.connect(self.select_font)
-        self.settings_menu.addAction(self.font_selection_action)
+        # Right Panel
+        self.right_panel = QWidget()
+        self.right_panel_layout = QVBoxLayout()
+        self.right_panel.setLayout(self.right_panel_layout)
 
-    def show_settings_menu(self):
-        self.settings_menu.popup(self.settings_button.mapToGlobal(self.settings_button.rect().bottomRight()))
+        self.messages_label = QLabel("Messages")
+        self.right_panel_layout.addWidget(self.messages_label)
 
-    def set_light_mode(self):
-        self.mode = "light"
-        self.apply_style()
+        self.messages_text_edit = QTextEdit()
+        self.right_panel_layout.addWidget(self.messages_text_edit)
 
-    def set_dark_mode(self):
-        self.mode = "dark"
-        self.apply_style()
+        self.message_input = QLineEdit()
+        self.right_panel_layout.addWidget(self.message_input)
 
-    def apply_style(self):
-        if self.mode == "light":
-            self.setStyleSheet("""
-                QWidget {
-                    background-color: white;
-                    color: black;
-                }
-                QLineEdit, QTextEdit, QListWidget {
-                    border: 1px solid #444;
-                }
-                QTabBar::tab {
-                    background-color: #ddd;
-                }
-                QTabBar::tab:selected {
-                    background-color: #ccc;
-                }
-            """)
-            self.settings_button.setIcon(QIcon("settings.svg"))
-        elif self.mode == "dark":
-            self.setStyleSheet("""
-                QWidget {
-                    background-color: #333;
-                    color: white;
-                }
-                QLineEdit, QTextEdit, QListWidget {
-                    border: 1px solid #444;
-                }
-                QTabBar::tab {
-                    background-color: #555;
-                }
-                QTabBar::tab:selected {
-                    background-color: #777;
-                }
-            """)
-            self.settings_button.setIcon(QIcon("settings_white.svg"))
+        self.send_button = QPushButton("Send")
+        self.send_button.clicked.connect(self.send_message)
+        self.right_panel_layout.addWidget(self.send_button)
 
-        self.config['Settings']['mode'] = self.mode
-        with open('settings.ini', 'w') as configfile:
-            self.config.write(configfile)
+        self.layout.addWidget(self.right_panel)
 
-    def load_client(self, token=""):
-        token_file_path = os.path.join(os.path.dirname(__file__), "token.txt")
-        if not token and os.path.exists(token_file_path):
-            with open(token_file_path, "r") as f:
-                token = f.read().strip()
-
-        if not token:
-            self.login_screen.show()
+        # Load data
+        self.token = self.get_token()
+        if not self.token:
+            # Show login screen if token is not available
+            self.show_login_screen()
         else:
-            self.token = token
-            self.login_screen.hide()
-            self.loading_screen.show()
-            QTimer.singleShot(1000, lambda: self.authenticate_with_token(token))
+            self.load_data()
 
-    def authenticate_with_token(self, token):
-        headers = {"Authorization": f"{token}"}
+        # Set up message refresh timer
+        self.refresh_timer = QTimer(self)
+        self.refresh_timer.timeout.connect(self.refresh_messages)
+        self.refresh_timer.start(3000)  # Refresh every 2 seconds
+
+    def show_login_screen(self):
+        login_screen = LoginScreen()
+        if login_screen.exec_() == QDialog.Accepted:
+            self.token = self.get_token()
+            self.load_data()
+        else:
+            sys.exit()
+
+    def get_token(self):
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        if 'Auth' in config and 'Token' in config['Auth']:
+            return config['Auth']['Token']
+        else:
+            return None
+
+    def load_data(self):
+        self.load_user_info()
+        self.load_friends()
+        self.load_servers()
+
+    def load_user_info(self):
+        headers = {"Authorization": f"{self.token}"}
         response = requests.get("https://discord.com/api/v9/users/@me", headers=headers)
         if response.status_code == 200:
             user_data = response.json()
-            self.loading_label.setText(f"Welcome, {user_data.get('username')}!")
-            self.progress_bar.setValue(30)
-            QTimer.singleShot(1000, lambda: self.update_user_info(user_data, token))
+            self.user_info_label.setText(f"User Info: {user_data.get('username')}")
         else:
-            QMessageBox.critical(self, "Error", "Authentication failed.")
-            self.loading_screen.hide()
-            self.load_client()
+            QMessageBox.warning(self, "Error", "Failed to fetch user information.")
 
-    def update_user_info(self, user_data, token):
-        avatar_url = f"https://cdn.discordapp.com/avatars/{user_data.get('id')}/{user_data.get('avatar')}.png"
-
-        self.loading_label.setText("Loading profile picture...")
-        self.progress_bar.setValue(50)
-        avatar_data = requests.get(avatar_url).content
-
-        pixmap = QPixmap()
-        pixmap.loadFromData(avatar_data)
-        pixmap = pixmap.scaled(48, 48, Qt.KeepAspectRatio)
-        self.label_avatar.setPixmap(pixmap)
-        self.label_avatar.show()
-
-        self.loading_label.setText("Loading friend and server lists...")
-        self.progress_bar.setValue(80)
-        QTimer.singleShot(1000, lambda: self.populate_friends_and_servers(token))
-
-    def populate_friends_and_servers(self, token):
-        headers = {"Authorization": f"{token}"}
-        response = requests.get("https://discord.com/api/v9/users/@me/relationships", headers=headers)
-        if response.status_code == 200:
-            friends_data = response.json()
-            for friend in friends_data:
-                friend_name = friend.get("user", {}).get("username")
-                self.friends_list.addItem(friend_name)
-
-        response = requests.get("https://discord.com/api/v9/users/@me/guilds", headers=headers)
-        if response.status_code == 200:
-            servers_data = response.json()
-            for server in servers_data:
-                server_name = server.get("name")
-                self.servers_list.addItem(server_name)
-
-        self.progress_bar.setValue(100)
-        self.loading_label.setText("Loading complete!")
-        self.loading_screen.hide()
-        self.friends_list.show()
-        self.servers_list.show()
-
-    def load_dm(self, item):
-        friend_name = item.text()
+    def load_friends(self):
         headers = {"Authorization": f"{self.token}"}
         response = requests.get("https://discord.com/api/v9/users/@me/channels", headers=headers)
         if response.status_code == 200:
             channels_data = response.json()
             for channel in channels_data:
-                if channel.get("type") == 1:
-                    recipients = channel.get("recipients", [])
-                    if len(recipients) == 1 and recipients[0].get("username") == friend_name:
-                        channel_id = channel.get("id")
-                        if channel_id != self.current_channel_id:
-                            messages = self.fetch_messages(channel_id)
-                            if messages:
-                                self.display_messages(messages)
-                                self.messages_text_edit.show()
-                                self.message_input.show()
-                                if not getattr(self, 'resized_once', False):
-                                    self.resize_once()
-                                    self.resized_once = True
-                                self.current_channel_id = channel_id
-                            else:
-                                QMessageBox.warning(self, "Error", f"Failed to fetch messages for {friend_name}.")
-                        break
+                friend_name = channel.get("recipients", [{}])[0].get("username", "Unknown")
+                item = QListWidgetItem(friend_name)
+                item.setData(Qt.UserRole, channel.get("id"))
+                self.friends_list.addItem(item)
+            self.friends_list.itemDoubleClicked.connect(self.load_channel_messages)
         else:
-            QMessageBox.warning(self, "Error", "Failed to fetch DM channels.")
+            QMessageBox.warning(self, "Error", "Failed to fetch friends.")
 
-    def refresh_dm(self):
-        if self.current_channel_id is not None:
-            messages = self.fetch_messages(self.current_channel_id)
-            if messages:
-                self.display_messages(messages)
-
-    def load_channels(self, item):
-        server_name = item.text()
+    def load_servers(self):
         headers = {"Authorization": f"{self.token}"}
-        response = requests.get(f"https://discord.com/api/v9/users/@me/guilds", headers=headers)
+        response = requests.get("https://discord.com/api/v9/users/@me/guilds", headers=headers)
         if response.status_code == 200:
             servers_data = response.json()
             for server in servers_data:
-                if server.get("name") == server_name:
-                    self.current_server_id = server.get("id")
-                    response = requests.get(f"https://discord.com/api/v9/guilds/{self.current_server_id}/channels", headers=headers)
-                    if response.status_code == 200:
-                        channels_data = response.json()
-                        self.servers_list.clear()
-                        back_item = QListWidgetItem("⮜ Go Back")
-                        back_item.setData(Qt.UserRole, "back")
-                        self.servers_list.addItem(back_item)
-                        for channel in channels_data:
-                            channel_name = channel.get("name")
-                            self.servers_list.addItem(channel_name)
-                            self.servers_list.item(self.servers_list.count() - 1).setData(Qt.UserRole, channel.get("id"))
-                        self.servers_list.itemClicked.connect(self.load_messages)
-                    break
+                server_name = server.get("name")
+                item = QListWidgetItem(server_name)
+                item.setData(Qt.UserRole, server.get("id"))
+                self.servers_list.addItem(item)
+            self.servers_list.itemDoubleClicked.connect(self.load_channel_messages)
+        else:
+            QMessageBox.warning(self, "Error", "Failed to fetch servers.")
 
-    def load_messages(self, item):
+    def load_channel_messages(self, item):
         channel_id = item.data(Qt.UserRole)
-        if channel_id == "back":
-            self.servers_list.show()
-            self.friends_list.clear()
-            return
-        if channel_id != self.current_channel_id:
-            messages = self.fetch_messages(channel_id)
-            if messages:
-                self.display_messages(messages)
-                self.messages_text_edit.show()
-                self.message_input.show()
-                if not getattr(self, 'resized_once', False):
-                    self.resize_once()
-                    self.resized_once = True
-                self.current_channel_id = channel_id
+        if channel_id:
+            headers = {"Authorization": f"{self.token}"}
+            response = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=headers, params={"limit": 20})
+            if response.status_code == 200:
+                messages_data = response.json()
+                self.display_messages(messages_data)
             else:
                 QMessageBox.warning(self, "Error", "Failed to fetch messages.")
-
-    def resize_once(self):
-        new_width = self.calculate_new_width()
-        self.resize(new_width, self.height())
-
-    def calculate_new_width(self):
-        content_width = self.messages_text_edit.sizeHint().width() + 30
-        return max(self.width(), content_width)
-
-    def fetch_messages(self, channel_id):
-        headers = {"Authorization": f"{self.token}"}
-        response = requests.get(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=headers, params={"limit": 5})
-        if response.status_code == 200:
-            messages_data = response.json()
-            return messages_data
-        else:
-            return None
 
     def display_messages(self, messages):
         self.messages_text_edit.clear()
@@ -349,116 +183,47 @@ class Naticord(QWidget):
             self.messages_text_edit.append(f"{author}: {content}")
 
     def send_message(self):
-        if self.current_channel_id:
-            headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
-            payload = {"content": self.message_input.text()}
-            response = requests.post(f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages", headers=headers, json=payload)
-            if response.status_code == 200:
-                self.message_input.clear()
-                self.refresh_dm()
+        message = self.message_input.text()
+        selected_tab_index = self.tabs.currentIndex()
+        
+        if selected_tab_index == 0:  # If Friends tab is selected
+            selected_item = self.friends_list.currentItem()
+            if selected_item:
+                recipient_id = selected_item.data(Qt.UserRole)
+                self.send_direct_message(recipient_id, message)
+        elif selected_tab_index == 1:  # If Servers tab is selected
+            selected_item = self.servers_list.currentItem()
+            if selected_item:
+                channel_id = selected_item.data(Qt.UserRole)
+                self.send_channel_message(channel_id, message)
 
-    def search_friends(self, text):
-        for i in range(self.friends_list.count()):
-            item = self.friends_list.item(i)
-            if text.lower() in item.text().lower():
-                item.setHidden(False)
-            else:
-                item.setHidden(True)
+    def send_direct_message(self, recipient_id, message):
+        headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
+        payload = {"content": message}
+        response = requests.post(f"https://discord.com/api/v9/channels/{recipient_id}/messages", headers=headers, json=payload)
+        if response.status_code != 200:
+            QMessageBox.warning(self, "Error", "Failed to send message.")
 
-    def search_servers(self, text):
-        for i in range(self.servers_list.count()):
-            item = self.servers_list.item(i)
-            if text.lower() in item.text().lower():
-                item.setHidden(False)
-            else:
-                item.setHidden(True)
+    def send_channel_message(self, channel_id, message):
+        headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
+        payload = {"content": message}
+        response = requests.post(f"https://discord.com/api/v9/channels/{channel_id}/messages", headers=headers, json=payload)
+        if response.status_code != 200:
+            QMessageBox.warning(self, "Error", "Failed to send message.")
 
-    def select_font(self):
-        font, ok = QFontDialog.getFont()
-        if ok:
-            self.messages_text_edit.setFont(font)
-
-    def open_emoji_dialog(self):
-        dialog = EmojiDialog(self.emojis, self.token, self)
-        dialog.exec_()
-
-    def load_emojis(self, token):
-        self.emojis = self.fetch_emojis(token)
-
-    def fetch_emojis(self, token):
-        headers = {"Authorization": f"{token}"}
-        response = requests.get("https://discord.com/api/v9/users/@me", headers=headers)
-        emojis = []
-        if response.status_code == 200:
-            user_data = response.json()
-            emoji_response = requests.get(f"https://discord.com/api/v9/guilds/{user_data['id']}/emojis", headers=headers)
-            if emoji_response.status_code == 200:
-                emojis_data = emoji_response.json()
-                for emoji in emojis_data:
-                    emojis.append(emoji['name'])
-        return emojis
-
-
-class LoginScreen(QWidget):
-    login_signal = pyqtSignal(str)
-
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Login")
-        self.layout = QVBoxLayout()
-
-        self.token_input = QLineEdit()
-        self.token_input.setPlaceholderText("Enter your token...")
-        self.layout.addWidget(self.token_input)
-
-        self.login_button = QPushButton("Login")
-        self.login_button.clicked.connect(self.emit_login_signal)
-        self.layout.addWidget(self.login_button)
-
-        self.setLayout(self.layout)
-
-    def emit_login_signal(self):
-        token = self.token_input.text().strip()
-        if token:
-            self.login_signal.emit(token)
-
-
-class EmojiDialog(QDialog):
-    def __init__(self, emojis, token, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Select Emoji")
-        self.layout = QGridLayout()
-
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidgetResizable(True)
-        self.scroll_widget = QWidget()
-        self.scroll_layout = QGridLayout(self.scroll_widget)
-
-        row = 0
-        col = 0
-        for emoji in emojis:
-            button = QPushButton(emoji)
-            button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-            button.clicked.connect(lambda checked, name=emoji: self.insert_emoji(name))
-            self.scroll_layout.addWidget(button, row, col)
-            col += 1
-            if col == 5:
-                col = 0
-                row += 1
-            if row == 5:
-                break
-
-        self.scroll_area.setWidget(self.scroll_widget)
-        self.layout.addWidget(self.scroll_area)
-
-        self.setLayout(self.layout)
-
-    def insert_emoji(self, name):
-        self.parent().message_input.insert(f"<:{name}>")
-
+    def refresh_messages(self):
+        selected_tab_index = self.tabs.currentIndex()
+        if selected_tab_index == 0:  # If Friends tab is selected
+            selected_item = self.friends_list.currentItem()
+            if selected_item:
+                self.load_channel_messages(selected_item)
+        elif selected_tab_index == 1:  # If Servers tab is selected
+            selected_item = self.servers_list.currentItem()
+            if selected_item:
+                self.load_channel_messages(selected_item)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    naticord = Naticord()
-    naticord.show()
+    client = Naticord()
+    client.show()
     sys.exit(app.exec_())
