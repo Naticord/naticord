@@ -1,14 +1,13 @@
+from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, \
+    QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, \
+    QAction, QListWidgetItem, QTabWidget, QFontDialog, QInputDialog, QCheckBox, QDialog, QGridLayout, QPushButton, QSizePolicy, QScrollArea
+from PyQt5.QtCore import QTimer, Qt, pyqtSignal, QSize
+from PyQt5.QtGui import QPixmap, QIcon
 import sys
 import os
 import configparser
 import requests
-from PyQt5.QtWidgets import (
-    QApplication, QLabel, QVBoxLayout, QWidget, QListWidget, QPushButton, 
-    QTextEdit, QLineEdit, QHBoxLayout, QProgressBar, QMessageBox, QMenu, 
-    QAction, QListWidgetItem, QTabWidget, QFontDialog, QInputDialog
-)
-from PyQt5.QtCore import QTimer, Qt, pyqtSignal, QVariant
-from PyQt5.QtGui import QPixmap, QIcon
+from threading import Thread
 
 class Naticord(QWidget):
     def __init__(self):
@@ -41,7 +40,6 @@ class Naticord(QWidget):
         self.label_avatar = QLabel()
         self.user_info_layout.addWidget(self.label_avatar)
         self.left_layout.addLayout(self.user_info_layout)
-
 
         self.tabs = QTabWidget()
 
@@ -80,6 +78,10 @@ class Naticord(QWidget):
         self.message_input.returnPressed.connect(self.send_message)
         self.right_layout.addWidget(self.message_input)
 
+        self.emoji_button = QPushButton("😀")
+        self.emoji_button.clicked.connect(self.open_emoji_dialog)
+        self.right_layout.addWidget(self.emoji_button)
+
         self.layout.addLayout(self.right_layout)
 
         self.setLayout(self.layout)
@@ -103,6 +105,9 @@ class Naticord(QWidget):
         self.refresh_timer.start(3000)
 
         self.create_settings_menu()
+
+        self.load_emojis_thread = Thread(target=self.load_emojis)
+        self.load_emojis_thread.start()
 
     def create_settings_menu(self):
         self.settings_button = QPushButton()
@@ -222,7 +227,6 @@ class Naticord(QWidget):
         self.progress_bar.setValue(80)
         QTimer.singleShot(1000, lambda: self.populate_friends_and_servers(token))
 
-
     def populate_friends_and_servers(self, token):
         headers = {"Authorization": f"{token}"}
         response = requests.get("https://discord.com/api/v9/users/@me/relationships", headers=headers)
@@ -340,98 +344,60 @@ class Naticord(QWidget):
     def display_messages(self, messages):
         self.messages_text_edit.clear()
         for message in reversed(messages):
-            author = message.get("author", {}).get("username")
-            content = message.get("content")
-
-            menu = QMenu()
-            edit_action = QAction("Edit")
-            edit_action.triggered.connect(lambda _, msg_id=message.get("id"): self.edit_message(msg_id))
-            menu.addAction(edit_action)
-
-            delete_action = QAction("Delete")
-            delete_action.triggered.connect(lambda _, msg_id=message.get("id"): self.delete_message(msg_id))
-            menu.addAction(delete_action)
-
-            reply_action = QAction("Reply")
-            reply_action.triggered.connect(lambda _, author=author: self.reply_to_author(author))
-            menu.addAction(reply_action)
-            
-            message_item = QListWidgetItem(f"{author}: {content}")
-            message_item.setIcon(QIcon("hamburger.svg"))
-
-            message_item.setData(Qt.UserRole, QVariant(menu))
+            author = message.get("author", {}).get("username", "Unknown")
+            content = message.get("content", "")
             self.messages_text_edit.append(f"{author}: {content}")
 
-    def edit_message(self, message_id):
-        message_text = self.get_message_text_by_id(message_id)
-        if message_text:
-            new_message_text, ok = QInputDialog.getText(self, "Edit Message", "Enter the new message:", QLineEdit.Normal, message_text)
-            if ok:
-                url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages/{message_id}"
-                headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
-                data = {"content": new_message_text}
-                response = requests.patch(url, headers=headers, json=data)
-                if response.status_code == 200:
-                    QMessageBox.information(self, "Success", "Message edited successfully.")
-                    self.refresh_messages()
-                else:
-                    QMessageBox.warning(self, "Error", "Failed to edit message.")
-
-    def delete_message(self, message_id):
-        confirm = QMessageBox.question(self, "Delete Message", "Are you sure you want to delete this message?", QMessageBox.Yes | QMessageBox.No)
-        if confirm == QMessageBox.Yes:
-            url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages/{message_id}"
-            headers = {"Authorization": f"{self.token}"}
-            response = requests.delete(url, headers=headers)
-            if response.status_code == 204:
-                QMessageBox.information(self, "Success", "Message deleted successfully.")
-                self.refresh_messages()
-            else:
-                QMessageBox.warning(self, "Error", "Failed to delete message.")
-
-    def refresh_messages(self):
-        if self.current_channel_id:
-            messages = self.fetch_messages(self.current_channel_id)
-            if messages:
-                self.display_messages(messages)
-
-    def reply_to_author(self, author):
-        self.message_input.setText(f"@{author} ")
-        self.message_input.setFocus()
-
     def send_message(self):
-        if self.message_input.text():
-            message = self.message_input.text()
+        if self.current_channel_id:
             headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
-            data = {"content": message}
-            url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages"
-            response = requests.post(url, headers=headers, json=data)
+            payload = {"content": self.message_input.text()}
+            response = requests.post(f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages", headers=headers, json=payload)
             if response.status_code == 200:
                 self.message_input.clear()
-                self.refresh_messages()
-            else:
-                QMessageBox.warning(self, "Error", "Failed to send message.")
+                self.refresh_dm()
 
     def search_friends(self, text):
-        items = self.friends_list.findItems("*", Qt.MatchWrap | Qt.MatchWildcard)
-        for item in items:
-            if text.lower() not in item.text().lower():
-                item.setHidden(True)
-            else:
+        for i in range(self.friends_list.count()):
+            item = self.friends_list.item(i)
+            if text.lower() in item.text().lower():
                 item.setHidden(False)
+            else:
+                item.setHidden(True)
 
     def search_servers(self, text):
-        items = self.servers_list.findItems("*", Qt.MatchWrap | Qt.MatchWildcard)
-        for item in items:
-            if text.lower() not in item.text().lower():
-                item.setHidden(True)
-            else:
+        for i in range(self.servers_list.count()):
+            item = self.servers_list.item(i)
+            if text.lower() in item.text().lower():
                 item.setHidden(False)
+            else:
+                item.setHidden(True)
 
     def select_font(self):
         font, ok = QFontDialog.getFont()
         if ok:
             self.messages_text_edit.setFont(font)
+
+    def open_emoji_dialog(self):
+        dialog = EmojiDialog(self.emojis, self.token, self)
+        dialog.exec_()
+
+    def load_emojis(self, token):
+        self.emojis = self.fetch_emojis(token)
+
+    def fetch_emojis(self, token):
+        headers = {"Authorization": f"{token}"}
+        response = requests.get("https://discord.com/api/v9/users/@me", headers=headers)
+        emojis = []
+        if response.status_code == 200:
+            user_data = response.json()
+            emoji_response = requests.get(f"https://discord.com/api/v9/guilds/{user_data['id']}/emojis", headers=headers)
+            if emoji_response.status_code == 200:
+                emojis_data = emoji_response.json()
+                for emoji in emojis_data:
+                    emojis.append(emoji['name'])
+        return emojis
+
 
 class LoginScreen(QWidget):
     login_signal = pyqtSignal(str)
@@ -439,22 +405,60 @@ class LoginScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Login")
-        layout = QVBoxLayout()
-        self.token_input = QLineEdit()
-        self.token_input.setPlaceholderText("Enter your token")
-        layout.addWidget(self.token_input)
-        login_button = QPushButton("Login")
-        login_button.clicked.connect(self.login)
-        layout.addWidget(login_button)
-        self.setLayout(layout)
+        self.layout = QVBoxLayout()
 
-    def login(self):
+        self.token_input = QLineEdit()
+        self.token_input.setPlaceholderText("Enter your token...")
+        self.layout.addWidget(self.token_input)
+
+        self.login_button = QPushButton("Login")
+        self.login_button.clicked.connect(self.emit_login_signal)
+        self.layout.addWidget(self.login_button)
+
+        self.setLayout(self.layout)
+
+    def emit_login_signal(self):
         token = self.token_input.text().strip()
         if token:
             self.login_signal.emit(token)
 
+
+class EmojiDialog(QDialog):
+    def __init__(self, emojis, token, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Select Emoji")
+        self.layout = QGridLayout()
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_widget = QWidget()
+        self.scroll_layout = QGridLayout(self.scroll_widget)
+
+        row = 0
+        col = 0
+        for emoji in emojis:
+            button = QPushButton(emoji)
+            button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+            button.clicked.connect(lambda checked, name=emoji: self.insert_emoji(name))
+            self.scroll_layout.addWidget(button, row, col)
+            col += 1
+            if col == 5:
+                col = 0
+                row += 1
+            if row == 5:
+                break
+
+        self.scroll_area.setWidget(self.scroll_widget)
+        self.layout.addWidget(self.scroll_area)
+
+        self.setLayout(self.layout)
+
+    def insert_emoji(self, name):
+        self.parent().message_input.insert(f"<:{name}>")
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = Naticord()
-    window.show()
+    naticord = Naticord()
+    naticord.show()
     sys.exit(app.exec_())
