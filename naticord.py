@@ -343,7 +343,6 @@ class Naticord(QWidget):
             author = message.get("author", {}).get("username")
             content = message.get("content")
 
-            # Create a menu for each message
             menu = QMenu()
             edit_action = QAction("Edit")
             edit_action.triggered.connect(lambda _, msg_id=message.get("id"): self.edit_message(msg_id))
@@ -356,46 +355,36 @@ class Naticord(QWidget):
             reply_action = QAction("Reply")
             reply_action.triggered.connect(lambda _, author=author: self.reply_to_author(author))
             menu.addAction(reply_action)
-
-            # Create a list widget item to hold the message content
+            
             message_item = QListWidgetItem(f"{author}: {content}")
-            message_item.setIcon(QIcon("hamburger.svg"))  # Set the hamburger icon
+            message_item.setIcon(QIcon("hamburger.svg"))
 
-            # Set the menu as an item data
             message_item.setData(Qt.UserRole, QVariant(menu))
-
-            # Add the message item to the list widget
             self.messages_text_edit.append(f"{author}: {content}")
 
     def edit_message(self, message_id):
-        # Update message logic
         message_text = self.get_message_text_by_id(message_id)
         if message_text:
             new_message_text, ok = QInputDialog.getText(self, "Edit Message", "Enter the new message:", QLineEdit.Normal, message_text)
             if ok:
-                # Send the update to the server
                 url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages/{message_id}"
                 headers = {"Authorization": f"{self.token}", "Content-Type": "application/json"}
                 data = {"content": new_message_text}
                 response = requests.patch(url, headers=headers, json=data)
                 if response.status_code == 200:
                     QMessageBox.information(self, "Success", "Message edited successfully.")
-                    # Refresh messages
                     self.refresh_messages()
                 else:
                     QMessageBox.warning(self, "Error", "Failed to edit message.")
 
     def delete_message(self, message_id):
-        # Delete message logic
         confirm = QMessageBox.question(self, "Delete Message", "Are you sure you want to delete this message?", QMessageBox.Yes | QMessageBox.No)
         if confirm == QMessageBox.Yes:
-            # Send delete request to the server
             url = f"https://discord.com/api/v9/channels/{self.current_channel_id}/messages/{message_id}"
             headers = {"Authorization": f"{self.token}"}
             response = requests.delete(url, headers=headers)
             if response.status_code == 204:
                 QMessageBox.information(self, "Success", "Message deleted successfully.")
-                # Refresh messages
                 self.refresh_messages()
             else:
                 QMessageBox.warning(self, "Error", "Failed to delete message.")
@@ -419,7 +408,6 @@ class Naticord(QWidget):
             response = requests.post(url, headers=headers, json=data)
             if response.status_code == 200:
                 self.message_input.clear()
-                # Refresh messages
                 self.refresh_messages()
             else:
                 QMessageBox.warning(self, "Error", "Failed to send message.")
