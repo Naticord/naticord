@@ -35,9 +35,13 @@ And then just run `naticord.py`
 - Servers glitch out when you select another channel
 - Dark mode is a bit finniky
 # Screenshots
+Naticord on Windows 10 20H1 
+
 ![home](https://github.com/n1d3v/naticord/assets/135556230/446c5069-8e76-4ca2-9413-5d6438946673)
 ![dms](https://github.com/n1d3v/naticord/assets/135556230/405b21d7-23b7-44df-a47f-9b474fb1a881)
-<br>
+
+Naticord on Linux Mint 21.3
+
 ![home-mint](https://github.com/n1d3v/naticord/assets/135556230/712ea91d-31dd-49e7-abbb-a5b367461811)
 ![dms-mint](https://github.com/n1d3v/naticord/assets/135556230/973576ae-6d62-4179-b2f6-4646a77b5675)
 
