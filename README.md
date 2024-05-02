@@ -11,6 +11,15 @@ The official Discord app goes to 400MB idle while this can go all the way low to
 Also feel free to make changes to the source! Make my code better as mine is pretty shit as it is, so I accept any PRs I get.
 
 The UI is also sort of inspired Windows Live Messenger (long live WLM)
+
+<a href="https://star-history.com/#n1d3v/naticord&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
+ </picture>
+</a>
+
 # Installation
 First of all, install the PyQt5 and requests library using
 ```
