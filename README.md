@@ -43,7 +43,7 @@ And then just run `naticord.py`
 - Voice calling (might not happen)
 # Bugs
 - Servers glitch out when you select another channel
-- Dark mode is a bit finniky
+- App lags when DMs refresh (not a bug thats a feature :tm:
 # Screenshots
 ![image](https://github.com/n1d3v/naticord/assets/135556230/f16cb368-cade-4fdf-b6a7-e8cfdf2d469a)
 
