@@ -1,5 +1,4 @@
 # naticord
-![fuck](https://img.shields.io/badge/fuck-web%20apps-blue?style=plastic)
 ![work](https://img.shields.io/badge/work-in%20progress-green?style=plastic)
 ![please star this <3](https://img.shields.io/badge/please%20star%20this%20%3C3-yellow?style=plastic)
 
