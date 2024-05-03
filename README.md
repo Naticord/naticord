@@ -53,6 +53,7 @@ And then just run `naticord.py`
 - ~~Fix servers~~
 - Add editing, reply and delete
 - Image support
+- Emojis
 - Voice calling (might not happen)
 # Bugs
 - App lags when DMs refresh (not a bug thats a feature™)
