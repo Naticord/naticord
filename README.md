@@ -50,14 +50,12 @@ And then just run `naticord.py`
 # Todo
 - ~~Server functionality~~
 - ~~Better UI~~
-- Profile pictures in friend list
-- Fix servers
+- ~~Fix servers~~
 - Add editing, reply and delete
 - Image support
 - Voice calling (might not happen)
 # Bugs
-- Servers glitch out when you select another channel
-- App lags when DMs refresh (not a bug thats a feature :tm:
+- App lags when DMs refresh (not a bug thats a feature™)
 # Screenshots
 ![image](https://github.com/n1d3v/naticord/assets/135556230/f16cb368-cade-4fdf-b6a7-e8cfdf2d469a)
 
