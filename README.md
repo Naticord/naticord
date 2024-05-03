@@ -21,9 +21,23 @@ The UI is also sort of inspired Windows Live Messenger (long live WLM)
 </a>
 
 # Installation
-First of all, install the PyQt5 and requests library using
+There are 3 different ways to install naticord on Windows, Linux and macOS.
+### Windows
 ```
-pip install PyQt5 requests
+pip install pyqt5 requests
+```
+### Linux
+```
+pip3 install pyqt5 requests
+```
+### macOS
+First install Homebrew (brew.sh). Then in terminal run
+```
+brew install python
+```
+Then run
+```
+pip3 install pyqt5 requests
 ```
 And then just run `naticord.py`
 # What's working
