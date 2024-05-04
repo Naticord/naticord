@@ -40,6 +40,29 @@ Then run
 pip3 install pyqt5 requests
 ```
 And then just run `naticord.py`
+
+# How to login
+
+1. Login to Discord on any web browser
+2. Refresh the page (F5)
+3. Do Ctrl + Shift + I (Or just right click and inspect element)
+4. Go to Responsive Design Mode (Or if you're on Chrome, it's "Toggle Device Toolbar")
+On Firefox it should be an icon with a phone and a tablet, on Chrome a phone with a laptop
+5. Go to local storage (on Chrome, go to Application and there should be local storage)
+6. In the filter tab, search "token"
+
+![image](https://github.com/Shavixinio/naticord/assets/54279284/7784ece1-3dbf-4fe5-916b-877c86404be8)
+
+8. Get the token and paste it into the Naticord login page
+
+![image](https://github.com/Shavixinio/naticord/assets/54279284/c588eb0d-edf6-4ab7-b2e5-c9ddbb298892)
+
+
+# Switching accounts
+
+1. Go to C:/Users/YourName/Config.ini
+2. Replace the token with your other token
+
 # What's working
 - Logging in with a token
 - Friends
