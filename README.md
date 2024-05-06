@@ -80,7 +80,8 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Server channel categories
 - Voice calling (might not happen)
 # Bugs
-- App lags when DMs refresh (not a bug thats a feature™)
+- ~~App lags when DMs refresh (not a bug thats a feature™)~~
+- Pings are broken (will be fixed pretty shortly)
 # Screenshots
 ![image](https://github.com/n1d3v/naticord/assets/135556230/f16cb368-cade-4fdf-b6a7-e8cfdf2d469a)
 
