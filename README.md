@@ -77,6 +77,7 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Add editing, reply and delete
 - Image support
 - Emojis
+- Server channel categories
 - Voice calling (might not happen)
 # Bugs
 - App lags when DMs refresh (not a bug thats a feature™)
