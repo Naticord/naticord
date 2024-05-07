@@ -6,6 +6,8 @@ import configparser
 import os
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QTextEdit, QLineEdit, QPushButton, QTabWidget, QMessageBox, QDialog, QListWidgetItem
 from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QColor, QPalette
+
 
 # define a dialog for the login screen
 class LoginScreen(QDialog):
@@ -22,7 +24,7 @@ class LoginScreen(QDialog):
         # create login button and connect it to login function
         self.login_button = QPushButton("Login")
         self.login_button.clicked.connect(self.login)
-        self.layout.addWidget(sealf.login_button)
+        self.layout.addWidget(self.login_button)
 
         self.setLayout(self.layout)
 
@@ -47,6 +49,7 @@ class Naticord(QWidget):
         self.setWindowTitle("Naticord")
         self.layout = QHBoxLayout()
         self.setLayout(self.layout)
+        self.load_style()
 
         # left panel containing user info, friends list, and servers list
         self.left_panel = QWidget()
@@ -121,6 +124,10 @@ class Naticord(QWidget):
         self.refresh_timer.timeout.connect(self.refresh_messages)
         self.refresh_timer.start(3000)
 
+        self.dark_mode_button = QPushButton("Dark Mode")
+        self.dark_mode_button.clicked.connect(self.toggle_dark_mode)
+        self.layout.addWidget(self.dark_mode_button)
+
     # function to display login screen
     def show_login_screen(self):
         login_screen = LoginScreen()
@@ -145,6 +152,40 @@ class Naticord(QWidget):
         asyncio.run(self.load_user_info())
         asyncio.run(self.load_friends())
         asyncio.run(self.load_servers())
+    
+    def load_style(self):
+        # Define dark mode color palette
+        dark_palette = QPalette()
+        dark_palette.setColor(QPalette.Window, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.WindowText, Qt.white)
+        dark_palette.setColor(QPalette.Base, QColor(25, 25, 25))
+        dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.ToolTipBase, Qt.white)
+        dark_palette.setColor(QPalette.ToolTipText, Qt.white)
+        dark_palette.setColor(QPalette.Text, Qt.white)
+        dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
+        dark_palette.setColor(QPalette.ButtonText, Qt.white)
+        dark_palette.setColor(QPalette.BrightText, Qt.red)
+        dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
+        dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+        dark_palette.setColor(QPalette.HighlightedText, Qt.black)
+        
+        # Apply dark palette
+        self.setPalette(dark_palette)
+
+    def toggle_dark_mode(self):
+        if self.dark_mode_button.text() == "Dark Mode":
+            self.dark_mode_button.setText("Light Mode")
+            self.load_light_style()
+        else:
+            self.dark_mode_button.setText("Dark Mode")
+            self.load_style()
+
+    def load_light_style(self):
+        # Define light mode color palette
+        light_palette = QPalette()
+        # Define your light mode colors here...
+        self.setPalette(light_palette)
 
     # function to load user info
     async def load_user_info(self):

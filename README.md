@@ -22,22 +22,16 @@ The UI is also sort of inspired Windows Live Messenger (long live WLM)
 
 # Installation
 There are 3 different ways to install naticord on Windows, Linux and macOS.
-### Windows
-```
-pip install pyqt5 requests
-```
-### Linux
-```
-pip3 install pyqt5 requests
-```
 ### macOS
+
 First install Homebrew (brew.sh). Then in terminal run
 ```
 brew install python
 ```
-Then run
+### Windows/MacOS/Linux Python requirements:
+
 ```
-pip3 install pyqt5 requests
+pip3 install -r requirements.txt
 ```
 And then just run `naticord.py`
 
@@ -70,6 +64,7 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Sending messages in DMs
 - Basic server functionality
 - Ping support
+- switch light/dark mode
 # Todo
 - ~~Server functionality~~
 - ~~Better UI~~
