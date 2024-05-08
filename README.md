@@ -45,27 +45,30 @@ brew install pyqt5 && brew install python-requests && pip3 install aiohttp --bre
 ```
 And then just run `naticord.py`
 
-# How to login
+Here's a revised version:
 
-1. Login to Discord on any web browser
-2. Refresh the page (F5)
-3. Do Ctrl + Shift + I (Or just right click and inspect element)
-4. Go to Responsive Design Mode (Or if you're on Chrome, it's "Toggle Device Toolbar")
-On Firefox it should be an icon with a phone and a tablet, on Chrome a phone with a laptop
-5. Go to local storage (on Chrome, go to Application and there should be local storage)
-6. In the filter tab, search "token"
+---
 
-![image](https://github.com/Shavixinio/naticord/assets/54279284/7784ece1-3dbf-4fe5-916b-877c86404be8)
+# How to Log In:
 
-8. Get the token and paste it into the Naticord login page
+1. Open Discord on any web browser and log in.
+2. Refresh the page (Press F5).
+3. Access Developer Tools by pressing Ctrl + Shift + I (or right-click and select "Inspect Element").
+4. Navigate to Responsive Design Mode. (In Chrome, it's "Toggle Device Toolbar").
+   - In Firefox, look for an icon featuring a phone and a tablet. In Chrome, it's a phone next to a laptop.
+5. Locate local storage. (In Chrome, navigate to Application and find local storage).
+6. In the filter tab, search for "token".
 
-![image](https://github.com/Shavixinio/naticord/assets/54279284/c588eb0d-edf6-4ab7-b2e5-c9ddbb298892)
+![Find Token](https://github.com/Shavixinio/naticord/assets/54279284/7784ece1-3dbf-4fe5-916b-877c86404be8)
 
+7. Retrieve the token and paste it into the Naticord login page.
 
-# Switching accounts
+![Paste Token](https://github.com/Shavixinio/naticord/assets/54279284/c588eb0d-edf6-4ab7-b2e5-c9ddbb298892)
 
-1. Go to C:/Users/YourName/Config.ini
-2. Replace the token with your other token
+# Switching Accounts:
+
+1. Navigate to C:/Users/YourName/Config.ini.
+2. Replace the current token with the one associated with your other account.
 
 # What's working
 - Logging in with a token
