@@ -22,7 +22,7 @@ class LoginScreen(QDialog):
         # create login button and connect it to login function
         self.login_button = QPushButton("Login")
         self.login_button.clicked.connect(self.login)
-        self.layout.addWidget(sealf.login_button)
+        self.layout.addWidget(self.login_button)
 
         self.setLayout(self.layout)
 
