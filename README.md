@@ -28,11 +28,11 @@ The UI is also sort of inspired Windows Live Messenger (long live WLM)
 There are 3 different ways to install naticord on Windows, Linux and macOS.
 ### Windows
 ```
-pip install pyqt5 requests
+pip install pyqt5 requests aiohttp
 ```
 ### Linux
 ```
-pip3 install pyqt5 requests
+pip3 install pyqt5 requests aiohttp
 ```
 ### macOS
 First install Homebrew (brew.sh). Then in terminal run
@@ -41,7 +41,7 @@ brew install python
 ```
 Then run
 ```
-pip3 install pyqt5 requests
+brew install pyqt5 && brew install python-requests && pip3 install aiohttp --break-system-packages 
 ```
 And then just run `naticord.py`
 
