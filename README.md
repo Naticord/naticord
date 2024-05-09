@@ -89,9 +89,6 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 # Screenshots
 ![image](https://github.com/n1d3v/naticord/assets/135556230/f16cb368-cade-4fdf-b6a7-e8cfdf2d469a)
 
----
-
-![naticord2 1](https://github.com/n1d3v/naticord/assets/135556230/db2b6f36-c095-42b8-adff-770b7a83d976)
 
 
 
