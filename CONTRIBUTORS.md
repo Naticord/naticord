@@ -9,4 +9,10 @@ For example, let's say you wanted to add a feature you would add the `add:` pref
 
 Here's an example of a good PR title: `add: New cool thing that makes life better`
 
+## Different types of prefixes
+`add:`
+`remove:`
+`change:`
+`fix:`
+
 ### That's all you need to know when contributing.
