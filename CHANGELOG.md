@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Better performance
 - Notifications in Windows (**soon for macOS and Linux**)
 - Overall stability improved
+- Markdown support
+- File uploading
 
 ### Removed
 - Unused / Useless functions from code
