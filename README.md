@@ -22,6 +22,14 @@ The UI is also sort of inspired Windows Live Messenger (long live WLM)
    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
  </picture>
+
+# Changelog
+Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
+
+# Contributing
+Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
+
+
 </a>
 
 # Installation
