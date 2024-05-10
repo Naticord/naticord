@@ -82,12 +82,15 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Sending messages in DMs
 - Basic server functionality
 - Ping support
+- Websockets
+- File uploading
+- Images
 # Todo
 - ~~Server functionality~~
 - ~~Better UI~~
 - ~~Fix servers~~
+- ~~Image support~~
 - Add editing, reply and delete
-- Image support
 - Emojis
 - Server channel categories
 - Voice calling (might not happen)
