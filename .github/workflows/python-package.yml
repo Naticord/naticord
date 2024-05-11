@@ -32,3 +32,9 @@ jobs:
       run: |
         pyinstaller --noconsole naticord.py
 
+    - name: Upload naticord
+      uses: actions/upload-artifact@v4.3.1
+      with:
+        name: Rectify11Installer (x64)
+        path: Rectify11Installer\bin\output\Release\Rectify11Installer.exe
+        compression-level: 0
