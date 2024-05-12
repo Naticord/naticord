@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+    <Error>it didn't work</Error>
+    <Message>Chats</Message>
+    <PleaseEnterValidToken>enter the token. NOW!</PleaseEnterValidToken>
+    <FailedToFetchFriends>no more friends?</FailedToFetchFriends>
+    <FailedToFetchServers>Failed to fetch servers.</FailedToFetchServers>
+    <FailedToFetchMessages>no one to talk to. womp womp</FailedToFetchMessages>
+    <FailedToFetchServerChannels>cant find your chats ig</FailedToFetchServerChannels>
+    <FailedToSendMessage>bro it didn't send</FailedToSendMessage>
+</language>

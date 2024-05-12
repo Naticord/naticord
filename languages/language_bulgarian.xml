@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+    <Error>Грешка</Error>
+    <Message>съобщение</Message>
+    <PleaseEnterValidToken>Моля въведете правилен Discord token.</PleaseEnterValidToken>
+    <FailedToFetchFriends>Грешка при извличането на приятелите.</FailedToFetchFriends>
+    <FailedToFetchServers>Грешка при извличането на сървърите.</FailedToFetchServers>
+    <FailedToFetchMessages>Грешка при извличането на съобщенията.</FailedToFetchMessages>
+    <FailedToFetchServerChannels>Грешка при извличането на каналите.</FailedToFetchServerChannels>
+    <FailedToSendMessage>Грешка при изпращането на съобщението.</FailedToSendMessage>
+</language>

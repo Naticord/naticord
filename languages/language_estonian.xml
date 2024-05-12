@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+    <Error>Viga</Error>
+    <Message>Sõnumite</Message>
+    <PleaseEnterValidToken>Palun sisesta toimiv Discordi token</PleaseEnterValidToken>
+    <FailedToFetchFriends>Viga sõprade hankimisel</FailedToFetchFriends>
+    <FailedToFetchServers>Viga serverite hankimisel</FailedToFetchServers>
+    <FailedToFetchMessages>Viga sõnumite hankimisel</FailedToFetchMessages>
+    <FailedToFetchServerChannels>Viga serveri kanalite hankimisel</FailedToFetchServerChannels>
+    <FailedToSendMessage>Viga sõnumi saatmisel</FailedToSendMessage>
+</language>

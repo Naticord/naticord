@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+    <Error>خطا</Error>
+    <Message>پیام ها</Message>
+    <PleaseEnterValidToken>لطفا یک رمز معتبر وارد کنید.</PleaseEnterValidToken>
+    <FailedToFetchFriends>یافتن دوست نا‌موفق بود.</FailedToFetchFriends>
+    <FailedToFetchServers>یافتن پیام ها نا‌موفق بود.</FailedToFetchServers>
+    <FailedToFetchMessages>یافتن پیام ها نا‌موفق بود.</FailedToFetchMessages>
+    <FailedToFetchServerChannels>یافتن کانال های سرور نا‌موفق بود.</FailedToFetchServerChannels>
+    <FailedToSendMessage>پیام ارسال نشد.</FailedToSendMessage>
+</language>

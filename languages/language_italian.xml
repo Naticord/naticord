@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+    <Error>Error</Error>
+    <Message>Messaggi</Message>
+    <PleaseEnterValidToken>Per favore entra un Discord token valido</PleaseEnterValidToken>
+    <FailedToFetchFriends>Fallito a recuperare gli amici</FailedToFetchFriends>
+    <FailedToFetchServers>Fallito a recuperare i server</FailedToFetchServers>
+    <FailedToFetchMessages>Fallito a recuperare i messaggi</FailedToFetchMessages>
+    <FailedToFetchServerChannels>Fallito a recuperare I canali dei server</FailedToFetchServerChannels>
+    <FailedToSendMessage>Fallito a inviare i messaggi</FailedToSendMessage>
+</language>
