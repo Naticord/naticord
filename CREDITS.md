@@ -10,6 +10,7 @@ I would like to thank you all for using naticord first of all. But let's get to 
 - Benjamin (my IRL friend) for Italian
 - loulou for French and Spanish
 - terathebyte for Serbian
+- Estrailia's friend for Persian
 - And myself for making English translations
 
 If you would like to contribute you can by adding your language in languages/ in the repo.
