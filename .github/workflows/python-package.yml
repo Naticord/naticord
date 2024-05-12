@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         py -m pip install --upgrade pip
-        py -m pip install pyqt5 requests pyinstaller
+        py -m pip install pyqt5 aiohttp pyinstaller
     - name: Build with pyinstaller
       run: |
         C:\hostedtoolcache\windows\Python\3.12.3\x64\Scripts\pyinstaller --noconsole --onefile naticord.py
