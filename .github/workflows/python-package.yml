@@ -30,7 +30,7 @@ jobs:
         py -m pip install pyqt5 requests pyinstaller
     - name: Build with pyinstaller
       run: |
-        pyinstaller --noconsole --onefile naticord.py
+        C:\hostedtoolcache\windows\Python\3.12.3\x64\Scripts\pyinstaller --noconsole --onefile naticord.py
         ls dist/
     - name: Upload naticord
       uses: actions/upload-artifact@v4.3.3
