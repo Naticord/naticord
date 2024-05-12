@@ -36,5 +36,5 @@ jobs:
       uses: actions/upload-artifact@v4.3.3
       with:
         name: naticord-client.exe
-        path: dist/naticord
+        path: dist/naticord.exe
         compression-level: 0
