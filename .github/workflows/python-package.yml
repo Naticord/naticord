@@ -31,7 +31,6 @@ jobs:
     - name: Build with pyinstaller
       run: |
         pyinstaller --noconsole naticord.py
-
     - name: Upload naticord
       uses: actions/upload-artifact@v4.3.3
       with:
