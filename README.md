@@ -86,6 +86,7 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - File uploading
 - Images
 - Account switching / adding (multiple accounts)
+- Localization
 # Todo
 - ~~Server functionality~~
 - ~~Better UI~~
