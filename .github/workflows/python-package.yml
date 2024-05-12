@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Naticord python testing
+name: Naticord CI/CD
 
 on:
   push:
@@ -35,6 +35,6 @@ jobs:
     - name: Upload naticord
       uses: actions/upload-artifact@v4.3.3
       with:
-        name: naticord-setup
+        name: naticord-client
         path: dist/naticord.exe
         compression-level: 0
