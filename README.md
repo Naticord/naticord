@@ -10,14 +10,6 @@ Naticord / Native-cord is a native Discord client made in C# (originally Python)
 
 Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work)
 
-Why make a native client or even a custom client at all? Well, it's because Discord's half baked web app is **shit**. So this was the answer.
-
-The official Discord app goes to 400MB idle while this can go all the way low to 25MB!
-
-Also feel free to make changes to the source! Make my code better as mine is pretty shit as it is, so I accept any PRs I get.
-
-The UI is also sort of inspired Windows Live Messenger (long live WLM)
-
 <a href="https://star-history.com/#n1d3v/naticord&Date">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date&theme=dark" />
