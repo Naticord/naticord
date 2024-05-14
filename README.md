@@ -8,7 +8,9 @@
 
 Naticord / Native-cord is a native Discord client made in C# (originally Python).
 
-Why make a native client or even a custom client at all? Well, it's because Discord's half baked web app is **shit**. I want to have a simple yet good experience while having my RAM not being taken by Discord. So this was the answer.
+Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work)
+
+Why make a native client or even a custom client at all? Well, it's because Discord's half baked web app is **shit**. So this was the answer.
 
 The official Discord app goes to 400MB idle while this can go all the way low to 25MB!
 
