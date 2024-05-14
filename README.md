@@ -6,7 +6,7 @@
 > ### Do not blame me if you get banned.
 > Discord may ban you if they catch you using a custom client, this hasn't happened to anyone yet using naticord or other client mods such as Vencord.
 
-Naticord / Native-cord is a native Discord client made in Python.
+Naticord / Native-cord is a native Discord client made in C# (originally Python).
 
 Why make a native client or even a custom client at all? Well, it's because Discord's half baked web app is **shit**. I want to have a simple yet good experience while having my RAM not being taken by Discord. So this was the answer.
 
@@ -33,25 +33,7 @@ Contributing guide can be found in the root directory of this repo as `CONTRIBUT
 </a>
 
 # Installation
-There are 3 different ways to install naticord on Windows, Linux and macOS.
-### Windows
-```
-pip install pyqt5 requests
-```
-### Linux
-```
-pip3 install pyqt5 requests
-```
-### macOS
-First install Homebrew (brew.sh). Then in terminal run
-```
-brew install python
-```
-Then run
-```
-pip3 install pyqt5 requests
-```
-And then just run `naticord.py`
+Download naticord.zip from the releases page. Note that this is for Windows only but soon will be ported to Mac and Linux.
 
 # How to login
 
@@ -69,39 +51,25 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 
 ![image](https://github.com/Shavixinio/naticord/assets/54279284/c588eb0d-edf6-4ab7-b2e5-c9ddbb298892)
 
-
-# Switching accounts
-
-1. Go to C:/Users/YourName/Config.ini
-2. Replace the token with your other token
-
 # What's working
 - Logging in with a token
 - Friends
 - DMs
-- Sending messages in DMs
 - Basic server functionality
-- Ping support
-- Websockets
-- File uploading
-- Images
-- Account switching / adding (multiple accounts)
-- Localization
 # Todo
-- ~~Server functionality~~
 - ~~Better UI~~
 - ~~Fix servers~~
-- ~~Image support~~
+- Image support
+- Full server functionality
 - Add editing, reply and delete
 - Emojis
 - Server channel categories
 - Voice calling (might not happen)
+- Sending messages
 # Bugs
-- ~~App lags when DMs refresh (not a bug thats a feature™)~~
-- Pings are broken (will be fixed pretty shortly)
+There are none!
 # Screenshots
-![image](https://github.com/n1d3v/naticord/assets/135556230/f16cb368-cade-4fdf-b6a7-e8cfdf2d469a)
-
+![screenshot](https://github.com/n1d3v/naticord/assets/135556230/d796980e-6c92-4115-9fa8-1dc2ae3be601)
 
 
 
