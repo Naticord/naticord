@@ -1,0 +1,14 @@
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\bin\Debug\Naticord.exe
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\bin\Debug\Naticord.pdb
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\bin\Debug\websocket-sharp.dll
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\bin\Debug\websocket-sharp.xml
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.Login.resources
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.Naticord.resources
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.Properties.Resources.resources
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.csproj.GenerateResource.cache
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.csproj.CoreCompileInputs.cache
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.csproj.CopyComplete
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.exe
+C:\Users\Patrick\naticord-c#\Naticord\Naticord\obj\Debug\Naticord.pdb
