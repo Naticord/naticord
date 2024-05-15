@@ -50,18 +50,16 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Friends
 - DMs
 - Basic server functionality
+- Sending messages
+- Server channel categories
 # Todo
-- ~~Better UI~~
-- ~~Fix servers~~
 - Image support
 - Full server functionality
 - Add editing, reply and delete
 - Emojis
-- Server channel categories
 - Voice calling (might not happen)
-- Sending messages
 # Bugs
-There are none!
+- If the server has channels with no categories it will crash.
 # Screenshots
 ![screenshot](https://github.com/n1d3v/naticord/assets/135556230/d796980e-6c92-4115-9fa8-1dc2ae3be601)
 
