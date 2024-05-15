@@ -36,8 +36,12 @@
             this.friendList = new System.Windows.Forms.TabPage();
             this.friendListBox = new System.Windows.Forms.ListBox();
             this.serverList = new System.Windows.Forms.TabPage();
-            this.serverListBox = new System.Windows.Forms.ListBox();
+            this.serverListBox = new System.Windows.Forms.ListView();
+            this.uploadButton = new System.Windows.Forms.Button();
+            this.settingsButton = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
+            this.friendList.SuspendLayout();
+            this.serverList.SuspendLayout();
             this.SuspendLayout();
             // 
             // usernameLabel
@@ -51,9 +55,9 @@
             // 
             // sendMessage
             // 
-            this.sendMessage.Location = new System.Drawing.Point(199, 412);
+            this.sendMessage.Location = new System.Drawing.Point(219, 412);
             this.sendMessage.Name = "sendMessage";
-            this.sendMessage.Size = new System.Drawing.Size(589, 20);
+            this.sendMessage.Size = new System.Drawing.Size(569, 20);
             this.sendMessage.TabIndex = 2;
             // 
             // messageBox
@@ -78,7 +82,7 @@
             // 
             // friendList
             // 
-            this.friendList.Controls.Add(this.friendListBox); 
+            this.friendList.Controls.Add(this.friendListBox);
             this.friendList.Location = new System.Drawing.Point(4, 22);
             this.friendList.Name = "friendList";
             this.friendList.Padding = new System.Windows.Forms.Padding(3);
@@ -108,18 +112,42 @@
             // 
             // serverListBox
             // 
-            this.serverListBox.FormattingEnabled = true;
+            this.serverListBox.GridLines = true;
+            this.serverListBox.HideSelection = false;
             this.serverListBox.Location = new System.Drawing.Point(6, 6);
             this.serverListBox.Name = "serverListBox";
-            this.serverListBox.Size = new System.Drawing.Size(161, 368);
-            this.serverListBox.TabIndex = 0;
+            this.serverListBox.Size = new System.Drawing.Size(161, 367);
+            this.serverListBox.TabIndex = 1;
+            this.serverListBox.UseCompatibleStateImageBehavior = false;
+            this.serverListBox.View = System.Windows.Forms.View.SmallIcon;
             // 
-
+            // uploadButton
+            // 
+            this.uploadButton.Image = global::Naticord.Properties.Resources.upload;
+            this.uploadButton.Location = new System.Drawing.Point(199, 412);
+            this.uploadButton.Name = "uploadButton";
+            this.uploadButton.Size = new System.Drawing.Size(20, 20);
+            this.uploadButton.TabIndex = 9;
+            this.uploadButton.UseVisualStyleBackColor = true;
+            this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
+            // 
+            // settingsButton
+            // 
+            this.settingsButton.Image = ((System.Drawing.Image)(resources.GetObject("settingsButton.Image")));
+            this.settingsButton.Location = new System.Drawing.Point(768, 4);
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(22, 22);
+            this.settingsButton.TabIndex = 8;
+            this.settingsButton.UseVisualStyleBackColor = true;
+            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            // 
             // Naticord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.uploadButton);
+            this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.sendMessage);
@@ -129,6 +157,8 @@
             this.Text = "Naticord";
             this.Load += new System.EventHandler(this.Naticord_Load);
             this.tabControl.ResumeLayout(false);
+            this.friendList.ResumeLayout(false);
+            this.serverList.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,8 +170,10 @@
         private System.Windows.Forms.RichTextBox messageBox;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage friendList;
-        private System.Windows.Forms.ListBox friendListBox; 
+        private System.Windows.Forms.ListBox friendListBox;
         private System.Windows.Forms.TabPage serverList;
-        private System.Windows.Forms.ListBox serverListBox;
+        private System.Windows.Forms.ListView serverListBox;
+        private System.Windows.Forms.Button settingsButton;
+        private System.Windows.Forms.Button uploadButton;
     }
 }

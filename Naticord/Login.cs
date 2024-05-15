@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Naticord
@@ -71,7 +72,12 @@ namespace Naticord
 
         private void Login_Load(object sender, EventArgs e)
         {
+            // this isn't really needed but at the same time it isnt?
+        }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/n1d3v/naticord#how-to-login");
         }
     }
 }
