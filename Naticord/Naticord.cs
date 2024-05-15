@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security.Authentication;
 using System.Windows.Forms;
 using System.Linq;
 using WebSocketSharp;
@@ -317,6 +318,7 @@ namespace Naticord
         // this is broken! will be fixed soon
         private Naticord parentNaticordForm;
         private WebSocket webSocket;
+        public const SslProtocols Tls12 = (SslProtocols)0x00000C00;
 
         public WebSocketClient(string accessToken, Naticord parentNaticordForm)
         {
@@ -328,7 +330,7 @@ namespace Naticord
         private void InitializeWebSocket(string accessToken)
         {
             webSocket = new WebSocket($"wss://gateway.discord.gg/?v=9&encoding=json");
-
+            webSocket.SslConfiguration.EnabledSslProtocols = Tls12;
             webSocket.OnMessage += (sender, e) => HandleWebSocketMessage(e.Data);
             string AccessToken = accessToken;
             webSocket.OnError += (sender, e) => HandleWebSocketError(e.Message);
