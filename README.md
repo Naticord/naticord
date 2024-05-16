@@ -2,11 +2,11 @@
 ![work](https://img.shields.io/badge/work-in%20progress-green?style=plastic)
 ![please star this <3](https://img.shields.io/badge/please%20star%20this%20%3C3-yellow?style=plastic)
 
-> [!Caution]
+> [!CAUTION]
 > ### 밴 당하더라도 저를 탓하지 마세요
 > Discord는 사용자 정의 클라이언트를 사용하다 적발되면 밴할 수 있습니다. 아직까지 naticord나 Vencord 같은 다른 클라이언트 모드를 사용하다 밴 당한 사람은 없습니다.
 
-Naticord / Native-cord는 C#(원래는 파이썬)으로 만든 네이티브 디스코드 클라이언트입니다.
+Naticord / Native-cord는 C#(원래는 Python)으로 만든 네이티브 디스코드 클라이언트입니다.
 
 Windows 2000 - Windows 11 지원 (Windows 2000 - Vista는 작동하려면 프록시 설정이 필요함)
 
