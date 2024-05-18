@@ -54,7 +54,8 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Server channel categories
 - File uploading
 - Pinging
-- Display Names and Friend Nicknames
+- Hyperlinks
+- Display names and friend nicknames
 # Planned functions
 - Image support
 - Full server functionality
