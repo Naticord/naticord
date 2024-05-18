@@ -55,6 +55,7 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - File uploading
 - Pinging
 - Hyperlinks
+- Typing indicators
 - Display names and friend nicknames
 # Planned functions
 - Image support
