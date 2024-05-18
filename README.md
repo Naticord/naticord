@@ -61,7 +61,6 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Add editing, reply and delete
 - Emojis
 # Bugs
-- If the server has channels with no categories it will crash.
 - Websocket doesn't close properly and then the app will stay open in the BG.
 # Screenshots
 ![screenshot](https://github.com/n1d3v/naticord/assets/135556230/d796980e-6c92-4115-9fa8-1dc2ae3be601)
