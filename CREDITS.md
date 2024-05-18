@@ -18,3 +18,6 @@ If you would like to contribute you can by adding your language in languages/ in
 ### Contributors
 - Shavix for some README and code fixes
 - Axel for maintaining the macOS build
+
+### Emotional Support
+- JukFiunne for bug fixing and more
