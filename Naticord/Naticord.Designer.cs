@@ -2,15 +2,8 @@
 {
     partial class Naticord
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Naticord));
@@ -34,11 +23,11 @@
             this.messageBox = new System.Windows.Forms.RichTextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.friendList = new System.Windows.Forms.TabPage();
-            this.friendListBox = new System.Windows.Forms.ListBox();
+            this.friendListBox = new System.Windows.Forms.ListView();
             this.serverList = new System.Windows.Forms.TabPage();
             this.serverListBox = new System.Windows.Forms.ListView();
             this.uploadButton = new System.Windows.Forms.Button();
-            this.settingsButton = new System.Windows.Forms.Button();
+            this.typingStatus = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.friendList.SuspendLayout();
             this.serverList.SuspendLayout();
@@ -62,10 +51,13 @@
             // 
             // messageBox
             // 
-            this.messageBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.messageBox.Cursor = System.Windows.Forms.Cursors.SizeAll;
+            this.messageBox.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.messageBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.messageBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.messageBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.messageBox.Location = new System.Drawing.Point(199, 27);
             this.messageBox.Name = "messageBox";
+            this.messageBox.ReadOnly = true;
             this.messageBox.Size = new System.Drawing.Size(589, 379);
             this.messageBox.TabIndex = 6;
             this.messageBox.Text = "";
@@ -93,11 +85,15 @@
             // 
             // friendListBox
             // 
-            this.friendListBox.FormattingEnabled = true;
+            this.friendListBox.HideSelection = false;
             this.friendListBox.Location = new System.Drawing.Point(6, 6);
+            this.friendListBox.MultiSelect = false;
             this.friendListBox.Name = "friendListBox";
             this.friendListBox.Size = new System.Drawing.Size(161, 368);
             this.friendListBox.TabIndex = 0;
+            this.friendListBox.UseCompatibleStateImageBehavior = false;
+            this.friendListBox.View = System.Windows.Forms.View.SmallIcon;
+            this.friendListBox.SelectedIndexChanged += new System.EventHandler(this.FriendList_SelectedIndexChanged);
             // 
             // serverList
             // 
@@ -113,13 +109,16 @@
             // serverListBox
             // 
             this.serverListBox.GridLines = true;
+            this.serverListBox.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.serverListBox.HideSelection = false;
             this.serverListBox.Location = new System.Drawing.Point(6, 6);
+            this.serverListBox.MultiSelect = false;
             this.serverListBox.Name = "serverListBox";
             this.serverListBox.Size = new System.Drawing.Size(161, 367);
             this.serverListBox.TabIndex = 1;
             this.serverListBox.UseCompatibleStateImageBehavior = false;
             this.serverListBox.View = System.Windows.Forms.View.SmallIcon;
+            this.serverListBox.DoubleClick += new System.EventHandler(this.ServerListBox_DoubleClick);
             // 
             // uploadButton
             // 
@@ -129,25 +128,23 @@
             this.uploadButton.Size = new System.Drawing.Size(20, 20);
             this.uploadButton.TabIndex = 9;
             this.uploadButton.UseVisualStyleBackColor = true;
-            this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
+            this.uploadButton.Click += new System.EventHandler(this.UploadButton_Click);
             // 
-            // settingsButton
+            // typingStatus
             // 
-            this.settingsButton.Image = ((System.Drawing.Image)(resources.GetObject("settingsButton.Image")));
-            this.settingsButton.Location = new System.Drawing.Point(768, 4);
-            this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Size = new System.Drawing.Size(22, 22);
-            this.settingsButton.TabIndex = 8;
-            this.settingsButton.UseVisualStyleBackColor = true;
-            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            this.typingStatus.AutoSize = true;
+            this.typingStatus.Location = new System.Drawing.Point(196, 434);
+            this.typingStatus.Name = "typingStatus";
+            this.typingStatus.Size = new System.Drawing.Size(0, 13);
+            this.typingStatus.TabIndex = 10;
             // 
             // Naticord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.typingStatus);
             this.Controls.Add(this.uploadButton);
-            this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.sendMessage);
@@ -170,10 +167,10 @@
         private System.Windows.Forms.RichTextBox messageBox;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage friendList;
-        private System.Windows.Forms.ListBox friendListBox;
+        private System.Windows.Forms.ListView friendListBox;
         private System.Windows.Forms.TabPage serverList;
         private System.Windows.Forms.ListView serverListBox;
-        private System.Windows.Forms.Button settingsButton;
         private System.Windows.Forms.Button uploadButton;
+        public System.Windows.Forms.Label typingStatus;
     }
 }

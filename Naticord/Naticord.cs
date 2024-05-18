@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Security.Authentication;
 using System.Windows.Forms;
 using System.Linq;
-using WebSocketSharp;
+using System.Text;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace Naticord
 {
@@ -13,9 +16,15 @@ namespace Naticord
     {
         private const string DiscordApiBaseUrl = "https://discord.com/api/v9/";
         private WebSocketClient websocketClient;
-        // set these to public for stuff
-        public string AccessToken;
-        public string CurrentChannelId;
+        private string accessToken;
+        private string currentChannelId;
+        private Dictionary<string, string> userCache = new Dictionary<string, string>();
+
+        public static string DiscordApiBaseUrl1 => DiscordApiBaseUrl;
+
+        public WebSocketClient WebsocketClient { get => websocketClient; set => websocketClient = value; }
+        public string AccessToken { get { return accessToken; } set => accessToken = value; }
+        public string CurrentChannelId { get => currentChannelId; set => currentChannelId = value; }
 
         public Naticord(string accessToken)
         {
@@ -26,10 +35,8 @@ namespace Naticord
             serverListBox.DoubleClick += ServerListBox_DoubleClick;
             sendMessage.KeyDown += SendMessage_KeyDown;
 
-            // set tls so the app doesnt break
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // TLS 1.2
 
-            // initialize the websocket
             websocketClient = new WebSocketClient(accessToken, this);
         }
 
@@ -44,7 +51,7 @@ namespace Naticord
             try
             {
                 dynamic userProfile = GetApiResponse("users/@me");
-                string username = userProfile.username;
+                string username = userProfile.global_name ?? userProfile.username;
                 usernameLabel.Text = $"Welcome, {username}!";
             }
             catch (WebException ex)
@@ -64,15 +71,17 @@ namespace Naticord
             try
             {
                 dynamic friends = GetApiResponse("users/@me/relationships");
-                List<string> friendNames = new List<string>();
                 foreach (var friend in friends)
                 {
-                    if (friend.type == 1 && friend.user.username != null)
+                    string username = friend.user.global_name ?? friend.user.username;
+                    string nickname = friend.nickname;
+                    string displayUsername = string.IsNullOrEmpty(nickname) ? username : nickname;
+                    var friendItem = new ListViewItem($"{displayUsername}")
                     {
-                        friendNames.Add((string)friend.user.username);
-                    }
+                        Tag = (string)friend.user.id
+                    };
+                    friendListBox.Items.Add(friendItem);
                 }
-                friendListBox.Items.AddRange(friendNames.ToArray());
             }
             catch (WebException ex)
             {
@@ -89,9 +98,12 @@ namespace Naticord
                 foreach (var guild in guilds)
                 {
                     string guildName = guild.name.ToString();
-                    serverNames.Add(guildName);
+                    var serverItem = new ListViewItem(guildName)
+                    {
+                        Tag = (string)guild.id
+                    };
+                    serverListBox.Items.Add(serverItem);
                 }
-                serverListBox.Items.AddRange(serverNames.Select(name => new ListViewItem(name)).ToArray());
             }
             catch (WebException ex)
             {
@@ -101,23 +113,26 @@ namespace Naticord
 
         private void FriendList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (friendListBox.SelectedItem != null)
+            if (friendListBox.SelectedItems.Count > 0)
             {
-                string selectedFriend = friendListBox.SelectedItem.ToString();
-                if (!string.IsNullOrEmpty(selectedFriend))
+                var selectedFriend = friendListBox.SelectedItems[0];
+                string friendId = (string)selectedFriend.Tag;
+                if (!string.IsNullOrEmpty(friendId))
                 {
                     try
                     {
                         dynamic friendChannels = GetApiResponse("users/@me/channels");
-                        foreach (var channel in friendChannels)
+                        foreach (dynamic channel in friendChannels)
                         {
-                            if (channel.type == 1 && channel.recipients[0].username == selectedFriend)
+                            if (channel.type == 1 && channel.recipients.Count > 0)
                             {
-                                string channelId = channel.id;
-                                CurrentChannelId = channelId;
-                                dynamic messages = GetApiResponse($"channels/{channelId}/messages");
-                                DisplayMessages(messages);
-                                return;
+                                dynamic recipient = channel.recipients[0];
+
+                                if (friendId == recipient.id.ToString())
+                                {
+                                    FetchMessages(channel);
+                                    return;
+                                }
                             }
                         }
                         MessageBox.Show("No messages found for this friend.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -130,24 +145,30 @@ namespace Naticord
             }
         }
 
+        private void FetchMessages(dynamic channel)
+        {
+            string channelId = channel.id;
+            CurrentChannelId = channelId;
+            dynamic messages = GetApiResponse($"channels/{channelId}/messages");
+            DisplayMessages(messages);
+        }
+
         private void ServerListBox_DoubleClick(object sender, EventArgs e)
         {
             if (serverListBox.SelectedItems.Count > 0)
             {
-                string selectedServer = serverListBox.SelectedItems[0].Text;
-                if (!string.IsNullOrEmpty(selectedServer))
+                var selectedServer = serverListBox.SelectedItems[0];
+                string serverId = (string)selectedServer.Tag;
+                if (!string.IsNullOrEmpty(serverId))
                 {
                     try
                     {
                         dynamic guilds = GetApiResponse("users/@me/guilds");
                         foreach (var guild in guilds)
                         {
-                            if (guild.name == selectedServer)
+                            if (guild.id == serverId)
                             {
-                                string serverId = guild.id;
-
                                 dynamic channels = GetApiResponse($"guilds/{serverId}/channels");
-
                                 DisplayChannels(channels);
                                 return;
                             }
@@ -191,12 +212,15 @@ namespace Naticord
                     string channelName = channel.name;
                     string categoryId = channel.parent_id;
 
-                    if (CanAccessChannel(channel) && categoryGroups.ContainsKey(categoryId))
+                    if (categoryGroups.ContainsKey(categoryId))
                     {
                         ListViewGroup categoryGroup = categoryGroups[categoryId];
 
-                        ListViewItem channelItem = new ListViewItem(channelName);
-                        channelItem.Group = categoryGroup;
+                        ListViewItem channelItem = new ListViewItem("#" + channelName)
+                        {
+                            Group = categoryGroup,
+                            Tag = channelId
+                        };
 
                         serverListBox.Items.Add(channelItem);
                     }
@@ -204,26 +228,105 @@ namespace Naticord
             }
         }
 
-        private bool CanAccessChannel(dynamic channel)
-        {
-            if (channel.type == 5)
-            {
-                return false;
-            }
-            return true;
-        }
-
-
         private void DisplayMessages(dynamic messages)
         {
             messageBox.Clear();
 
+            messages = ((JArray)messages).Reverse();
+
             foreach (var message in messages)
             {
-                string author = message["author"]["username"];
-                string content = message["content"];
+                string author = GetAuthorDisplayName(message["author"]);
+                string content = FormatPings(message["content"].ToString());
 
-                messageBox.AppendText($"{author}: {content}\n");
+                AppendTextWithFormatting($"{author}: {content}\n", messageBox);
+            }
+        }
+
+        private string FormatPings(string content)
+        {
+            return Regex.Replace(content, @"<@(\d+)>", new MatchEvaluator(MatchEvaluator));
+        }
+
+        private string MatchEvaluator(Match match)
+        {
+            string userId = match.Groups[1].Value;
+            string username = GetUsernameById(userId);
+            return $"@{username}";
+        }
+
+        private void AppendTextWithFormatting(string text, RichTextBox box)
+        {
+            var matches = Regex.Matches(text, @"@[^ ]+");
+
+            int lastIndex = 0;
+            foreach (Match match in matches)
+            {
+                box.AppendText(text.Substring(lastIndex, match.Index - lastIndex));
+                box.SelectionStart = box.TextLength;
+                box.SelectionLength = 0;
+
+                box.SelectionColor = Color.Blue;
+                box.AppendText(match.Value);
+                box.SelectionColor = box.ForeColor;
+
+                lastIndex = match.Index + match.Length;
+            }
+            box.AppendText(text.Substring(lastIndex));
+        }
+
+        private string GetUsernameById(string userId)
+        {
+            if (userCache.ContainsKey(userId))
+            {
+                return userCache[userId];
+            }
+
+            try
+            {
+                dynamic user = GetApiResponse($"users/{userId}");
+                string nickname = user.nickname;
+                string username = user.global_name ?? user.username;
+                string displayName = !string.IsNullOrEmpty(nickname) ? nickname : username;
+                userCache[userId] = displayName;
+                return displayName;
+            }
+            catch (WebException)
+            {
+                return "UnknownUser";
+            }
+        }
+
+        private void DetectUrlsInRichTextBox(RichTextBox messageBox)
+        {
+            messageBox.LinkClicked += MessageBox_LinkClicked;
+            messageBox.SelectionColor = messageBox.ForeColor;
+            messageBox.DetectUrls = true;
+        }
+
+        private void MessageBox_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.LinkText);
+            ((RichTextBox)sender).LinkClicked -= MessageBox_LinkClicked;
+        }
+
+        private string GetAuthorDisplayName(dynamic author)
+        {
+            string nickname = author["nickname"];
+            string globalName = author["global_name"];
+            string username = author["username"];
+
+            if (!string.IsNullOrEmpty(nickname))
+            {
+                return nickname;
+            }
+            else if (!string.IsNullOrEmpty(globalName))
+            {
+                return globalName;
+            }
+            else
+            {
+                return username;
             }
         }
 
@@ -256,31 +359,47 @@ namespace Naticord
             {
                 try
                 {
-                    string postData = $"{{\"content\": \"{message}\"}}";
+                    var postData = new
+                    {
+                        content = message
+                    };
+
+                    string jsonPostData = JsonConvert.SerializeObject(postData);
 
                     using (var client = new WebClient())
                     {
                         client.Headers[HttpRequestHeader.ContentType] = "application/json";
                         client.Headers[HttpRequestHeader.Authorization] = AccessToken;
-                        string response = client.UploadString($"{DiscordApiBaseUrl}channels/{CurrentChannelId}/messages", "POST", postData);
+
+                        byte[] byteArray = Encoding.UTF8.GetBytes(jsonPostData);
+                        byte[] responseArray = client.UploadData($"{DiscordApiBaseUrl}channels/{CurrentChannelId}/messages", "POST", byteArray);
+
+                        string response = Encoding.UTF8.GetString(responseArray);
                     }
 
                     sendMessage.Clear();
                 }
                 catch (WebException ex)
                 {
-                    ShowErrorMessage("Failed to send message", ex);
+                    using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        ShowErrorMessage($"Failed to send message. Response: {responseText}", ex);
+                    }
                 }
             }
         }
 
-        private dynamic GetApiResponse(string endpoint)
+        public dynamic GetApiResponse(string endpoint)
         {
             using (var webClient = new WebClient())
             {
                 webClient.Headers[HttpRequestHeader.Authorization] = AccessToken;
-                string jsonResponse = webClient.DownloadString(DiscordApiBaseUrl + endpoint);
-                return Newtonsoft.Json.JsonConvert.DeserializeObject(jsonResponse);
+
+                string endpointUrl = $"{DiscordApiBaseUrl}{endpoint}?limit=20";
+
+                string jsonResponse = webClient.DownloadString(endpointUrl);
+                return JsonConvert.DeserializeObject(jsonResponse);
             }
         }
 
@@ -295,134 +414,58 @@ namespace Naticord
             websocketClient.CloseWebSocket();
         }
 
-        public void UpdateMessageBox(string message)
+        public void UpdateMessageBoxWithFormatting(string message)
         {
-            messageBox.AppendText(message);
-        }
+            string[] parts = message.Split(new string[] { "@@" }, StringSplitOptions.None);
+            messageBox.SelectionStart = messageBox.TextLength;
+            messageBox.SelectionLength = 0;
 
-        private void settingsButton_Click(object sender, EventArgs e)
-        {
-            Settings settingsForm = new Settings();
-
-            settingsForm.Show();
-        }
-
-        private void uploadButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("This is a work in progress! Please wait for the next release.");
-        }
-    }
-
-    public class WebSocketClient
-    {
-        // this is broken! will be fixed soon
-        private Naticord parentNaticordForm;
-        private WebSocket webSocket;
-        public const SslProtocols Tls12 = (SslProtocols)0x00000C00;
-
-        public WebSocketClient(string accessToken, Naticord parentNaticordForm)
-        {
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // idk why this doesnt work? it should but idk ill fix it later
-            this.parentNaticordForm = parentNaticordForm;
-            InitializeWebSocket(accessToken);
-        }
-
-        private void InitializeWebSocket(string accessToken)
-        {
-            webSocket = new WebSocket($"wss://gateway.discord.gg/?v=9&encoding=json");
-            webSocket.SslConfiguration.EnabledSslProtocols = Tls12;
-            webSocket.OnMessage += (sender, e) => HandleWebSocketMessage(e.Data);
-            string AccessToken = accessToken;
-            webSocket.OnError += (sender, e) => HandleWebSocketError(e.Message);
-            webSocket.Connect();
-            SendIdentifyPayload(accessToken);
-        }
-
-        private void SendIdentifyPayload(string accessToken)
-        {
-            if (webSocket.ReadyState == WebSocketState.Open)
+            foreach (var part in parts)
             {
-                var identifyPayload = new
+                if (part.StartsWith("@"))
                 {
-                    op = 2,
-                    d = new
-                    {
-                        token = accessToken,
-                        properties = new
-                        {
-                            os = "windows",
-                            browser = "chrome",
-                            device = "pc"
-                        }
-                    }
-                };
-
-                try
-                {
-                    webSocket.Send(Newtonsoft.Json.JsonConvert.SerializeObject(identifyPayload));
+                    messageBox.SelectionColor = Color.Blue;
+                    messageBox.AppendText(part);
+                    messageBox.SelectionColor = messageBox.ForeColor;
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Error sending identify payload: {ex.Message}");
+                    messageBox.AppendText(part);
+                    messageBox.ScrollToCaret();
                 }
             }
-            else
+        }
+
+        private void UploadButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Console.WriteLine("WebSocket connection is not open. Unable to send identify payload.");
+                Title = "Select a File",
+                Filter = "All files (*.*)|*.*",
+                Multiselect = false
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string selectedFile = openFileDialog.FileName;
+                UploadFile(selectedFile);
             }
         }
 
-        private void HandleWebSocketMessage(string data)
+        private void UploadFile(string filePath)
         {
-            var json = JObject.Parse(data);
-            int opCode = (int)json["op"];
-
-            switch (opCode)
+            try
             {
-                case 0:
-                    string eventType = (string)json["t"];
-                    if (eventType == "MESSAGE_CREATE")
-                    {
-                        HandleMessageCreateEvent(json["d"]);
-                    }
-                    break;
-                default:
-                    // if needed here ill add other op codes js incase
-                    break;
-            }
-        }
-
-        private void HandleMessageCreateEvent(JToken jToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void HandleMessageCreateEvent(JObject eventData)
-        {
-            string channelId = (string)eventData["channel_id"];
-            string author = (string)eventData["author"]["username"];
-            string content = (string)eventData["content"];
-
-            if (channelId == parentNaticordForm.CurrentChannelId)
-            {
-                parentNaticordForm.Invoke((MethodInvoker)(() =>
+                using (var client = new WebClient())
                 {
-                    parentNaticordForm.UpdateMessageBox($"{author}: {content}\n");
-                }));
+                    client.Headers[HttpRequestHeader.Authorization] = AccessToken;
+                    byte[] response = client.UploadFile($"{DiscordApiBaseUrl}channels/{CurrentChannelId}/messages", "POST", filePath);
+                }
             }
-        }
-
-        private void HandleWebSocketError(string errorMessage)
-        {
-            parentNaticordForm.Invoke((MethodInvoker)(() =>
+            catch (WebException ex)
             {
-                MessageBox.Show(parentNaticordForm, $"WebSocket Error: {errorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }));
-        }
-
-        public void CloseWebSocket()
-        {
-            webSocket.Close();
+                ShowErrorMessage("Failed to upload file", ex);
+            }
         }
     }
 }
