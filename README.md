@@ -52,12 +52,14 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Basic server functionality
 - Sending messages
 - Server channel categories
-# Todo
+- File uploading
+- Pinging
+- Display Names and Friend Nicknames
+# Planned functions
 - Image support
 - Full server functionality
 - Add editing, reply and delete
 - Emojis
-- Voice calling (might not happen)
 # Bugs
 - If the server has channels with no categories it will crash.
 - Websocket doesn't close properly and then the app will stay open in the BG.
