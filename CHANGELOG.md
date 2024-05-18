@@ -6,13 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
-- More stable API calls
-- Better performance
-- Notifications
+- Improved API calls
+- Improved how friends load
 - Display names and friend nicknames
 - File uploading
 - Pinging
 - Typing indicators
+
+And more!
 
 ### Fixed
 - Unicode bug
