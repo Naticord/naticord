@@ -57,6 +57,7 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 - Hyperlinks
 - Typing indicators
 - Display names and friend nicknames
+- Websockets
 # Planned functions
 - Image support
 - Full server functionality
