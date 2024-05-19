@@ -16,6 +16,7 @@ namespace Naticord
     {
         private const string DiscordApiBaseUrl = "https://discord.com/api/v9/";
         private WebSocketClient websocketClient;
+        private Login parentLogin;
         private string accessToken;
         private string currentChannelId;
         private Dictionary<string, string> userCache = new Dictionary<string, string>();
@@ -26,9 +27,10 @@ namespace Naticord
         public string AccessToken { get { return accessToken; } set => accessToken = value; }
         public string CurrentChannelId { get => currentChannelId; set => currentChannelId = value; }
 
-        public Naticord(string accessToken)
+        public Naticord(Login parentLogin, string accessToken)
         {
             InitializeComponent();
+            this.parentLogin = parentLogin;
             AccessToken = accessToken;
             tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
             friendListBox.SelectedIndexChanged += FriendList_SelectedIndexChanged;
@@ -38,6 +40,12 @@ namespace Naticord
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // TLS 1.2
 
             websocketClient = new WebSocketClient(accessToken, this);
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            parentLogin.Hide();
         }
 
         private void Naticord_Load(object sender, EventArgs e)
@@ -73,10 +81,9 @@ namespace Naticord
                 dynamic friends = GetApiResponse("users/@me/relationships");
                 foreach (var friend in friends)
                 {
-                    string username = friend.user.global_name ?? friend.user.username;
-                    string nickname = friend.nickname;
-                    string displayUsername = string.IsNullOrEmpty(nickname) ? username : nickname;
-                    var friendItem = new ListViewItem($"{displayUsername}")
+                    string username;
+                    if(friend.nickname != null) { username = friend.nickname; } else if(friend.user.global_name != null) { username = friend.user.global_name; } else { username = friend.user.username; } // His old implementation wasnt working for some reason
+                    var friendItem = new ListViewItem(username)
                     {
                         Tag = (string)friend.user.id
                     };
@@ -412,6 +419,7 @@ namespace Naticord
         {
             base.OnFormClosing(e);
             websocketClient.CloseWebSocket();
+            parentLogin.Close();
         }
 
         public void UpdateMessageBoxWithFormatting(string message)
