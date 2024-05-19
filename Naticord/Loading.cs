@@ -6,7 +6,7 @@ namespace Naticord
 {
     public partial class Loading : Form
     {
-        private Naticord parentForm;
+        //private Naticord parentForm;
         private Random random = new Random();
         private List<string> quotes = new List<string>
         {
@@ -20,10 +20,10 @@ namespace Naticord
             "i have severe brain damage afte reading this code - pat"
         };
 
-        public Loading(Naticord parentForm)
+        public Loading(/*Naticord parentForm*/)
         {
             InitializeComponent();
-            this.parentForm = parentForm;
+            //this.parentForm = parentForm;
         }
 
         public void UpdateProgress(string message, int progress)
