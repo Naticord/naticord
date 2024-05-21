@@ -47,7 +47,7 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 
 # What's working
 - ~~Logging in with a token~~
-- Logging in wiht an email and password (with MFA)
+- Logging in with an email and password (with MFA)
 - Friends
 - DMs
 - Basic server functionality
