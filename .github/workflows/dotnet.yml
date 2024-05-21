@@ -10,25 +10,19 @@ on:
     branches: [ "dev" ]
 
 runs-on: windows-2019
-
 jobs:
   build:
-			steps:
-				- uses: actions/checkout@v2
-
-				- name: Setup MSBuild
-  				uses: microsoft/setup-msbuild@v1
-
-				- name: Setup NuGet
-  				uses: NuGet/setup-nuget@v1.0.5
-  
-				- name: setup-msbuild
-  				uses: microsoft/setup-msbuild@v1.1
-
-				- name: Restore Packages
-  				run: nuget restore Naticord.sln
-
-				- name: Build
- 				 run: msbuild Naticord.sln -t:rebuild -property:Configuration=Release
-				- name: Test
-      run: dotnet test --no-build --verbosity normal
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v1.1
+      - name: Restore Packages
+        run: nuget restore Naticord.sln
+      - name: Build
+        run: 'msbuild Naticord.sln -t:rebuild -property:Configuration=Release'
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
