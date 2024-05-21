@@ -46,7 +46,8 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 ![image](https://github.com/Shavixinio/naticord/assets/54279284/c588eb0d-edf6-4ab7-b2e5-c9ddbb298892)
 
 # What's working
-- Logging in with a token
+- ~~Logging in with a token~~
+- Logging in wiht an email and password (with MFA)
 - Friends
 - DMs
 - Basic server functionality
