@@ -8,7 +8,7 @@
 
 Naticord / Native-cord is a native Discord client made in C# (originally Python).
 
-Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work)
+Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work which you can setup with `PROXY.md`)
 
 <a href="https://star-history.com/#n1d3v/naticord&Date">
  <picture>
@@ -16,6 +16,7 @@ Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to 
    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
  </picture>
+</a>
 
 # Changelog
 Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
@@ -23,27 +24,8 @@ Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
 # Contributing
 Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
 
-
-</a>
-
 # Installation
-Download naticord.zip from the releases page. Note that this is for Windows only but soon will be ported to Mac and Linux.
-
-# How to login
-
-1. Login to Discord on any web browser
-2. Refresh the page (F5)
-3. Do Ctrl + Shift + I (Or just right click and inspect element)
-4. Go to Responsive Design Mode (Or if you're on Chrome, it's "Toggle Device Toolbar")
-On Firefox it should be an icon with a phone and a tablet, on Chrome a phone with a laptop
-5. Go to local storage (on Chrome, go to Application and there should be local storage)
-6. In the filter tab, search "token"
-
-![image](https://github.com/Shavixinio/naticord/assets/54279284/7784ece1-3dbf-4fe5-916b-877c86404be8)
-
-8. Get the token and paste it into the Naticord login page
-
-![image](https://github.com/Shavixinio/naticord/assets/54279284/c588eb0d-edf6-4ab7-b2e5-c9ddbb298892)
+Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP download naticord-binaries.zip
 
 # What's working
 - ~~Logging in with a token~~
@@ -67,7 +49,8 @@ On Firefox it should be an icon with a phone and a tablet, on Chrome a phone wit
 # Bugs
 None as of now.
 # Screenshots
-![screenshot](https://github.com/n1d3v/naticord/assets/135556230/d796980e-6c92-4115-9fa8-1dc2ae3be601)
+![image](https://github.com/n1d3v/naticord/assets/135556230/124b900c-e510-4cf8-8709-8fafdb7b032c)
+
 
 
 
