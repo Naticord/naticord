@@ -242,13 +242,22 @@ namespace Naticord
                     string channelName = channel.name;
                     string categoryId = channel.parent_id;
 
-                    if (categoryGroups.ContainsKey(categoryId))
+                    if (categoryId != null && categoryGroups.ContainsKey(categoryId))
                     {
                         ListViewGroup categoryGroup = categoryGroups[categoryId];
 
-                        ListViewItem channelItem = new ListViewItem("#" + channelName)
+                        ListViewItem channelItem = new ListViewItem("# " + channelName)
                         {
                             Group = categoryGroup,
+                            Tag = channelId
+                        };
+
+                        serverListBox.Items.Add(channelItem);
+                    }
+                    else
+                    {
+                        ListViewItem channelItem = new ListViewItem("# " + channelName)
+                        {
                             Tag = channelId
                         };
 
