@@ -34,16 +34,16 @@ Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP do
 - DMs
 - Basic server functionality
 - Sending messages
+- Full server functionality
 - Server channel categories
 - File uploading
-- Pinging
+- Pings
 - Hyperlinks
 - Typing indicators
 - Display names and friend nicknames
 - Websockets
 # Planned functions
 - Image support
-- Full server functionality
 - Add editing, reply and delete
 - Emojis
 # Bugs
