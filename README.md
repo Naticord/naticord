@@ -47,8 +47,7 @@ Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP do
 # Bugs
 None as of now.
 # Screenshots
-![image](https://github.com/n1d3v/naticord/assets/135556230/124b900c-e510-4cf8-8709-8fafdb7b032c)
-
+![image](https://github.com/n1d3v/naticord/assets/135556230/0cbb0798-409a-4c60-98d7-b6b4d97782c0)
 
 
 
