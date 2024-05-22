@@ -32,7 +32,6 @@ Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP do
 - Logging in with an email and password (with MFA)
 - Friends
 - DMs
-- Basic server functionality
 - Sending messages
 - Full server functionality
 - Server channel categories
