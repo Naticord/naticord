@@ -26,19 +26,23 @@
             this.friendListBox = new System.Windows.Forms.ListView();
             this.serverList = new System.Windows.Forms.TabPage();
             this.serverListBox = new System.Windows.Forms.ListView();
-            this.uploadButton = new System.Windows.Forms.Button();
             this.typingStatus = new System.Windows.Forms.Label();
+            this.settingsButton = new System.Windows.Forms.Button();
+            this.profilePictureBox = new System.Windows.Forms.PictureBox();
+            this.uploadButton = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.friendList.SuspendLayout();
             this.serverList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.profilePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
-            this.usernameLabel.Location = new System.Drawing.Point(14, 9);
+            this.usernameLabel.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.usernameLabel.Location = new System.Drawing.Point(45, 412);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(53, 13);
+            this.usernameLabel.Size = new System.Drawing.Size(73, 20);
             this.usernameLabel.TabIndex = 1;
             this.usernameLabel.Text = "username";
             // 
@@ -66,10 +70,10 @@
             // 
             this.tabControl.Controls.Add(this.friendList);
             this.tabControl.Controls.Add(this.serverList);
-            this.tabControl.Location = new System.Drawing.Point(12, 27);
+            this.tabControl.Location = new System.Drawing.Point(12, 12);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(181, 405);
+            this.tabControl.Size = new System.Drawing.Size(181, 394);
             this.tabControl.TabIndex = 7;
             // 
             // friendList
@@ -78,7 +82,7 @@
             this.friendList.Location = new System.Drawing.Point(4, 22);
             this.friendList.Name = "friendList";
             this.friendList.Padding = new System.Windows.Forms.Padding(3);
-            this.friendList.Size = new System.Drawing.Size(173, 379);
+            this.friendList.Size = new System.Drawing.Size(173, 368);
             this.friendList.TabIndex = 0;
             this.friendList.Text = "Friends";
             this.friendList.UseVisualStyleBackColor = true;
@@ -89,7 +93,7 @@
             this.friendListBox.Location = new System.Drawing.Point(6, 6);
             this.friendListBox.MultiSelect = false;
             this.friendListBox.Name = "friendListBox";
-            this.friendListBox.Size = new System.Drawing.Size(161, 368);
+            this.friendListBox.Size = new System.Drawing.Size(161, 356);
             this.friendListBox.TabIndex = 0;
             this.friendListBox.UseCompatibleStateImageBehavior = false;
             this.friendListBox.View = System.Windows.Forms.View.SmallIcon;
@@ -101,7 +105,7 @@
             this.serverList.Location = new System.Drawing.Point(4, 22);
             this.serverList.Name = "serverList";
             this.serverList.Padding = new System.Windows.Forms.Padding(3);
-            this.serverList.Size = new System.Drawing.Size(173, 379);
+            this.serverList.Size = new System.Drawing.Size(173, 368);
             this.serverList.TabIndex = 1;
             this.serverList.Text = "Servers";
             this.serverList.UseVisualStyleBackColor = true;
@@ -120,6 +124,33 @@
             this.serverListBox.View = System.Windows.Forms.View.SmallIcon;
             this.serverListBox.DoubleClick += new System.EventHandler(this.ServerListBox_DoubleClick);
             // 
+            // typingStatus
+            // 
+            this.typingStatus.AutoSize = true;
+            this.typingStatus.Location = new System.Drawing.Point(196, 434);
+            this.typingStatus.Name = "typingStatus";
+            this.typingStatus.Size = new System.Drawing.Size(0, 13);
+            this.typingStatus.TabIndex = 10;
+            // 
+            // settingsButton
+            // 
+            this.settingsButton.Image = global::Naticord.Properties.Resources.settings;
+            this.settingsButton.Location = new System.Drawing.Point(168, 411);
+            this.settingsButton.Name = "settingsButton";
+            this.settingsButton.Size = new System.Drawing.Size(25, 25);
+            this.settingsButton.TabIndex = 12;
+            this.settingsButton.UseVisualStyleBackColor = true;
+            this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
+            // 
+            // profilePictureBox
+            // 
+            this.profilePictureBox.Location = new System.Drawing.Point(12, 408);
+            this.profilePictureBox.Name = "profilePictureBox";
+            this.profilePictureBox.Size = new System.Drawing.Size(30, 30);
+            this.profilePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.profilePictureBox.TabIndex = 11;
+            this.profilePictureBox.TabStop = false;
+            // 
             // uploadButton
             // 
             this.uploadButton.Image = global::Naticord.Properties.Resources.upload;
@@ -130,32 +161,29 @@
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.UploadButton_Click);
             // 
-            // typingStatus
-            // 
-            this.typingStatus.AutoSize = true;
-            this.typingStatus.Location = new System.Drawing.Point(196, 434);
-            this.typingStatus.Name = "typingStatus";
-            this.typingStatus.Size = new System.Drawing.Size(0, 13);
-            this.typingStatus.TabIndex = 10;
-            // 
             // Naticord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.settingsButton);
+            this.Controls.Add(this.profilePictureBox);
             this.Controls.Add(this.typingStatus);
             this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.sendMessage);
             this.Controls.Add(this.usernameLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Naticord";
             this.Text = "Naticord";
             this.Load += new System.EventHandler(this.Naticord_Load);
             this.tabControl.ResumeLayout(false);
             this.friendList.ResumeLayout(false);
             this.serverList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.profilePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,5 +200,7 @@
         private System.Windows.Forms.ListView serverListBox;
         private System.Windows.Forms.Button uploadButton;
         public System.Windows.Forms.Label typingStatus;
+        private System.Windows.Forms.PictureBox profilePictureBox;
+        private System.Windows.Forms.Button settingsButton;
     }
 }

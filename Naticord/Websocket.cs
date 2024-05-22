@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Authentication;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
@@ -16,6 +17,8 @@ namespace Naticord
         private readonly string accessToken;
         private const SslProtocols Tls12 = (SslProtocols)0x00000C00;
         private Dictionary<string, string> userCache = new Dictionary<string, string>();
+        private Dictionary<string, HashSet<string>> typingUsersByChannel = new Dictionary<string, HashSet<string>>();
+        private const int MaxMessageSizeBytes = 4 * 1024 * 1024; // 4MB
 
         public WebSocketClient(string accessToken, Naticord parentNaticordForm)
         {
@@ -31,7 +34,7 @@ namespace Naticord
         {
             webSocket = new WebSocket($"wss://gateway.discord.gg/?v=9&encoding=json");
             webSocket.SslConfiguration.EnabledSslProtocols = Tls12;
-            webSocket.OnMessage += (sender, e) => HandleWebSocketMessage(e.Data);
+            webSocket.OnMessage += (sender, e) => HandleWebSocketMessage(e);
             webSocket.OnError += (sender, e) => HandleWebSocketError(e.Message);
             webSocket.OnClose += (sender, e) => HandleWebSocketClose();
             webSocket.Connect();
@@ -51,7 +54,7 @@ namespace Naticord
                         properties = new
                         {
                             os = "windows",
-                            browser = "chrome",
+                            browser = "firefox",
                             device = "pc"
                         }
                     }
@@ -72,11 +75,18 @@ namespace Naticord
             }
         }
 
-        private void HandleWebSocketMessage(string data)
+        private void HandleWebSocketMessage(MessageEventArgs e)
         {
-            Console.WriteLine($"WebSocket Received: {data}");
+            int messageSize = Encoding.UTF8.GetByteCount(e.Data);
+            if (messageSize > MaxMessageSizeBytes)
+            {
+                Console.WriteLine($"Message exceeded max size of {MaxMessageSizeBytes} bytes and was discarded.");
+                return;
+            }
 
-            var json = JObject.Parse(data);
+            Console.WriteLine($"WebSocket Received: {e.Data}");
+
+            var json = JObject.Parse(e.Data);
             int opCode = (int)json["op"];
 
             switch (opCode)
@@ -95,7 +105,7 @@ namespace Naticord
                     }
                     break;
                 default:
-                    // handle other op codes when needed ig
+                    // handle other op codes when needed
                     break;
             }
         }
@@ -103,25 +113,66 @@ namespace Naticord
         private void HandleTypingStartEvent(JToken jToken)
         {
             string channelId = (string)jToken["channel_id"];
-            if (channelId == parentNaticordForm.CurrentChannelId)
-            {
-                string userId = (string)jToken["user_id"];
-                string username = GetUsernameById(userId);
-                string message = $"{username} is typing...";
+            string userId = (string)jToken["user_id"];
 
-                parentNaticordForm.Invoke((MethodInvoker)(() =>
-                {
-                    parentNaticordForm.typingStatus.Text = message;
-                }));
+            if (!typingUsersByChannel.ContainsKey(channelId))
+            {
+                typingUsersByChannel[channelId] = new HashSet<string>();
             }
+
+            typingUsersByChannel[channelId].Add(userId);
+            UpdateTypingStatus(channelId);
         }
 
         private void HandleTypingStopEvent(JToken jToken)
         {
             string channelId = (string)jToken["channel_id"];
+            string userId = (string)jToken["user_id"];
+
+            if (typingUsersByChannel.ContainsKey(channelId))
+            {
+                typingUsersByChannel[channelId].Remove(userId);
+                if (typingUsersByChannel[channelId].Count == 0)
+                {
+                    typingUsersByChannel.Remove(channelId);
+                }
+            }
+
+            UpdateTypingStatus(channelId);
+        }
+
+        private void UpdateTypingStatus(string channelId)
+        {
             if (channelId == parentNaticordForm.CurrentChannelId)
             {
                 string message = "";
+
+                if (typingUsersByChannel.ContainsKey(channelId) && typingUsersByChannel[channelId].Count > 0)
+                {
+                    List<string> usernames = new List<string>();
+                    foreach (string userId in typingUsersByChannel[channelId])
+                    {
+                        usernames.Add(GetUsernameById(userId));
+                    }
+
+                    if (usernames.Count <= 3)
+                    {
+                        message = string.Join(", ", usernames);
+                        if (usernames.Count > 1)
+                        {
+                            int lastCommaIndex = message.LastIndexOf(',');
+                            if (lastCommaIndex != -1)
+                            {
+                                message = message.Remove(lastCommaIndex, 1).Insert(lastCommaIndex, " and");
+                            }
+                        }
+                        message += " are typing...";
+                    }
+                    else
+                    {
+                        message = "Multiple people are typing...";
+                    }
+                }
 
                 parentNaticordForm.Invoke((MethodInvoker)(() =>
                 {
@@ -158,6 +209,19 @@ namespace Naticord
             string authorId = eventData["author"]["id"];
             string content = FormatPings(eventData["content"].ToString());
 
+            string authorDisplayName = GetAuthorDisplayName(authorId);
+
+            if (channelId == parentNaticordForm.CurrentChannelId)
+            {
+                parentNaticordForm.Invoke((MethodInvoker)(() =>
+                {
+                    parentNaticordForm.UpdateMessageBoxWithFormatting($"{authorDisplayName}: {content}\n");
+                }));
+            }
+        }
+
+        private string GetAuthorDisplayName(string authorId)
+        {
             string authorNickname = "";
             string authorGlobalName = "";
             string authorUsername = "";
@@ -174,18 +238,10 @@ namespace Naticord
                 Console.WriteLine($"Failed to retrieve user information for user ID {authorId}: {ex.Message}");
             }
 
-            string authorDisplayName = authorNickname != "" ? authorNickname :
-                                       authorGlobalName != "" ? authorGlobalName :
-                                       authorUsername != "" ? authorUsername :
-                                       "Unknown";
-
-            if (channelId == parentNaticordForm.CurrentChannelId)
-            {
-                parentNaticordForm.Invoke((MethodInvoker)(() =>
-                {
-                    parentNaticordForm.UpdateMessageBoxWithFormatting($"{authorDisplayName}: {content}\n");
-                }));
-            }
+            return authorNickname != "" ? authorNickname :
+                   authorGlobalName != "" ? authorGlobalName :
+                   authorUsername != "" ? authorUsername :
+                   "Unknown";
         }
 
         private string FormatPings(string content)

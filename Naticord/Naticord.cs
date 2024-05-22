@@ -60,13 +60,30 @@ namespace Naticord
             {
                 dynamic userProfile = GetApiResponse("users/@me");
                 string username = userProfile.global_name ?? userProfile.username;
-                usernameLabel.Text = $"Welcome, {username}!";
+
+                if (username.Length > 10)
+                {
+                    username = username.Substring(0, 10) + "...";
+                }
+
+                usernameLabel.Text = $"{username}";
+
+                string avatarUrl = GetAvatarUrl(userProfile);
+                if (!string.IsNullOrEmpty(avatarUrl))
+                {
+                    Image profileImage = DownloadImage(avatarUrl);
+                    if (profileImage != null)
+                    {
+                        profilePictureBox.Image = profileImage;
+                    }
+                }
             }
             catch (WebException ex)
             {
                 ShowErrorMessage("Failed to retrieve user profile", ex);
             }
         }
+
 
         private void PopulateTabs()
         {
@@ -82,7 +99,7 @@ namespace Naticord
                 foreach (var friend in friends)
                 {
                     string username;
-                    if(friend.nickname != null) { username = friend.nickname; } else if(friend.user.global_name != null) { username = friend.user.global_name; } else { username = friend.user.username; } // His old implementation wasnt working for some reason
+                    if (friend.nickname != null) { username = friend.nickname; } else if (friend.user.global_name != null) { username = friend.user.global_name; } else { username = friend.user.username; }
                     var friendItem = new ListViewItem(username)
                     {
                         Tag = (string)friend.user.id
@@ -164,27 +181,33 @@ namespace Naticord
         {
             if (serverListBox.SelectedItems.Count > 0)
             {
-                var selectedServer = serverListBox.SelectedItems[0];
-                string serverId = (string)selectedServer.Tag;
-                if (!string.IsNullOrEmpty(serverId))
+                var selectedItem = serverListBox.SelectedItems[0];
+                string id = (string)selectedItem.Tag;
+                if (selectedItem.Group != null)
                 {
+                    string channelId = id;
                     try
                     {
-                        dynamic guilds = GetApiResponse("users/@me/guilds");
-                        foreach (var guild in guilds)
-                        {
-                            if (guild.id == serverId)
-                            {
-                                dynamic channels = GetApiResponse($"guilds/{serverId}/channels");
-                                DisplayChannels(channels);
-                                return;
-                            }
-                        }
-                        MessageBox.Show("Failed to find the selected server.");
+                        dynamic messages = GetApiResponse($"channels/{channelId}/messages");
+                        DisplayMessages(messages);
+                        CurrentChannelId = channelId;
                     }
                     catch (WebException ex)
                     {
-                        ShowErrorMessage("Failed to fetch channels for server", ex);
+                        ShowErrorMessage("Failed to retrieve messages for the selected channel", ex);
+                    }
+                }
+                else
+                {
+                    string serverId = id;
+                    try
+                    {
+                        dynamic channels = GetApiResponse($"guilds/{serverId}/channels");
+                        DisplayChannels(channels);
+                    }
+                    catch (WebException ex)
+                    {
+                        ShowErrorMessage("Failed to fetch channels for the selected server", ex);
                     }
                 }
             }
@@ -291,10 +314,8 @@ namespace Naticord
 
             try
             {
-                dynamic user = GetApiResponse($"users/{userId}");
-                string nickname = user.nickname;
-                string username = user.global_name ?? user.username;
-                string displayName = !string.IsNullOrEmpty(nickname) ? nickname : username;
+                dynamic userProfile = GetApiResponse($"users/{userId}");
+                string displayName = GetAuthorDisplayName(userProfile);
                 userCache[userId] = displayName;
                 return displayName;
             }
@@ -474,6 +495,34 @@ namespace Naticord
             {
                 ShowErrorMessage("Failed to upload file", ex);
             }
+        }
+
+        private string GetAvatarUrl(dynamic userProfile)
+        {
+            string userId = userProfile.id;
+            string avatarHash = userProfile.avatar;
+            if (!string.IsNullOrEmpty(avatarHash))
+            {
+                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png";
+            }
+            return string.Empty;
+        }
+
+        private Image DownloadImage(string imageUrl)
+        {
+            using (WebClient client = new WebClient())
+            {
+                byte[] imageBytes = client.DownloadData(imageUrl);
+                using (MemoryStream stream = new MemoryStream(imageBytes))
+                {
+                    return Image.FromStream(stream);
+                }
+            }
+        }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("This isn't finished yet. Please wait for the official 0.1.1 stable release.");
         }
     }
 }

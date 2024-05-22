@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.34729.27
-MinimumVisualStudioVersion = 10.0.40219.1
+MinimumVisualStudioVersion = 10.0.30319.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naticord", "Naticord\Naticord.csproj", "{1383FE7A-AB28-48C3-A477-E35655E31D5F}"
 EndProject
 Global
