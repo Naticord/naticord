@@ -136,6 +136,7 @@
             this.emailPasswordLoginButton.TabIndex = 13;
             this.emailPasswordLoginButton.Text = "Login";
             this.emailPasswordLoginButton.UseVisualStyleBackColor = true;
+            this.emailPasswordLoginButton.Click += new System.EventHandler(this.emailPasswordLoginButton_Click);
             // 
             // Login
             // 
