@@ -256,8 +256,21 @@ namespace Naticord
                     }
                     else
                     {
+                        ListViewGroup noCategoryGroup;
+                        if(categoryGroups.TryGetValue("No Category", out var foundGroup))
+                        {
+                            noCategoryGroup = foundGroup;
+                        }
+                        else
+                        {
+                            noCategoryGroup = new ListViewGroup("No Category");
+                            categoryGroups["No Category"] = noCategoryGroup;
+                            serverListBox.Groups.Add(noCategoryGroup);
+                        }
+
                         ListViewItem channelItem = new ListViewItem("# " + channelName)
                         {
+                            Group = noCategoryGroup,
                             Tag = channelId
                         };
 
