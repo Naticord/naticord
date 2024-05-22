@@ -241,12 +241,13 @@ namespace Naticord
                     string channelId = channel.id;
                     string channelName = channel.name;
                     string categoryId = channel.parent_id;
+                    string channelIcon = channel.type == 2 ? "🔈 " : "# ";
 
                     if (categoryId != null && categoryGroups.ContainsKey(categoryId))
                     {
                         ListViewGroup categoryGroup = categoryGroups[categoryId];
 
-                        ListViewItem channelItem = new ListViewItem("# " + channelName)
+                        ListViewItem channelItem = new ListViewItem(channelIcon + channelName)
                         {
                             Group = categoryGroup,
                             Tag = channelId
@@ -268,7 +269,7 @@ namespace Naticord
                             serverListBox.Groups.Add(noCategoryGroup);
                         }
 
-                        ListViewItem channelItem = new ListViewItem("# " + channelName)
+                        ListViewItem channelItem = new ListViewItem(channelIcon + channelName)
                         {
                             Group = noCategoryGroup,
                             Tag = channelId
