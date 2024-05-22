@@ -1,10 +1,6 @@
 # naticord
 ![work](https://img.shields.io/badge/work-in%20progress-green?style=plastic)
 
-> [!CAUTION]
-> ### Do not blame me if you get banned.
-> Discord may ban you if they catch you using a custom client, this hasn't happened to anyone yet using naticord or other client mods such as Vencord.
-
 Naticord / Native-cord is a native Discord client made in C# (originally Python).
 
 Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work which you can setup with `PROXY.md`)
