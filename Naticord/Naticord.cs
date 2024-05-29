@@ -2,81 +2,37 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Windows.Forms;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Drawing;
 
 namespace Naticord
 {
     public partial class Naticord : Form
     {
         private const string DiscordApiBaseUrl = "https://discord.com/api/v9/";
-        private WebSocketClient websocketClient;
-        private Login parentLogin;
-        private string accessToken;
-        private string currentChannelId;
-        private Dictionary<string, string> userCache = new Dictionary<string, string>();
-
-        public static string DiscordApiBaseUrl1 => DiscordApiBaseUrl;
-
-        public WebSocketClient WebsocketClient { get => websocketClient; set => websocketClient = value; }
-        public string AccessToken { get { return accessToken; } set => accessToken = value; }
-        public string CurrentChannelId { get => currentChannelId; set => currentChannelId = value; }
-
-        public Naticord(Login parentLogin, string accessToken)
+        private string AccessToken;
+        private Login signin;
+        private string userPFP;
+        public Naticord(string token, Login signinArg)
         {
             InitializeComponent();
-            this.parentLogin = parentLogin;
-            AccessToken = accessToken;
-            tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
-            friendListBox.SelectedIndexChanged += FriendList_SelectedIndexChanged;
-            serverListBox.DoubleClick += ServerListBox_DoubleClick;
-            sendMessage.KeyDown += SendMessage_KeyDown;
-
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // TLS 1.2
-
-            websocketClient = new WebSocketClient(accessToken, this);
+            signin = signinArg;
+            AccessToken = token;
+            SetUserInfo();
+            PopulateFriendsTab();
+            PopulateServersTab();
         }
 
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-            parentLogin.Hide();
-        }
-
-        private void Naticord_Load(object sender, EventArgs e)
-        {
-            PopulateUserProfile();
-            PopulateTabs();
-        }
-
-        private void PopulateUserProfile()
+        private void SetUserInfo()
         {
             try
             {
                 dynamic userProfile = GetApiResponse("users/@me");
-                string username = userProfile.global_name ?? userProfile.username;
-
-                if (username.Length > 10)
-                {
-                    username = username.Substring(0, 10) + "...";
-                }
-
-                usernameLabel.Text = $"{username}";
-
-                string avatarUrl = GetAvatarUrl(userProfile);
-                if (!string.IsNullOrEmpty(avatarUrl))
-                {
-                    Image profileImage = DownloadImage(avatarUrl);
-                    if (profileImage != null)
-                    {
-                        profilePictureBox.Image = profileImage;
-                    }
-                }
+                string displayname = userProfile.global_name;
+                if (userProfile.global_name != null) { displayname = userProfile.global_name; } else { displayname = userProfile.username; }
+                string bio = userProfile.bio;
+                usernameLabel.Text = displayname;
+                descriptionLabel.Text = bio;
+                userPFP = $"https://cdn.discordapp.com/avatars/{userProfile.id}/{userProfile.avatar}.png";
+                profilepicture.ImageLocation = userPFP;
             }
             catch (WebException ex)
             {
@@ -84,50 +40,120 @@ namespace Naticord
             }
         }
 
-
-        private void PopulateTabs()
-        {
-            PopulateFriendsTab();
-            PopulateServersTab();
-        }
-
         private void PopulateFriendsTab()
         {
             try
             {
                 dynamic friends = GetApiResponse("users/@me/relationships");
+                List<ListViewItem> friendNames = new List<ListViewItem>();
                 foreach (var friend in friends)
                 {
-                    string username;
-                    if (friend.nickname != null) { username = friend.nickname; } else if (friend.user.global_name != null) { username = friend.user.global_name; } else { username = friend.user.username; }
-                    var friendItem = new ListViewItem(username)
+                    if (friend.type == 1 && friend.user.global_name != null)
                     {
-                        Tag = (string)friend.user.id
-                    };
-                    friendListBox.Items.Add(friendItem);
+                        friendNames.Add(new ListViewItem((string)friend.user.global_name/*, $"https://cdn.discordapp.com/avatars/{friend.user.id}/{friend.user.avatar}.png"*/));
+                    }
+                    else if(friend.type == 1 && friend.user.username != null)
+                    {
+                        friendNames.Add(new ListViewItem((string)friend.user.username/*, $"https://cdn.discordapp.com/avatars/{friend.user.id}/{friend.user.avatar}.png"*/));
+                    }
                 }
+                friendsList.Items.AddRange(friendNames.ToArray());
             }
             catch (WebException ex)
             {
                 ShowErrorMessage("Failed to retrieve friend list", ex);
             }
         }
-
+        private long GetChatID(string name)
+        {
+            try
+            {
+                dynamic channels = GetApiResponse("users/@me/channels");
+                foreach (var channel in channels)
+                {
+                    if (channel.type == 1 && channel.recipients[0].global_name != null)
+                    {
+                        if ((string)channel.recipients[0].global_name == name)
+                        {
+                            return (long)channel.id;
+                        }
+                    }
+                    else if (channel.type == 1 && channel.recipients[0].username != null)
+                    {
+                        if ((string)channel.recipients[0].username == name)
+                        {
+                            return (long)channel.id;
+                        }
+                    }
+                }
+                return -1;
+            }
+            catch (WebException ex)
+            {
+                ShowErrorMessage("Failed to retrieve friends", ex);
+                return -1;
+            }
+        }
+        private long GetFriendID(string name)
+        {
+            try
+            {
+                dynamic friends = GetApiResponse("users/@me/relationships");
+                foreach (var friend in friends)
+                {
+                    if (friend.type == 1 && friend.user.global_name != null)
+                    {
+                        if ((string)friend.user.global_name == name)
+                        {
+                            return (long)friend.id;
+                        }
+                    }
+                    else if (friend.type == 1 && friend.user.username != null)
+                    {
+                        if ((string)friend.user.username == name)
+                        {
+                            return (long)friend.id;
+                        }
+                    }
+                }
+                return -1;
+            }
+            catch (WebException ex)
+            {
+                ShowErrorMessage("Failed to retrieve friends", ex);
+                return -1;
+            }
+        }
+        private long GetServerID(string name)
+        {
+            try
+            {
+                dynamic guilds = GetApiResponse("users/@me/guilds");
+                foreach (var guild in guilds)
+                {
+                    if (guild.name.ToString() == name) return (long)guild.id;
+                }
+                return -1;
+            }
+            catch (WebException ex)
+            {
+                ShowErrorMessage("Failed to retrieve server list", ex);
+                return -1;
+            }
+        }
         private void PopulateServersTab()
         {
             try
             {
                 dynamic guilds = GetApiResponse("users/@me/guilds");
-                List<string> serverNames = new List<string>();
+                List<ListViewItem> serverNames = new List<ListViewItem>();
                 foreach (var guild in guilds)
                 {
                     string guildName = guild.name.ToString();
-                    var serverItem = new ListViewItem(guildName)
-                    {
-                        Tag = (string)guild.id
-                    };
-                    serverListBox.Items.Add(serverItem);
+
+                    serverNames.Add(new ListViewItem(guildName));
                 }
+                serversList.Items.AddRange(serverNames.ToArray());
             }
             catch (WebException ex)
             {
@@ -135,322 +161,13 @@ namespace Naticord
             }
         }
 
-        private void FriendList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (friendListBox.SelectedItems.Count > 0)
-            {
-                var selectedFriend = friendListBox.SelectedItems[0];
-                string friendId = (string)selectedFriend.Tag;
-                if (!string.IsNullOrEmpty(friendId))
-                {
-                    try
-                    {
-                        dynamic friendChannels = GetApiResponse("users/@me/channels");
-                        foreach (dynamic channel in friendChannels)
-                        {
-                            if (channel.type == 1 && channel.recipients.Count > 0)
-                            {
-                                dynamic recipient = channel.recipients[0];
-
-                                if (friendId == recipient.id.ToString())
-                                {
-                                    FetchMessages(channel);
-                                    return;
-                                }
-                            }
-                        }
-                        MessageBox.Show("No messages found for this friend.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (WebException ex)
-                    {
-                        ShowErrorMessage("Failed to retrieve messages", ex);
-                    }
-                }
-            }
-        }
-
-        private void FetchMessages(dynamic channel)
-        {
-            string channelId = channel.id;
-            CurrentChannelId = channelId;
-            dynamic messages = GetApiResponse($"channels/{channelId}/messages");
-            DisplayMessages(messages);
-        }
-
-        private void ServerListBox_DoubleClick(object sender, EventArgs e)
-        {
-            if (serverListBox.SelectedItems.Count > 0)
-            {
-                var selectedItem = serverListBox.SelectedItems[0];
-                string id = (string)selectedItem.Tag;
-                if (selectedItem.Group != null)
-                {
-                    string channelId = id;
-                    try
-                    {
-                        dynamic messages = GetApiResponse($"channels/{channelId}/messages");
-                        DisplayMessages(messages);
-                        CurrentChannelId = channelId;
-                    }
-                    catch (WebException ex)
-                    {
-                        ShowErrorMessage("Failed to retrieve messages for the selected channel", ex);
-                    }
-                }
-                else
-                {
-                    string serverId = id;
-                    try
-                    {
-                        dynamic channels = GetApiResponse($"guilds/{serverId}/channels");
-                        DisplayChannels(channels);
-                    }
-                    catch (WebException ex)
-                    {
-                        ShowErrorMessage("Failed to fetch channels for the selected server", ex);
-                    }
-                }
-            }
-        }
-
-        private void DisplayChannels(dynamic channels)
-        {
-            serverListBox.Items.Clear();
-            serverListBox.Groups.Clear();
-
-            Dictionary<string, ListViewGroup> categoryGroups = new Dictionary<string, ListViewGroup>();
-
-            foreach (var channel in channels)
-            {
-                if (channel.type == 4)
-                {
-                    string categoryId = channel.id;
-                    string categoryName = channel.name;
-
-                    ListViewGroup categoryGroup = new ListViewGroup(categoryName);
-                    categoryGroups[categoryId] = categoryGroup;
-
-                    serverListBox.Groups.Add(categoryGroup);
-                }
-            }
-
-            foreach (var channel in channels)
-            {
-                if (channel.type != 4)
-                {
-                    string channelId = channel.id;
-                    string channelName = channel.name;
-                    string categoryId = channel.parent_id;
-                    string channelIcon = channel.type == 2 ? "🔈 " : "# ";
-
-                    if (categoryId != null && categoryGroups.ContainsKey(categoryId))
-                    {
-                        ListViewGroup categoryGroup = categoryGroups[categoryId];
-
-                        ListViewItem channelItem = new ListViewItem(channelIcon + channelName)
-                        {
-                            Group = categoryGroup,
-                            Tag = channelId
-                        };
-
-                        serverListBox.Items.Add(channelItem);
-                    }
-                    else
-                    {
-                        ListViewGroup noCategoryGroup;
-                        if(categoryGroups.TryGetValue("No Category", out var foundGroup))
-                        {
-                            noCategoryGroup = foundGroup;
-                        }
-                        else
-                        {
-                            noCategoryGroup = new ListViewGroup("No Category");
-                            categoryGroups["No Category"] = noCategoryGroup;
-                            serverListBox.Groups.Add(noCategoryGroup);
-                        }
-
-                        ListViewItem channelItem = new ListViewItem(channelIcon + channelName)
-                        {
-                            Group = noCategoryGroup,
-                            Tag = channelId
-                        };
-
-                        serverListBox.Items.Add(channelItem);
-                    }
-                }
-            }
-        }
-
-        private void DisplayMessages(dynamic messages)
-        {
-            messageBox.Clear();
-
-            messages = ((JArray)messages).Reverse();
-
-            foreach (var message in messages)
-            {
-                string author = GetAuthorDisplayName(message["author"]);
-                string content = FormatPings(message["content"].ToString());
-
-                AppendTextWithFormatting($"{author}: {content}\n", messageBox);
-            }
-        }
-
-        private string FormatPings(string content)
-        {
-            return Regex.Replace(content, @"<@(\d+)>", new MatchEvaluator(MatchEvaluator));
-        }
-
-        private string MatchEvaluator(Match match)
-        {
-            string userId = match.Groups[1].Value;
-            string username = GetUsernameById(userId);
-            return $"@{username}";
-        }
-
-        private void AppendTextWithFormatting(string text, RichTextBox box)
-        {
-            var matches = Regex.Matches(text, @"@[^ ]+");
-
-            int lastIndex = 0;
-            foreach (Match match in matches)
-            {
-                box.AppendText(text.Substring(lastIndex, match.Index - lastIndex));
-                box.SelectionStart = box.TextLength;
-                box.SelectionLength = 0;
-
-                box.SelectionColor = Color.Blue;
-                box.AppendText(match.Value);
-                box.SelectionColor = box.ForeColor;
-
-                lastIndex = match.Index + match.Length;
-            }
-            box.AppendText(text.Substring(lastIndex));
-        }
-
-        private string GetUsernameById(string userId)
-        {
-            if (userCache.ContainsKey(userId))
-            {
-                return userCache[userId];
-            }
-
-            try
-            {
-                dynamic userProfile = GetApiResponse($"users/{userId}");
-                string displayName = GetAuthorDisplayName(userProfile);
-                userCache[userId] = displayName;
-                return displayName;
-            }
-            catch (WebException)
-            {
-                return "UnknownUser";
-            }
-        }
-
-        private void DetectUrlsInRichTextBox(RichTextBox messageBox)
-        {
-            messageBox.LinkClicked += MessageBox_LinkClicked;
-            messageBox.SelectionColor = messageBox.ForeColor;
-            messageBox.DetectUrls = true;
-        }
-
-        private void MessageBox_LinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(e.LinkText);
-            ((RichTextBox)sender).LinkClicked -= MessageBox_LinkClicked;
-        }
-
-        private string GetAuthorDisplayName(dynamic author)
-        {
-            string nickname = author["nickname"];
-            string globalName = author["global_name"];
-            string username = author["username"];
-
-            if (!string.IsNullOrEmpty(nickname))
-            {
-                return nickname;
-            }
-            else if (!string.IsNullOrEmpty(globalName))
-            {
-                return globalName;
-            }
-            else
-            {
-                return username;
-            }
-        }
-
-        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControl.SelectedTab == friendList)
-            {
-                friendListBox.Items.Clear();
-                PopulateFriendsTab();
-            }
-            else if (tabControl.SelectedTab == serverList)
-            {
-                serverListBox.Items.Clear();
-                PopulateServersTab();
-            }
-        }
-
-        private void SendMessage_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                SendMessage();
-            }
-        }
-
-        private void SendMessage()
-        {
-            string message = sendMessage.Text.Trim();
-            if (!string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(CurrentChannelId))
-            {
-                try
-                {
-                    var postData = new
-                    {
-                        content = message
-                    };
-
-                    string jsonPostData = JsonConvert.SerializeObject(postData);
-
-                    using (var client = new WebClient())
-                    {
-                        client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                        client.Headers[HttpRequestHeader.Authorization] = AccessToken;
-
-                        byte[] byteArray = Encoding.UTF8.GetBytes(jsonPostData);
-                        byte[] responseArray = client.UploadData($"{DiscordApiBaseUrl}channels/{CurrentChannelId}/messages", "POST", byteArray);
-
-                        string response = Encoding.UTF8.GetString(responseArray);
-                    }
-
-                    sendMessage.Clear();
-                }
-                catch (WebException ex)
-                {
-                    using (var reader = new StreamReader(ex.Response.GetResponseStream()))
-                    {
-                        string responseText = reader.ReadToEnd();
-                        ShowErrorMessage($"Failed to send message. Response: {responseText}", ex);
-                    }
-                }
-            }
-        }
-
-        public dynamic GetApiResponse(string endpoint)
+        private dynamic GetApiResponse(string endpoint)
         {
             using (var webClient = new WebClient())
             {
                 webClient.Headers[HttpRequestHeader.Authorization] = AccessToken;
-
-                string endpointUrl = $"{DiscordApiBaseUrl}{endpoint}?limit=20";
-
-                string jsonResponse = webClient.DownloadString(endpointUrl);
-                return JsonConvert.DeserializeObject(jsonResponse);
+                string jsonResponse = webClient.DownloadString(DiscordApiBaseUrl + endpoint);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject(jsonResponse);
             }
         }
 
@@ -459,93 +176,52 @@ namespace Naticord
             MessageBox.Show($"{message}: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        protected override void OnShown(EventArgs e)
+        { 
+            base.OnShown(e);
+            signin.Hide();
+        }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-            websocketClient.CloseWebSocket();
-            parentLogin.Close();
+            signin.Close();
         }
 
-        public void UpdateMessageBoxWithFormatting(string message)
+        private void friendsList_DoubleClick(object sender, EventArgs ex)
         {
-            string[] parts = message.Split(new string[] { "@@" }, StringSplitOptions.None);
-            messageBox.SelectionStart = messageBox.TextLength;
-            messageBox.SelectionLength = 0;
-
-            foreach (var part in parts)
+            if (friendsList.SelectedItems[0].Text != null)
             {
-                if (part.StartsWith("@"))
+                string selectedFriend = friendsList.SelectedItems[0].Text;
+                long chatID = GetChatID(selectedFriend);
+                long friendID = GetFriendID(selectedFriend);
+                if (chatID >= 0)
                 {
-                    messageBox.SelectionColor = Color.Blue;
-                    messageBox.AppendText(part);
-                    messageBox.SelectionColor = messageBox.ForeColor;
-                }
-                else
+                    DM dm = new DM(chatID, friendID, AccessToken, userPFP);
+                    dm.Show();
+                } else MessageBox.Show("Unable to open this DM", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void serversList_DoubleClick(object sender, EventArgs ex)
+        {
+            if (serversList.SelectedItems[0].Text != null)
+            {
+                string selectedServer = serversList.SelectedItems[0].Text;
+                long serverID = GetServerID(selectedServer);
+                if (serverID >= 0)
                 {
-                    messageBox.AppendText(part);
-                    messageBox.ScrollToCaret();
+                    Server server = new Server(serverID, AccessToken);
+                    server.Show();
                 }
+                else MessageBox.Show("Unable to open this Server", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void UploadButton_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Title = "Select a File",
-                Filter = "All files (*.*)|*.*",
-                Multiselect = false
-            };
+            Settings settingsForm = new Settings();
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string selectedFile = openFileDialog.FileName;
-                UploadFile(selectedFile);
-            }
-        }
-
-        private void UploadFile(string filePath)
-        {
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    client.Headers[HttpRequestHeader.Authorization] = AccessToken;
-                    byte[] response = client.UploadFile($"{DiscordApiBaseUrl}channels/{CurrentChannelId}/messages", "POST", filePath);
-                }
-            }
-            catch (WebException ex)
-            {
-                ShowErrorMessage("Failed to upload file", ex);
-            }
-        }
-
-        private string GetAvatarUrl(dynamic userProfile)
-        {
-            string userId = userProfile.id;
-            string avatarHash = userProfile.avatar;
-            if (!string.IsNullOrEmpty(avatarHash))
-            {
-                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png";
-            }
-            return string.Empty;
-        }
-
-        private Image DownloadImage(string imageUrl)
-        {
-            using (WebClient client = new WebClient())
-            {
-                byte[] imageBytes = client.DownloadData(imageUrl);
-                using (MemoryStream stream = new MemoryStream(imageBytes))
-                {
-                    return Image.FromStream(stream);
-                }
-            }
-        }
-
-        private void settingsButton_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("This isn't finished yet. Please wait for the official 0.1.1 stable release.");
+            settingsForm.Show();
         }
     }
 }

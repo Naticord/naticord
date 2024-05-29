@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Naticord")]
+[assembly: AssemblyTitle("Aerocord")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Naticord")]
+[assembly: AssemblyProduct("Aerocord")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1383fe7a-ab28-48c3-a477-e35655e31d5f")]
+[assembly: Guid("1d209443-49d6-4e9d-ae19-e4990777b522")]
 
 // Version information for an assembly consists of the following four values:
 //

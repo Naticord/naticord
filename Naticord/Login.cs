@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace Naticord
@@ -13,13 +14,18 @@ namespace Naticord
         public Login()
         {
             InitializeComponent();
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // TLS 1.2
+        }
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
             CheckToken();
         }
 
-        private void emailPasswordLoginButton_Click(object sender, EventArgs e)
+        private void signinButton_Click(object sender, EventArgs e)
         {
-            string email = emailTextBox.Text.Trim();
-            string password = passwordTextBox.Text.Trim();
+            string email = emailBox.Text.Trim();
+            string password = passBox.Text.Trim();
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -27,31 +33,10 @@ namespace Naticord
                 return;
             }
 
-            PerformEmailPasswordLogin(email, password);
+            PerformLoginWithPass(email, password);
         }
 
-        private void PerformLogin(string accessToken, bool isAutomated = false)
-        {
-            try
-            {
-                using (var webClient = new WebClient())
-                {
-                    webClient.Headers[HttpRequestHeader.Authorization] = accessToken;
-
-                    string userProfileJson = webClient.DownloadString("https://discord.com/api/v9/users/@me");
-
-                    if (!isAutomated) SaveToken(accessToken);
-
-                    OpenNaticordForm(accessToken);
-                }
-            }
-            catch (WebException ex)
-            {
-                MessageBox.Show("Failed to login. Please enter a valid token! Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void PerformEmailPasswordLogin(string email, string password)
+        private void PerformLoginWithPass(string email, string password)
         {
             try
             {
@@ -72,8 +57,7 @@ namespace Naticord
                     if (json["token"] != null)
                     {
                         string accessToken = json["token"].ToString();
-                        SaveToken(accessToken);
-                        OpenNaticordForm(accessToken);
+                        PerformLogin(accessToken, false);
                     }
                     else if (json["mfa"] != null && (bool)json["mfa"])
                     {
@@ -90,6 +74,30 @@ namespace Naticord
             catch (WebException ex)
             {
                 MessageBox.Show("Failed to login. Please check your email and password! Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void PerformLogin(string accessToken, bool isAutomated)
+        {
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+
+            using (var webClient = new WebClient())
+            {
+                webClient.Headers[HttpRequestHeader.Authorization] = accessToken;
+
+                try
+                {
+                    string userProfileJson = webClient.DownloadString("https://discord.com/api/v9/users/@me");
+
+                    if(!isAutomated) SaveToken(accessToken);
+
+                    Naticord mainForm = new Naticord(accessToken, this);
+                    mainForm.Show();
+                }
+                catch (WebException ex)
+                {
+                    MessageBox.Show("Failed to login. Please enter a valid token! Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -116,8 +124,7 @@ namespace Naticord
                     if (json["token"] != null)
                     {
                         string accessToken = json["token"].ToString();
-                        SaveToken(accessToken);
-                        OpenNaticordForm(accessToken);
+                        PerformLogin(accessToken, false);
                     }
                     else
                     {
@@ -135,8 +142,8 @@ namespace Naticord
         {
             using (var form = new Form())
             using (var label = new Label() { Text = "Enter your 2FA code:" })
-            using (var inputBox = new TextBox())
-            using (var buttonOk = new Button() { Text = "OK", DialogResult = DialogResult.OK })
+            using (var inputBox = new System.Windows.Forms.TextBox())
+            using (var buttonOk = new System.Windows.Forms.Button() { Text = "OK", DialogResult = DialogResult.OK })
             {
                 ConfigureFormControls(form, label, inputBox, buttonOk);
 
@@ -144,7 +151,23 @@ namespace Naticord
             }
         }
 
-        private void ConfigureFormControls(Form form, Label label, TextBox inputBox, Button buttonOk)
+        private void SaveToken(string accessToken)
+        {
+            try
+            {
+                string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+                string filePath = Path.Combine(homeDirectory, TokenFileName);
+
+                File.WriteAllText(filePath, "token=" + accessToken);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to save token: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ConfigureFormControls(Form form, Label label, System.Windows.Forms.TextBox inputBox, System.Windows.Forms.Button buttonOk)
         {
             form.Text = "2FA Required";
             form.StartPosition = FormStartPosition.CenterParent;
@@ -169,7 +192,11 @@ namespace Naticord
         {
             try
             {
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), TokenFileName);
+                this.Hide();
+
+                string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+                string filePath = Path.Combine(homeDirectory, TokenFileName);
 
                 if (File.Exists(filePath))
                 {
@@ -182,6 +209,7 @@ namespace Naticord
                         }
                     }
                 }
+                this.Show();
             }
             catch (Exception ex)
             {
@@ -189,23 +217,23 @@ namespace Naticord
             }
         }
 
-        private void SaveToken(string accessToken)
+        private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            try
-            {
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), TokenFileName);
-                File.WriteAllText(filePath, "token=" + accessToken);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to save token: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            System.Diagnostics.Process.Start("https://github.com/n1d3v/naticord");
         }
 
-        private void OpenNaticordForm(string accessToken)
+        private void discordStatusLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Naticord naticordForm = new Naticord(this, accessToken);
-            naticordForm.Show();
+            System.Diagnostics.Process.Start("https://discordstatus.com");
+        }
+
+        private void tokenButton_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+
+            TokenLogin token = new TokenLogin(this);
+
+            token.Show();
         }
     }
 }
