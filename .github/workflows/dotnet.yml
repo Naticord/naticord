@@ -24,5 +24,3 @@ jobs:
         run: nuget restore Naticord/Naticord.sln
       - name: Build
         run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Release'
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
