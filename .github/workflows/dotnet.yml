@@ -21,8 +21,8 @@ jobs:
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v1.1
       - name: Restore Packages
-        run: nuget restore Naticord.sln
+        run: nuget restore Naticord/Naticord.sln
       - name: Build
-        run: 'msbuild Naticord.sln -t:rebuild -property:Configuration=Release'
+        run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Release'
       - name: Test
         run: dotnet test --no-build --verbosity normal
