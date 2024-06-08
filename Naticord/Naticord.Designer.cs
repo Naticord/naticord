@@ -68,7 +68,6 @@
             // friendsList
             // 
             this.friendsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.friendsList.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.friendsList.ForeColor = System.Drawing.SystemColors.WindowText;
             this.friendsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.friendsList.HideSelection = false;
@@ -79,7 +78,6 @@
             this.friendsList.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.friendsList.TabIndex = 0;
             this.friendsList.UseCompatibleStateImageBehavior = false;
-            this.friendsList.UseWaitCursor = true;
             this.friendsList.View = System.Windows.Forms.View.Tile;
             this.friendsList.DoubleClick += new System.EventHandler(this.friendsList_DoubleClick);
             // 
@@ -87,7 +85,6 @@
             // 
             this.fsTabs.Controls.Add(this.friendsTab);
             this.fsTabs.Controls.Add(this.serversTab);
-            this.fsTabs.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.fsTabs.Location = new System.Drawing.Point(11, 66);
             this.fsTabs.Name = "fsTabs";
             this.fsTabs.SelectedIndex = 0;
@@ -104,7 +101,6 @@
             this.friendsTab.TabIndex = 0;
             this.friendsTab.Text = "Friends";
             this.friendsTab.UseVisualStyleBackColor = true;
-            this.friendsTab.UseWaitCursor = true;
             // 
             // serversTab
             // 
@@ -116,7 +112,6 @@
             this.serversTab.TabIndex = 1;
             this.serversTab.Text = "Servers";
             this.serversTab.UseVisualStyleBackColor = true;
-            this.serversTab.UseWaitCursor = true;
             // 
             // serversList
             // 
@@ -130,7 +125,6 @@
             this.serversList.Size = new System.Drawing.Size(257, 335);
             this.serversList.TabIndex = 1;
             this.serversList.UseCompatibleStateImageBehavior = false;
-            this.serversList.UseWaitCursor = true;
             this.serversList.View = System.Windows.Forms.View.Tile;
             this.serversList.DoubleClick += new System.EventHandler(this.serversList_DoubleClick);
             // 
