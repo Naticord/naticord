@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+using System.Drawing;
 
 namespace Naticord
 {
@@ -19,6 +21,9 @@ namespace Naticord
             SetUserInfo();
             PopulateFriendsTab();
             PopulateServersTab();
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddEllipse(0, 0, profilepicture.Width, profilepicture.Height);
+            profilepicture.Region = new Region(path);
         }
 
         private void SetUserInfo()
@@ -94,6 +99,7 @@ namespace Naticord
                 return -1;
             }
         }
+
         private long GetFriendID(string name)
         {
             try

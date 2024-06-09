@@ -379,7 +379,6 @@ namespace Naticord
                 long channelID = (long)channelList.SelectedItems[0].Tag;
                 if (channelID>=0)
                 {
-                    channelLabel.Text = selectedChannel;
                     ChatID = channelID;
                     LoadMessages(channelID);
                     websocketClient = new WebSocketClientServer(AccessToken, this);

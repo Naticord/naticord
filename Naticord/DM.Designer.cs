@@ -49,6 +49,7 @@ namespace Naticord
             this.usernameLabel.Size = new System.Drawing.Size(183, 20);
             this.usernameLabel.TabIndex = 4;
             this.usernameLabel.Text = "username";
+            this.usernameLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             // 
             // messageBox
             // 
@@ -57,6 +58,7 @@ namespace Naticord
             this.messageBox.Size = new System.Drawing.Size(630, 20);
             this.messageBox.TabIndex = 6;
             this.messageBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.messageBox_KeyDown);
+            this.messageBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             // 
             // chatBox
             // 
@@ -68,6 +70,7 @@ namespace Naticord
             this.chatBox.TabIndex = 9;
             this.chatBox.Url = new System.Uri("", System.UriKind.Relative);
             this.chatBox.WebBrowserShortcutsEnabled = false;
+            this.chatBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             // 
             // profilepicture
             // 
@@ -81,6 +84,7 @@ namespace Naticord
             this.profilepicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.profilepicture.TabIndex = 8;
             this.profilepicture.TabStop = false;
+            this.profilepicture.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             // 
             // profilepicturefriend
             // 
@@ -94,6 +98,7 @@ namespace Naticord
             this.profilepicturefriend.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.profilepicturefriend.TabIndex = 0;
             this.profilepicturefriend.TabStop = false;
+            this.profilepicturefriend.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             // 
             // DM
             // 
@@ -107,7 +112,7 @@ namespace Naticord
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.profilepicturefriend);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
+            this.MaximizeBox = true;
             this.Name = "DM";
             this.ShowIcon = false;
             this.Text = "Naticord - Chat";

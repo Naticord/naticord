@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
-using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace Naticord
@@ -14,11 +13,21 @@ namespace Naticord
         public Login()
         {
             InitializeComponent();
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // TLS 1.2
         }
-        protected override void OnShown(EventArgs e)
+
+        protected override void OnLoad(EventArgs e)
         {
-            base.OnShown(e);
+            base.OnLoad(e);
+
+            if (Environment.OSVersion.Version.Major <= 6 && Environment.OSVersion.Version.Minor <= 0)
+            {
+                // do nothin
+            }
+            else
+            {
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            }
+
             CheckToken();
         }
 
@@ -89,7 +98,7 @@ namespace Naticord
                 {
                     string userProfileJson = webClient.DownloadString("https://discord.com/api/v9/users/@me");
 
-                    if(!isAutomated) SaveToken(accessToken);
+                    if (!isAutomated) SaveToken(accessToken);
 
                     Naticord mainForm = new Naticord(accessToken, this);
                     mainForm.Show();

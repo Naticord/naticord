@@ -43,6 +43,7 @@
             // 
             // username
             // 
+            this.username.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.username.BackColor = System.Drawing.Color.Transparent;
             this.username.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.username.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -54,6 +55,8 @@
             // 
             // emailBox
             // 
+            this.emailBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.emailBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.emailBox.Location = new System.Drawing.Point(41, 144);
             this.emailBox.Name = "emailBox";
@@ -62,6 +65,7 @@
             // 
             // signinButton
             // 
+            this.signinButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.signinButton.Location = new System.Drawing.Point(104, 206);
             this.signinButton.Name = "signinButton";
             this.signinButton.Size = new System.Drawing.Size(86, 23);
@@ -72,6 +76,7 @@
             // 
             // profilepicture
             // 
+            this.profilepicture.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.profilepicture.BackColor = System.Drawing.Color.Transparent;
             this.profilepicture.Image = global::Naticord.Properties.Resources.icon;
             this.profilepicture.ImageLocation = "";
@@ -84,6 +89,8 @@
             // 
             // passBox
             // 
+            this.passBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.passBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.passBox.Location = new System.Drawing.Point(41, 175);
             this.passBox.Name = "passBox";
@@ -94,6 +101,7 @@
             // githubLink
             // 
             this.githubLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.githubLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.githubLink.AutoSize = true;
             this.githubLink.BackColor = System.Drawing.Color.Transparent;
             this.githubLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
@@ -109,6 +117,7 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -122,6 +131,7 @@
             // discordStatusLink
             // 
             this.discordStatusLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.discordStatusLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.discordStatusLink.AutoSize = true;
             this.discordStatusLink.BackColor = System.Drawing.Color.Transparent;
             this.discordStatusLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
@@ -137,6 +147,7 @@
             // 
             // tokenButton
             // 
+            this.tokenButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tokenButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.tokenButton.Location = new System.Drawing.Point(235, 233);
             this.tokenButton.Name = "tokenButton";
@@ -151,6 +162,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(296, 267);
             this.Controls.Add(this.tokenButton);
             this.Controls.Add(this.discordStatusLink);
@@ -161,6 +173,7 @@
             this.Controls.Add(this.emailBox);
             this.Controls.Add(this.username);
             this.Controls.Add(this.profilepicture);
+            this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Login";

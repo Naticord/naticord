@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Drawing;
 
 namespace Naticord
 {
@@ -30,6 +31,14 @@ namespace Naticord
             SetFriendInfo();
             LoadMessages();
             websocketClient = new WebSocketClientDM(AccessToken, this);
+            // user pfp
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddEllipse(0, 0, profilepicture.Width, profilepicture.Height);
+            profilepicture.Region = new Region(path);
+            // friend pfp
+            System.Drawing.Drawing2D.GraphicsPath path2 = new System.Drawing.Drawing2D.GraphicsPath();
+            path2.AddEllipse(0, 0, profilepicturefriend.Width, profilepicturefriend.Height);
+            profilepicturefriend.Region = new Region(path);
         }
 
         private void SetFriendInfo()
