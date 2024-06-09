@@ -7,9 +7,9 @@ Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to 
 
 <a href="https://star-history.com/#n1d3v/naticord&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=n1d3v/naticord&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date" />
  </picture>
 </a>
 
