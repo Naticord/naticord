@@ -33,6 +33,7 @@
             this.chatBox = new System.Windows.Forms.WebBrowser();
             this.channelList = new System.Windows.Forms.ListView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.typingStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -43,10 +44,9 @@
             // 
             this.servernameLabel.AutoSize = true;
             this.servernameLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.servernameLabel.Location = new System.Drawing.Point(4, 9);
-            this.servernameLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.servernameLabel.Location = new System.Drawing.Point(3, 6);
             this.servernameLabel.Name = "servernameLabel";
-            this.servernameLabel.Size = new System.Drawing.Size(148, 32);
+            this.servernameLabel.Size = new System.Drawing.Size(100, 21);
             this.servernameLabel.TabIndex = 4;
             this.servernameLabel.Text = "servername";
             // 
@@ -54,10 +54,9 @@
             // 
             this.messageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.messageBox.Location = new System.Drawing.Point(1, 442);
-            this.messageBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.messageBox.Location = new System.Drawing.Point(2, 284);
             this.messageBox.Name = "messageBox";
-            this.messageBox.Size = new System.Drawing.Size(762, 26);
+            this.messageBox.Size = new System.Drawing.Size(510, 20);
             this.messageBox.TabIndex = 6;
             this.messageBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.messageBox_KeyDown);
             // 
@@ -66,11 +65,10 @@
             this.chatBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.chatBox.Location = new System.Drawing.Point(1, 46);
-            this.chatBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.chatBox.MinimumSize = new System.Drawing.Size(30, 31);
+            this.chatBox.Location = new System.Drawing.Point(1, 30);
+            this.chatBox.MinimumSize = new System.Drawing.Size(20, 20);
             this.chatBox.Name = "chatBox";
-            this.chatBox.Size = new System.Drawing.Size(764, 375);
+            this.chatBox.Size = new System.Drawing.Size(510, 248);
             this.chatBox.TabIndex = 9;
             this.chatBox.Url = new System.Uri("", System.UriKind.Relative);
             this.chatBox.WebBrowserShortcutsEnabled = false;
@@ -81,10 +79,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.channelList.HideSelection = false;
-            this.channelList.Location = new System.Drawing.Point(4, 46);
-            this.channelList.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.channelList.Location = new System.Drawing.Point(3, 30);
             this.channelList.Name = "channelList";
-            this.channelList.Size = new System.Drawing.Size(220, 431);
+            this.channelList.Size = new System.Drawing.Size(147, 291);
             this.channelList.TabIndex = 10;
             this.channelList.UseCompatibleStateImageBehavior = false;
             this.channelList.View = System.Windows.Forms.View.Tile;
@@ -94,6 +91,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -103,21 +101,30 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.typingStatus);
             this.splitContainer1.Panel2.Controls.Add(this.chatBox);
             this.splitContainer1.Panel2.Controls.Add(this.messageBox);
-            this.splitContainer1.Size = new System.Drawing.Size(1008, 482);
-            this.splitContainer1.SplitterDistance = 228;
+            this.splitContainer1.Size = new System.Drawing.Size(672, 322);
+            this.splitContainer1.SplitterDistance = 151;
+            this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 11;
+            // 
+            // typingStatus
+            // 
+            this.typingStatus.AutoSize = true;
+            this.typingStatus.Location = new System.Drawing.Point(2, 307);
+            this.typingStatus.Name = "typingStatus";
+            this.typingStatus.Size = new System.Drawing.Size(0, 13);
+            this.typingStatus.TabIndex = 10;
             // 
             // Server
             // 
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.Dialog;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1008, 482);
+            this.ClientSize = new System.Drawing.Size(672, 322);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Server";
             this.ShowIcon = false;
             this.Text = "Naticord - Chat";
@@ -137,5 +144,6 @@
         private System.Windows.Forms.WebBrowser chatBox;
         private System.Windows.Forms.ListView channelList;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        public System.Windows.Forms.Label typingStatus;
     }
 }

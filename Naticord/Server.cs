@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -172,7 +173,7 @@ namespace Naticord
                             ping.Append('@');
                             i += 2;
                             StringBuilder uid = new StringBuilder();
-                            while (Char.IsNumber(md[i])) { /*Console.WriteLine(md[i]);*/ uid.Append(md[i]); i += 1; }
+                            while (Char.IsNumber(md[i])) { uid.Append(md[i]); i += 1; }
                             if (md[i].ToString() == ">")
                             {
                                 ping.Append(GetUsernameById(uid.ToString()).ToCharArray());
@@ -192,10 +193,19 @@ namespace Naticord
                         break;
 
                     default:
-                        html.Append(md[i]);
+                        if (IsUrl(md, i, out string url, out int length))
+                        {
+                            html.Append($"<a href=\"{url}\" target=\"_blank\">{url}</a>");
+                            i += length - 1;
+                        }
+                        else
+                        {
+                            html.Append(md[i]);
+                        }
                         break;
                 }
             }
+
             for (int i = 0; i < waitingToClose.Count; i++)
             {
                 switch (waitingToClose[i])
@@ -236,6 +246,20 @@ namespace Naticord
             }
             GC.Collect();
             return html.ToString();
+        }
+        private bool IsUrl(string text, int startIndex, out string url, out int length)
+        {
+            string pattern = @"https?://\S+";
+            Match match = Regex.Match(text.Substring(startIndex), pattern);
+            if (match.Success && match.Index == 0)
+            {
+                url = match.Value;
+                length = match.Length;
+                return true;
+            }
+            url = null;
+            length = 0;
+            return false;
         }
 
         public string GetUsernameById(string userId)

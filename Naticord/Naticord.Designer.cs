@@ -46,6 +46,8 @@
             // 
             // usernameLabel
             // 
+            this.usernameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.usernameLabel.BackColor = System.Drawing.Color.Transparent;
             this.usernameLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.usernameLabel.Location = new System.Drawing.Point(67, 10);
@@ -53,22 +55,25 @@
             this.usernameLabel.Size = new System.Drawing.Size(183, 20);
             this.usernameLabel.TabIndex = 1;
             this.usernameLabel.Text = "username";
-            this.usernameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // descriptionLabel
             // 
+            this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.descriptionLabel.BackColor = System.Drawing.Color.Transparent;
             this.descriptionLabel.Font = new System.Drawing.Font("Segoe UI Semilight", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descriptionLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.descriptionLabel.Location = new System.Drawing.Point(67, 36);
             this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(183, 24);
+            this.descriptionLabel.Size = new System.Drawing.Size(183, 18);
             this.descriptionLabel.TabIndex = 3;
             this.descriptionLabel.Text = "description";
-            this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // friendsList
             // 
+            this.friendsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.friendsList.BackColor = System.Drawing.Color.WhiteSmoke;
             this.friendsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.friendsList.ForeColor = System.Drawing.SystemColors.WindowText;
@@ -83,12 +88,12 @@
             this.friendsList.UseCompatibleStateImageBehavior = false;
             this.friendsList.View = System.Windows.Forms.View.Tile;
             this.friendsList.DoubleClick += new System.EventHandler(this.friendsList_DoubleClick);
-            this.friendsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // fsTabs
             // 
+            this.fsTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.fsTabs.Controls.Add(this.friendsTab);
             this.fsTabs.Controls.Add(this.serversTab);
             this.fsTabs.Location = new System.Drawing.Point(11, 66);
@@ -96,9 +101,6 @@
             this.fsTabs.SelectedIndex = 0;
             this.fsTabs.Size = new System.Drawing.Size(274, 372);
             this.fsTabs.TabIndex = 4;
-            this.fsTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // friendsTab
             // 
@@ -124,6 +126,10 @@
             // 
             // serversList
             // 
+            this.serversList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.serversList.BackColor = System.Drawing.Color.WhiteSmoke;
             this.serversList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.serversList.ForeColor = System.Drawing.SystemColors.WindowText;
             this.serversList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -136,9 +142,6 @@
             this.serversList.UseCompatibleStateImageBehavior = false;
             this.serversList.View = System.Windows.Forms.View.Tile;
             this.serversList.DoubleClick += new System.EventHandler(this.serversList_DoubleClick);
-            this.serversList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // profilepicture
             // 
@@ -153,9 +156,9 @@
             this.profilepicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.profilepicture.TabIndex = 0;
             this.profilepicture.TabStop = false;
-            //
+            // 
             // button1
-            //
+            // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.Location = new System.Drawing.Point(261, 6);
@@ -179,7 +182,6 @@
             this.Controls.Add(this.profilepicture);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = true;
             this.Name = "Naticord";
             this.Text = "Naticord";
             this.fsTabs.ResumeLayout(false);

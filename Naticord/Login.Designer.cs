@@ -37,7 +37,10 @@
             this.githubLink = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.discordStatusLink = new System.Windows.Forms.LinkLabel();
-            this.tokenButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.proxyLink = new System.Windows.Forms.LinkLabel();
+            this.tokenLink = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.profilepicture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -106,7 +109,7 @@
             this.githubLink.BackColor = System.Drawing.Color.Transparent;
             this.githubLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.githubLink.LinkColor = System.Drawing.Color.Fuchsia;
-            this.githubLink.Location = new System.Drawing.Point(12, 243);
+            this.githubLink.Location = new System.Drawing.Point(16, 243);
             this.githubLink.Name = "githubLink";
             this.githubLink.Size = new System.Drawing.Size(40, 13);
             this.githubLink.TabIndex = 11;
@@ -122,7 +125,7 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.label1.Location = new System.Drawing.Point(50, 242);
+            this.label1.Location = new System.Drawing.Point(54, 242);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(10, 13);
             this.label1.TabIndex = 12;
@@ -136,7 +139,7 @@
             this.discordStatusLink.BackColor = System.Drawing.Color.Transparent;
             this.discordStatusLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.discordStatusLink.LinkColor = System.Drawing.Color.Fuchsia;
-            this.discordStatusLink.Location = new System.Drawing.Point(62, 243);
+            this.discordStatusLink.Location = new System.Drawing.Point(66, 243);
             this.discordStatusLink.Name = "discordStatusLink";
             this.discordStatusLink.Size = new System.Drawing.Size(76, 13);
             this.discordStatusLink.TabIndex = 13;
@@ -145,17 +148,65 @@
             this.discordStatusLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
             this.discordStatusLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.discordStatusLink_LinkClicked);
             // 
-            // tokenButton
+            // label2
             // 
-            this.tokenButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.tokenButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.tokenButton.Location = new System.Drawing.Point(235, 233);
-            this.tokenButton.Name = "tokenButton";
-            this.tokenButton.Size = new System.Drawing.Size(49, 23);
-            this.tokenButton.TabIndex = 14;
-            this.tokenButton.Text = "Token";
-            this.tokenButton.UseVisualStyleBackColor = true;
-            this.tokenButton.Click += new System.EventHandler(this.tokenButton_Click);
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label2.Location = new System.Drawing.Point(142, 242);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(10, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "|";
+            // 
+            // proxyLink
+            // 
+            this.proxyLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.proxyLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.proxyLink.AutoSize = true;
+            this.proxyLink.BackColor = System.Drawing.Color.Transparent;
+            this.proxyLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.proxyLink.LinkColor = System.Drawing.Color.Fuchsia;
+            this.proxyLink.Location = new System.Drawing.Point(155, 243);
+            this.proxyLink.Name = "proxyLink";
+            this.proxyLink.Size = new System.Drawing.Size(74, 13);
+            this.proxyLink.TabIndex = 16;
+            this.proxyLink.TabStop = true;
+            this.proxyLink.Text = "Proxy Settings";
+            this.proxyLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.proxyLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.proxyLink_LinkClicked);
+            // 
+            // tokenLink
+            // 
+            this.tokenLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.tokenLink.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tokenLink.AutoSize = true;
+            this.tokenLink.BackColor = System.Drawing.Color.Transparent;
+            this.tokenLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.tokenLink.LinkColor = System.Drawing.Color.Fuchsia;
+            this.tokenLink.Location = new System.Drawing.Point(242, 243);
+            this.tokenLink.Name = "tokenLink";
+            this.tokenLink.Size = new System.Drawing.Size(38, 13);
+            this.tokenLink.TabIndex = 18;
+            this.tokenLink.TabStop = true;
+            this.tokenLink.Text = "Token";
+            this.tokenLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.tokenLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tokenLink_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label3.Location = new System.Drawing.Point(229, 242);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(10, 13);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "|";
             // 
             // Login
             // 
@@ -164,7 +215,10 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(296, 267);
-            this.Controls.Add(this.tokenButton);
+            this.Controls.Add(this.tokenLink);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.proxyLink);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.discordStatusLink);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.githubLink);
@@ -194,7 +248,10 @@
         private System.Windows.Forms.LinkLabel githubLink;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel discordStatusLink;
-        private System.Windows.Forms.Button tokenButton;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.LinkLabel proxyLink;
+        private System.Windows.Forms.LinkLabel tokenLink;
+        private System.Windows.Forms.Label label3;
     }
 }
 

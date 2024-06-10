@@ -236,7 +236,12 @@ namespace Naticord
             System.Diagnostics.Process.Start("https://discordstatus.com");
         }
 
-        private void tokenButton_Click(object sender, EventArgs e)
+        private void proxyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("This will be in a later beta of 0.2.");
+        }
+
+        private void tokenLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.Hide();
 

@@ -32,7 +32,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkUpdates = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.wipLabel = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.pluginList = new System.Windows.Forms.ListBox();
+            this.addPlugin = new System.Windows.Forms.Button();
+            this.removePlugin = new System.Windows.Forms.Button();
+            this.applyPluginsSettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -47,9 +51,9 @@
             // 
             // checkUpdates
             // 
-            this.checkUpdates.Location = new System.Drawing.Point(172, 39);
+            this.checkUpdates.Location = new System.Drawing.Point(160, 40);
             this.checkUpdates.Name = "checkUpdates";
-            this.checkUpdates.Size = new System.Drawing.Size(75, 23);
+            this.checkUpdates.Size = new System.Drawing.Size(75, 22);
             this.checkUpdates.TabIndex = 1;
             this.checkUpdates.Text = "Check";
             this.checkUpdates.UseVisualStyleBackColor = true;
@@ -64,23 +68,62 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Check for Updates";
             // 
-            // wipLabel
+            // label3
             // 
-            this.wipLabel.AutoSize = true;
-            this.wipLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wipLabel.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.wipLabel.Location = new System.Drawing.Point(131, 69);
-            this.wipLabel.Name = "wipLabel";
-            this.wipLabel.Size = new System.Drawing.Size(126, 13);
-            this.wipLabel.TabIndex = 3;
-            this.wipLabel.Text = "This is a work in progress";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(17, 68);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(118, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Plugins (barely working)";
+            // 
+            // pluginList
+            // 
+            this.pluginList.FormattingEnabled = true;
+            this.pluginList.Location = new System.Drawing.Point(20, 85);
+            this.pluginList.Name = "pluginList";
+            this.pluginList.Size = new System.Drawing.Size(212, 147);
+            this.pluginList.TabIndex = 4;
+            // 
+            // addPlugin
+            // 
+            this.addPlugin.Location = new System.Drawing.Point(192, 238);
+            this.addPlugin.Name = "addPlugin";
+            this.addPlugin.Size = new System.Drawing.Size(40, 23);
+            this.addPlugin.TabIndex = 5;
+            this.addPlugin.Text = "Add";
+            this.addPlugin.UseVisualStyleBackColor = true;
+            this.addPlugin.Click += new System.EventHandler(this.addPlugin_Click);
+            // 
+            // removePlugin
+            // 
+            this.removePlugin.Location = new System.Drawing.Point(128, 238);
+            this.removePlugin.Name = "removePlugin";
+            this.removePlugin.Size = new System.Drawing.Size(58, 23);
+            this.removePlugin.TabIndex = 6;
+            this.removePlugin.Text = "Remove";
+            this.removePlugin.UseVisualStyleBackColor = true;
+            // 
+            // applyPluginsSettings
+            // 
+            this.applyPluginsSettings.Location = new System.Drawing.Point(156, 268);
+            this.applyPluginsSettings.Name = "applyPluginsSettings";
+            this.applyPluginsSettings.Size = new System.Drawing.Size(75, 23);
+            this.applyPluginsSettings.TabIndex = 7;
+            this.applyPluginsSettings.Text = "Apply";
+            this.applyPluginsSettings.UseVisualStyleBackColor = true;
+            this.applyPluginsSettings.Click += new System.EventHandler(this.applyPluginsSettings_Click);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(259, 85);
-            this.Controls.Add(this.wipLabel);
+            this.ClientSize = new System.Drawing.Size(248, 307);
+            this.Controls.Add(this.applyPluginsSettings);
+            this.Controls.Add(this.removePlugin);
+            this.Controls.Add(this.addPlugin);
+            this.Controls.Add(this.pluginList);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.checkUpdates);
             this.Controls.Add(this.label1);
@@ -98,6 +141,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button checkUpdates;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label wipLabel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox pluginList;
+        private System.Windows.Forms.Button addPlugin;
+        private System.Windows.Forms.Button removePlugin;
+        private System.Windows.Forms.Button applyPluginsSettings;
     }
 }

@@ -84,14 +84,12 @@ namespace Naticord
                     string eventType = (string)json["t"];
                     switch (eventType)
                     {
-                        /*case "TYPING_START":
+                        case "TYPING_START":
                             HandleTypingStartEvent(json["d"]);
                             break;
-                        case "TYPING_STOP":
-                            HandleTypingStopEvent(json["d"]);
-                            break;*/
                         case "MESSAGE_CREATE":
                             HandleMessageCreateEvent(json["d"]);
+                            HandleTypingStopEvent(json["d"]);
                             break;
                         case "PRESENCE_UPDATE":
                             HandlePresenceUpdateEvent(json["d"]);
@@ -104,10 +102,10 @@ namespace Naticord
             }
         }
 
-        /*private void HandleTypingStartEvent(JToken jToken)
+        private void HandleTypingStartEvent(JToken jToken)
         {
             string channelId = (string)jToken["channel_id"];
-            if (channelId == parentDMForm.CurrentChannelId)
+            if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentDMForm.ChatID)
             {
                 string userId = (string)jToken["user_id"];
                 string username = GetUsernameById(userId);
@@ -123,7 +121,7 @@ namespace Naticord
         private void HandleTypingStopEvent(JToken jToken)
         {
             string channelId = (string)jToken["channel_id"];
-            if (channelId == parentDMForm.CurrentChannelId)
+            if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentDMForm.ChatID)
             {
                 string message = "";
 
@@ -132,7 +130,8 @@ namespace Naticord
                     parentDMForm.typingStatus.Text = message;
                 }));
             }
-        }*/
+        }
+
 
         public string GetUsernameById(string userId)
         {
