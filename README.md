@@ -23,7 +23,6 @@ Contributing guide can be found in the root directory of this repo as `CONTRIBUT
 Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP download naticord-binaries.zip
 
 # What's working
-- ~~Logging in with a token~~
 - Logging in with an email and password (with MFA)
 - Friends
 - DMs
@@ -36,10 +35,17 @@ Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP do
 - Typing indicators
 - Display names and friend nicknames
 - Websockets
+- Image viewing
+- Embeds
+- Plugins (experimental)
+- Searching for either friends or servers
 # Planned functions
-- Image support
-- Add editing, reply and delete
-- Emojis
+- Voice calling
+- Statuses
+- Copying and pasting images from the clipboard
+- Hide hidden channels in servers
+- Other various channels such as fourms and such
+- Edit reply and delete.
 # Bugs
 None as of now.
 # Screenshots
