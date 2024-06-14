@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Aerocord")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Naticord")]
+[assembly: AssemblyDescription("The awesome sauce Discord replacement.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Aerocord")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyCompany("Naticord")]
+[assembly: AssemblyProduct("Naticord")]
+[assembly: AssemblyCopyright("Licensed under Apache License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

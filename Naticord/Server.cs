@@ -40,9 +40,11 @@ namespace Naticord
                         servernameLabel.Text = guild.name.ToString();
                     }
                 }
+
                 dynamic channels = GetApiResponse($"guilds/{ServerID}/channels");
                 List<ListViewGroup> categoryNames = new List<ListViewGroup>();
                 List<ListViewItem> channelNames = new List<ListViewItem>();
+
                 foreach (var category in channels)
                 {
                     if (category.type == 4)
@@ -53,23 +55,28 @@ namespace Naticord
                         categoryNames.Add(categoryItem);
                     }
                 }
+
                 foreach (var channel in channels)
                 {
-                    if (channel.type == 0)
+                    if (channel.type == 0 || channel.type == 2)
                     {
                         string channelName = channel.name.ToString();
-                        ListViewItem channelItem = new ListViewItem("# " + channelName.ToLower());
-                        for(int i = 0; i < categoryNames.Count; i++)
+                        string prefix = channel.type == 2 ? "🔊 " : "# ";
+                        ListViewItem channelItem = new ListViewItem(prefix + channelName.ToLower());
+
+                        for (int i = 0; i < categoryNames.Count; i++)
                         {
                             if (channel.parent_id != null && (long)categoryNames[i].Tag == (long)channel.parent_id)
                             {
                                 channelItem.Group = categoryNames[i];
                             }
                         }
+
                         channelItem.Tag = (long)channel.id;
                         channelNames.Add(channelItem);
                     }
                 }
+
                 channelList.Groups.AddRange(categoryNames.ToArray());
                 channelList.Items.AddRange(channelNames.ToArray());
             }
@@ -86,7 +93,6 @@ namespace Naticord
                 htmlMiddle += "<br><p>" + DiscordMDToHtml(message) + "</p>";
             }else if(action == "replied")
             {
-                Console.WriteLine("ligmaballzsd");
                 htmlMiddle += "<br><em style=\"color: darkgray\">┌ @" + replyname + ": " + DiscordMDToHtml(replymessage) + "</em><br><strong>" + name + " " + action + ":</strong><br><p>" + DiscordMDToHtml(message) + "</p>";
             }
             else

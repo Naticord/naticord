@@ -54,9 +54,9 @@
             // 
             this.messageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.messageBox.Location = new System.Drawing.Point(2, 284);
+            this.messageBox.Location = new System.Drawing.Point(2, 356);
             this.messageBox.Name = "messageBox";
-            this.messageBox.Size = new System.Drawing.Size(510, 20);
+            this.messageBox.Size = new System.Drawing.Size(586, 20);
             this.messageBox.TabIndex = 6;
             this.messageBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.messageBox_KeyDown);
             // 
@@ -68,7 +68,7 @@
             this.chatBox.Location = new System.Drawing.Point(1, 30);
             this.chatBox.MinimumSize = new System.Drawing.Size(20, 20);
             this.chatBox.Name = "chatBox";
-            this.chatBox.Size = new System.Drawing.Size(510, 248);
+            this.chatBox.Size = new System.Drawing.Size(586, 320);
             this.chatBox.TabIndex = 9;
             this.chatBox.Url = new System.Uri("", System.UriKind.Relative);
             this.chatBox.WebBrowserShortcutsEnabled = false;
@@ -79,10 +79,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.channelList.HideSelection = false;
-            this.channelList.Location = new System.Drawing.Point(3, 30);
+            this.channelList.Location = new System.Drawing.Point(7, 37);
             this.channelList.Name = "channelList";
-            this.channelList.Size = new System.Drawing.Size(147, 291);
+            this.channelList.Size = new System.Drawing.Size(162, 345);
             this.channelList.TabIndex = 10;
+            this.channelList.TileSize = new System.Drawing.Size(168, 30);
             this.channelList.UseCompatibleStateImageBehavior = false;
             this.channelList.View = System.Windows.Forms.View.Tile;
             this.channelList.DoubleClick += new System.EventHandler(this.channelList_DoubleClick);
@@ -91,7 +92,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -104,8 +105,8 @@
             this.splitContainer1.Panel2.Controls.Add(this.typingStatus);
             this.splitContainer1.Panel2.Controls.Add(this.chatBox);
             this.splitContainer1.Panel2.Controls.Add(this.messageBox);
-            this.splitContainer1.Size = new System.Drawing.Size(672, 322);
-            this.splitContainer1.SplitterDistance = 151;
+            this.splitContainer1.Size = new System.Drawing.Size(768, 394);
+            this.splitContainer1.SplitterDistance = 172;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 11;
             // 
@@ -123,7 +124,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(672, 322);
+            this.ClientSize = new System.Drawing.Size(768, 394);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Server";
             this.ShowIcon = false;

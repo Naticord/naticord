@@ -69,6 +69,7 @@ namespace Naticord
                 ShowErrorMessage("Failed to retrieve friend list", ex);
             }
         }
+
         private long GetChatID(string name)
         {
             try
