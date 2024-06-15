@@ -22,6 +22,9 @@ Contributing guide can be found in the root directory of this repo as `CONTRIBUT
 # Installation
 Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP download naticord-binaries.zip
 
+### Updating
+To update, you can just get the latest version and install it.
+
 # What's working
 - Logging in with an email and password (with MFA)
 - Friends
