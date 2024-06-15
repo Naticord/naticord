@@ -1,5 +1,5 @@
 # naticord
-[![skillicns](https://skillicons.dev/icons?i=discord,cs,dotnet)](https://skillicons.dev)
+[![skillicns](https://skillicons.dev/icons?i=discord,cs,dotnet)]
 
 Naticord / Native-cord is a native Discord client made in C#.
 
