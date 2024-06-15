@@ -47,8 +47,8 @@ Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP do
 - Other various channels such as fourms and such
 - Edit reply and delete.
 # Bugs
-None as of now.
-
-
+- Some images do not load. 
+# Screenshots
+![Naticord 1_b1](https://github.com/Naticord/naticord/assets/135556230/7a5dc2a1-7400-483a-bbf6-e91f8b86953a)
 
 
