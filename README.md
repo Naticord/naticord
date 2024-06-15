@@ -1,7 +1,7 @@
 # naticord
-![work](https://img.shields.io/badge/work-in%20progress-green?style=plastic)
+[![skillicns](https://skillicons.dev/icons?i=discord,cs,dotnet)](https://skillicons.dev)
 
-Naticord / Native-cord is a native Discord client made in C# (originally Python).
+Naticord / Native-cord is a native Discord client made in C#.
 
 Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work which you can setup with `PROXY.md`)
 
