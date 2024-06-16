@@ -42,10 +42,10 @@ To update, you can just get the latest version and install it.
 - Embeds
 - Plugins (experimental)
 - Searching for either friends or servers
+- Copying and pasting images from the clipboard
 # Planned functions
 - Voice calling
 - Statuses
-- Copying and pasting images from the clipboard
 - Hide hidden channels in servers
 - Other various channels such as fourms and such
 - Edit reply and delete.
