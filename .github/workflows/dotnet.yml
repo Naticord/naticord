@@ -24,9 +24,18 @@ jobs:
         run: nuget restore Naticord/Naticord.sln
       - name: Build
         run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Release'
+      - name: Clone naticord-setup
+        run: 'git clone https://github.com/Naticord/naticord-setup Naticord\bin\release'
+      - name: Compile .ISS to .EXE Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: Naticord\bin\Release\naticord.iss
+          options: /O+
+      - name: Rename mysetup.exe to naticord-setup.exe
+        run: ren Naticord\bin\Release\{userappdata}\mysetup.exe Naticord\bin\Release\{userappdata}\naticord-setup.exe 
       - name: Upload Naticord
         uses: actions/upload-artifact@v4.3.3
         with:
           name: Naticord
-          path: Naticord\bin\Release\
+          path: Naticord\bin\Release\{userappdata}\naticord-setup.exe
           compression-level: 0
