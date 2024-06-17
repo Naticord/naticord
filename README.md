@@ -43,6 +43,7 @@ To update, you can just get the latest version and install it.
 - Plugins (experimental)
 - Searching for either friends or servers
 - Copying and pasting images from the clipboard
+- Block, unfriend and leave groups / friends.
 # Planned functions
 - Voice calling
 - Statuses
