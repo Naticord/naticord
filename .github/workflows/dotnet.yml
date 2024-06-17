@@ -25,19 +25,19 @@ jobs:
       - name: Build
         run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Release'
       - name: Clone naticord-setup
-        run: 'git clone https://github.com/Naticord/naticord-setup Naticord\bin\release\setup'
+        run: 'git clone https://github.com/Naticord/naticord-setup Naticord\bin\setup'
       - name: Copy Release build to \setup
-        run: copy Naticord\bin\Release\* Naticord\bin\Release\setup
+        run: copy Naticord\bin\Release\* Naticord\bin\setup
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
-          path: Naticord\bin\Release\setup\naticord.iss
+          path: Naticord\bin\setup\naticord.iss
           options: /O+
       - name: Rename mysetup.exe to naticord-setup.exe
-        run: ren Naticord\bin\Release\{userappdata}\mysetup.exe Naticord\bin\Release\{userappdata}\naticord-setup.exe 
+        run: ren Naticord\bin\setup\{userappdata}\mysetup.exe Naticord\bin\setup\{userappdata}\naticord-setup.exe 
       - name: Upload Naticord
         uses: actions/upload-artifact@v4.3.3
         with:
           name: Naticord
-          path: Naticord\bin\Release\{userappdata}\naticord-setup.exe
+          path: Naticord\bin\setup\{userappdata}\naticord-setup.exe
           compression-level: 0
