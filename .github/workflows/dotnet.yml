@@ -28,5 +28,5 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           name: Naticord
-          path: Naticord\bin\Debug\*
+          path: Naticord\bin\Release\*
           compression-level: 0
