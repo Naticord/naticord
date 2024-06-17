@@ -33,6 +33,8 @@ jobs:
         with:
           path: Naticord\bin\setup\naticord.iss
           options: /O+
+      - name: List directory of \setup (debugging)
+        run: dir Naticord\bin\setup
       - name: Rename mysetup.exe to naticord-setup.exe
         run: ren Naticord\bin\setup\mysetup.exe Naticord\bin\setup\naticord-setup.exe 
       - name: Upload Naticord
