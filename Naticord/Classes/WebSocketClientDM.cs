@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Security.Authentication;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using System.Net;
 using WebSocketSharp;
-using System.Security.Authentication;
 
 namespace Naticord
 {
-    public class WebSocketClientServer
+    public class WebSocketClientDM
     {
-        private Server parentServerForm;
+        private DM parentDMForm;
         private WebSocket webSocket;
         private string accessToken;
         private const SslProtocols Tls12 = (SslProtocols)0x00000C00;
-        bool tryingRandomStuffAtThisPoint = false;
+        private bool tryingRandomStuffAtThisPoint = false;
 
-        public WebSocketClientServer(string accessToken, Server parentServerForm)
+        public WebSocketClientDM(string accessToken, DM parentDMForm)
         {
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-            //Console.WriteLine($"Using Access Token: {accessToken}");
-
             this.accessToken = accessToken;
-            this.parentServerForm = parentServerForm;
+            this.parentDMForm = parentDMForm;
             InitializeWebSocket();
         }
 
@@ -30,7 +29,7 @@ namespace Naticord
         {
             webSocket = new WebSocket($"wss://gateway.discord.gg/?v=9&encoding=json");
             webSocket.SslConfiguration.EnabledSslProtocols = Tls12;
-            webSocket.OnMessage += (sender, e) => HandleWebSocketMessage(e.Data);
+            webSocket.OnMessage += async (sender, e) => await HandleWebSocketMessage(e.Data);
             webSocket.OnError += (sender, e) => HandleWebSocketError(e.Message);
             webSocket.OnClose += (sender, e) => HandleWebSocketClose();
             webSocket.Connect();
@@ -71,7 +70,7 @@ namespace Naticord
             }
         }
 
-        private void HandleWebSocketMessage(string data)
+        private async Task HandleWebSocketMessage(string data)
         {
             Console.WriteLine($"WebSocket Received: {data}");
 
@@ -88,13 +87,16 @@ namespace Naticord
                             HandleTypingStartEvent(json["d"]);
                             break;
                         case "MESSAGE_CREATE":
-                            HandleMessageCreateEvent(json["d"]);
+                            await HandleMessageCreateEventAsync(json["d"]);
                             HandleTypingStopEvent(json["d"]);
+                            break;
+                        case "PRESENCE_UPDATE":
+                            //HandlePresenceUpdateEvent(json["d"]);
                             break;
                     }
                     break;
                 default:
-                    // handle other op codes when needed ig
+                    // handle other op codes when needed
                     break;
             }
         }
@@ -102,15 +104,15 @@ namespace Naticord
         private void HandleTypingStartEvent(JToken jToken)
         {
             string channelId = (string)jToken["channel_id"];
-            if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentServerForm.ChatID)
+            if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentDMForm.ChatID)
             {
                 string userId = (string)jToken["user_id"];
                 string username = GetUsernameById(userId);
                 string message = $"{username} is typing...";
 
-                parentServerForm.Invoke((MethodInvoker)(() =>
+                parentDMForm.Invoke((MethodInvoker)(() =>
                 {
-                    parentServerForm.typingStatus.Text = message;
+                    parentDMForm.typingStatus.Text = message;
                 }));
             }
         }
@@ -118,13 +120,11 @@ namespace Naticord
         private void HandleTypingStopEvent(JToken jToken)
         {
             string channelId = (string)jToken["channel_id"];
-            if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentServerForm.ChatID)
+            if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentDMForm.ChatID)
             {
-                string message = "";
-
-                parentServerForm.Invoke((MethodInvoker)(() =>
+                parentDMForm.Invoke((MethodInvoker)(() =>
                 {
-                    parentServerForm.typingStatus.Text = message;
+                    parentDMForm.typingStatus.Text = string.Empty;
                 }));
             }
         }
@@ -133,7 +133,7 @@ namespace Naticord
         {
             try
             {
-                dynamic user = parentServerForm.GetApiResponse($"users/{userId}");
+                dynamic user = parentDMForm.GetApiResponse($"users/{userId}");
                 return user.username;
             }
             catch (Exception ex)
@@ -159,17 +159,18 @@ namespace Naticord
             public string Description { get; set; }
         }
 
-            private void HandleMessageCreateEvent(JToken data)
+        private async Task HandleMessageCreateEventAsync(JToken data)
         {
             dynamic eventData = data;
             dynamic attachmentData = eventData["attachments"];
             dynamic embedData = eventData["embeds"];
             string channelId = eventData["channel_id"];
             string author = eventData["author"]["global_name"];
-            if(eventData["author"]["global_name"] == null) author = eventData["author"]["username"];
+            if (author == null) author = eventData["author"]["username"];
             string content = eventData["content"];
-            List<Attachment> attachmentsFormed = new List<Attachment>();
-            List<Embed> embedsFormed = new List<Embed >();
+            var attachmentsFormed = new List<Attachment>();
+            var embedsFormed = new List<Embed>();
+
             if (attachmentData != null)
             {
                 foreach (var attachment in attachmentData)
@@ -186,62 +187,79 @@ namespace Naticord
                 }
             }
 
-            if (channelId == parentServerForm.ChatID.ToString())
+            if (channelId == parentDMForm.ChatID.ToString())
             {
                 switch ((int)eventData["type"].Value)
                 {
                     case 7:
                         // Join message
-                        parentServerForm.AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
+                        parentDMForm.AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
                         break;
 
                     case 19:
                         // Reply
                         bool found = false;
-                        foreach (var message in parentServerForm.GetApiResponse($"channels/{parentServerForm.ChatID.ToString()}/messages"))
+                        var messages = await parentDMForm.GetApiResponse($"channels/{parentDMForm.ChatID}/messages");
+                        foreach (var message in messages)
                         {
                             if (message.id == eventData["message_reference"]["message_id"])
                             {
                                 string replyAuthor = message.author.global_name;
                                 if (replyAuthor == null) replyAuthor = message.author.username;
-                                parentServerForm.AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true, replyAuthor, message.content.Value);
+                                parentDMForm.AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true, replyAuthor, message.content.Value);
                                 found = true;
                                 break;
                             }
                         }
-                        if (!found) parentServerForm.AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true, " ", "Unable to load message");
+                        if (!found) parentDMForm.AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true, " ", "Unable to load message");
                         break;
 
                     default:
-                        //Normal text or unimplemented
-                        parentServerForm.AddMessage(author, content, "said", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
+                        // Normal text or unimplemented
+                        parentDMForm.AddMessage(author, content, "said", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
                         break;
                 }
+                parentDMForm.Invoke((MethodInvoker)(() => parentDMForm.ScrollToBottom()));
             }
         }
 
+        /*private void HandlePresenceUpdateEvent(JToken data)
+        {
+            dynamic eventData = data;
+            string userId = eventData["user"]["id"];
+            string status = eventData["status"];
+
+            string username = GetUsernameById(userId);
+
+            parentDMForm.Invoke((MethodInvoker)(() =>
+            {
+                // nothing for now
+            }));
+        }*/
+
         private void HandleWebSocketError(string errorMessage)
         {
-            parentServerForm.Invoke((MethodInvoker)(() =>
+            parentDMForm.Invoke((MethodInvoker)(() =>
             {
-                //Console.WriteLine($"WebSocket Error: {errorMessage}");
-                // really shitty code on getting the websocket back but works fine, will be patched soon
+                Console.WriteLine($"WebSocket Error: {errorMessage}");
                 InitializeWebSocket();
             }));
         }
 
         private void HandleWebSocketClose()
         {
-            if(!tryingRandomStuffAtThisPoint) try
+            if (!tryingRandomStuffAtThisPoint)
             {
-                parentServerForm.Invoke((MethodInvoker)(() =>
+                try
                 {
-                //Console.WriteLine("WebSocket connection closed.");
-                // really shitty code on getting the websocket back but works fine, will be patched soon
-                InitializeWebSocket();
-                }));
+                    parentDMForm.Invoke((MethodInvoker)(() =>
+                    {
+                        Console.WriteLine("WebSocket connection closed.");
+                        InitializeWebSocket();
+                    }));
+                }
+                catch { }
             }
-            catch { }
         }
 
         public void CloseWebSocket()

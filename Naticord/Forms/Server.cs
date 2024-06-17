@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Naticord
@@ -32,7 +33,7 @@ namespace Naticord
         {
             try
             {
-                dynamic guilds = GetApiResponse("users/@me/guilds");
+                dynamic guilds = GetApiResponseSynchronus("users/@me/guilds");
                 foreach (var guild in guilds)
                 {
                     if ((long)guild.id == ServerID)
@@ -40,11 +41,9 @@ namespace Naticord
                         servernameLabel.Text = guild.name.ToString();
                     }
                 }
-
-                dynamic channels = GetApiResponse($"guilds/{ServerID}/channels");
+                dynamic channels = GetApiResponseSynchronus($"guilds/{ServerID}/channels");
                 List<ListViewGroup> categoryNames = new List<ListViewGroup>();
                 List<ListViewItem> channelNames = new List<ListViewItem>();
-
                 foreach (var category in channels)
                 {
                     if (category.type == 4)
@@ -55,15 +54,12 @@ namespace Naticord
                         categoryNames.Add(categoryItem);
                     }
                 }
-
                 foreach (var channel in channels)
                 {
-                    if (channel.type == 0 || channel.type == 2)
+                    if (channel.type == 0)
                     {
                         string channelName = channel.name.ToString();
-                        string prefix = channel.type == 2 ? "🔊 " : "# ";
-                        ListViewItem channelItem = new ListViewItem(prefix + channelName.ToLower());
-
+                        ListViewItem channelItem = new ListViewItem("# " + channelName.ToLower());
                         for (int i = 0; i < categoryNames.Count; i++)
                         {
                             if (channel.parent_id != null && (long)categoryNames[i].Tag == (long)channel.parent_id)
@@ -71,12 +67,10 @@ namespace Naticord
                                 channelItem.Group = categoryNames[i];
                             }
                         }
-
                         channelItem.Tag = (long)channel.id;
                         channelNames.Add(channelItem);
                     }
                 }
-
                 channelList.Groups.AddRange(categoryNames.ToArray());
                 channelList.Items.AddRange(channelNames.ToArray());
             }
@@ -86,35 +80,49 @@ namespace Naticord
             }
         }
 
-        public void AddMessage(string name, string message, string action, WebSocketClientServer.Attachment[] attachments, WebSocketClientServer.Embed[] embeds, bool reload = true, bool scroll = true, string replyname = "", string replymessage = "")
+        public async Task<string> AddMessage(string name, string message, string action, WebSocketClientServer.Attachment[] attachments, WebSocketClientServer.Embed[] embeds, bool reload = true, bool scroll = true, string replyname = "", string replymessage = "")
         {
+            string result = string.Empty;
+
             if (name == lastMessageAuthor && action == "said")
             {
-                htmlMiddle += "<br><p>" + DiscordMDToHtml(message) + "</p>";
-            }else if(action == "replied")
+                htmlMiddle += "<br><p>" + await DiscordMDToHtml(message) + "</p>";
+            }
+            else if (action == "replied")
             {
-                htmlMiddle += "<br><em style=\"color: darkgray\">┌ @" + replyname + ": " + DiscordMDToHtml(replymessage) + "</em><br><strong>" + name + " " + action + ":</strong><br><p>" + DiscordMDToHtml(message) + "</p>";
+                htmlMiddle += "<br><em style=\"color: darkgray\">┌ @" + replyname + ": " + await DiscordMDToHtml(replymessage) + "</em><br><strong>" + name + " " + action + ":</strong><br><p>" + await DiscordMDToHtml(message) + "</p>";
             }
             else
             {
-                htmlMiddle += "<br><strong>" + name + " " + action + ":</strong><br><p>" + DiscordMDToHtml(message) + "</p>";
+                htmlMiddle += "<br><strong>" + name + " " + action + ":</strong><br><p>" + await DiscordMDToHtml(message) + "</p>";
             }
             lastMessageAuthor = name;
-            if (attachments.Length > 0) foreach (var attachment in attachments)
+
+            if (attachments.Length > 0)
+            {
+                foreach (var attachment in attachments)
                 {
                     chatBox.ScriptErrorsSuppressed = true;
                     if (attachment.Type.Contains("image")) htmlMiddle += "<br><img src=\"" + attachment.URL + "\"></img>";
                     if (attachment.Type.Contains("video")) htmlMiddle += "<br><embed src=\"" + attachment.URL + "\" type=\"" + attachment.Type + "\" width=\"60%\" height=\"60%\">";
                 }
-            if (embeds.Length > 0) foreach (var embed in embeds)
+            }
+
+            if (embeds.Length > 0)
+            {
+                foreach (var embed in embeds)
                 {
-                    if(embed.Type == "rich") htmlMiddle += "<br><div class=\"rich\"><a style=\"color: black\" href=\"" + embed.AuthorURL + "\">" + embed.Author + "</a><br><br><a href=\"" + embed.TitleURL + "\">" + embed.Title + "</a><br><br><p>" + embed.Description + "</p></div>";
+                    if (embed.Type == "rich") htmlMiddle += "<br><div class=\"rich\"><a style=\"color: black\" href=\"" + embed.AuthorURL + "\">" + embed.Author + "</a><br><br><a href=\"" + embed.TitleURL + "\">" + embed.Title + "</a><br><br><p>" + embed.Description + "</p></div>";
                 }
+            }
+
             if (reload) chatBox.DocumentText = (htmlStart + htmlMiddle + htmlEnd).ToString();
             if (scroll) ScrollToBottom();
+
+            return result;
         }
 
-        private string DiscordMDToHtml(string md)
+        private async Task<string> DiscordMDToHtml(string md)
         {
             List<string> waitingToClose = new List<string>();
             StringBuilder html = new StringBuilder();
@@ -175,17 +183,28 @@ namespace Naticord
                         if (md.Length > i + 1 && md[i + 1].ToString() == "@")
                         {
                             StringBuilder ping = new StringBuilder();
-                            if (!waitingToClose.Contains("||")) ping.Append("<span class=\"ping\">".ToCharArray());
+                            if (!waitingToClose.Contains("||"))
+                                ping.Append("<span class=\"ping\">");
+
                             ping.Append('@');
                             i += 2;
+
                             StringBuilder uid = new StringBuilder();
-                            while (Char.IsNumber(md[i])) { uid.Append(md[i]); i += 1; }
+                            while (Char.IsNumber(md[i]))
+                            {
+                                uid.Append(md[i]);
+                                i += 1;
+                            }
+
                             if (md[i].ToString() == ">")
                             {
-                                ping.Append(GetUsernameById(uid.ToString()).ToCharArray());
-                                if (!waitingToClose.Contains("||")) ping.Append("</span>".ToCharArray());
+                                string username = await GetUsernameById(uid.ToString());
+                                ping.Append(username);
+                                if (!waitingToClose.Contains("||"))
+                                    ping.Append("</span>");
                                 html.Append(ping);
                             }
+
                             GC.Collect();
                             break;
                         }
@@ -199,19 +218,10 @@ namespace Naticord
                         break;
 
                     default:
-                        if (IsUrl(md, i, out string url, out int length))
-                        {
-                            html.Append($"<a href=\"{url}\" target=\"_blank\">{url}</a>");
-                            i += length - 1;
-                        }
-                        else
-                        {
-                            html.Append(md[i]);
-                        }
+                        html.Append(md[i]);
                         break;
                 }
             }
-
             for (int i = 0; i < waitingToClose.Count; i++)
             {
                 switch (waitingToClose[i])
@@ -253,26 +263,12 @@ namespace Naticord
             GC.Collect();
             return html.ToString();
         }
-        private bool IsUrl(string text, int startIndex, out string url, out int length)
-        {
-            string pattern = @"https?://\S+";
-            Match match = Regex.Match(text.Substring(startIndex), pattern);
-            if (match.Success && match.Index == 0)
-            {
-                url = match.Value;
-                length = match.Length;
-                return true;
-            }
-            url = null;
-            length = 0;
-            return false;
-        }
 
-        public string GetUsernameById(string userId)
+        private async Task<string> GetUsernameById(string userId)
         {
             try
             {
-                dynamic user = GetApiResponse($"users/{userId}");
+                dynamic user = await GetApiResponse($"users/{userId}");
                 if (user.global_name != null) return user.global_name;
                 return user.username;
             }
@@ -283,43 +279,78 @@ namespace Naticord
             }
         }
 
-        public dynamic GetApiResponse(string endpoint)
+        public async Task<dynamic> GetApiResponse(string endpoint)
         {
-            using (var webClient = new WebClient())
+            using (var httpClient = new HttpClient())
             {
-                webClient.Headers[HttpRequestHeader.Authorization] = AccessToken;
-                string jsonResponse = webClient.DownloadString(DiscordApiBaseUrl + endpoint);
-                return Newtonsoft.Json.JsonConvert.DeserializeObject(jsonResponse);
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(AccessToken);
+
+                HttpResponseMessage response = await httpClient.GetAsync(DiscordApiBaseUrl + endpoint);
+                response.EnsureSuccessStatusCode();
+
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject(jsonResponse);
             }
         }
 
-        private void LoadMessages(long channelID)
+        public dynamic GetApiResponseSynchronus(string endpoint)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(AccessToken);
+
+                HttpResponseMessage response = httpClient.GetAsync(DiscordApiBaseUrl + endpoint).Result;
+                response.EnsureSuccessStatusCode();
+
+                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject(jsonResponse);
+            }
+        }
+
+        private async Task LoadMessages(long channelID)
         {
             try
             {
-                dynamic messages = GetApiResponse($"channels/{channelID.ToString()}/messages");
-                Console.WriteLine(messages);
+                dynamic messages = await GetApiResponse($"channels/{channelID.ToString()}/messages");
                 htmlMiddle = "";
+
                 for (int i = messages.Count - 1; i >= 0; i--)
                 {
-                    string author = messages[i].author.global_name;
-                    if (author == null) author = messages[i].author.username;
+                    string author = messages[i].author.global_name ?? messages[i].author.username;
                     string content = messages[i].content;
+
                     List<WebSocketClientServer.Attachment> attachmentsFormed = new List<WebSocketClientServer.Attachment>();
                     List<WebSocketClientServer.Embed> embedsFormed = new List<WebSocketClientServer.Embed>();
 
-                    if(messages[i].attachments != null) foreach (var attachment in messages[i].attachments)
+                    if (messages[i].attachments != null)
+                    {
+                        foreach (var attachment in messages[i].attachments)
                         {
                             attachmentsFormed.Add(new WebSocketClientServer.Attachment { URL = attachment.url, Type = attachment.content_type });
                         }
-                    if (messages[i].embeds != null) foreach (var embed in messages[i].embeds)
+                    }
+
+                    if (messages[i].embeds != null)
+                    {
+                        foreach (var embed in messages[i].embeds)
                         {
-                            embedsFormed.Add(new WebSocketClientServer.Embed { Type = embed?.type ?? "", Author = embed?.author?.name ?? "", AuthorURL = embed?.author?.url ?? "", Title = embed?.title ?? "", TitleURL = embed?.url ?? "", Description = embed?.description ?? "" });
+                            embedsFormed.Add(new WebSocketClientServer.Embed
+                            {
+                                Type = embed?.type ?? "",
+                                Author = embed?.author?.name ?? "",
+                                AuthorURL = embed?.author?.url ?? "",
+                                Title = embed?.title ?? "",
+                                TitleURL = embed?.url ?? "",
+                                Description = embed?.description ?? ""
+                            });
                         }
+                    }
+
+                    string messageResult = "";
                     switch ((int)messages[i].type.Value)
                     {
                         case 7:
-                            AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false);
+                            messageResult = await AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false);
                             break;
 
                         case 19:
@@ -328,25 +359,28 @@ namespace Naticord
                             {
                                 if (message.id == messages[i].message_reference.message_id)
                                 {
-                                    string replyAuthor = message.author.global_name;
-                                    if (replyAuthor == null) replyAuthor = message.author.username;
-                                    AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false, replyAuthor, message.content.Value);
+                                    string replyAuthor = message.author.global_name ?? message.author.username;
+                                    messageResult = await AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false, replyAuthor, message.content.Value);
                                     found = true;
                                     break;
                                 }
                             }
-                            if (!found) AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false, " ", "Unable to load message");
+                            if (!found)
+                            {
+                                messageResult = await AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false, " ", "Unable to load message");
+                            }
                             break;
 
                         default:
-                            AddMessage(author, content, "said", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false);
+                            messageResult = await AddMessage(author, content, "said", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false);
                             break;
                     }
+
+                    htmlMiddle += messageResult;
                 }
+
                 chatBox.DocumentText = htmlStart + htmlMiddle + htmlEnd;
-                Thread.Sleep(200);
                 ScrollToBottom();
-                return;
             }
             catch (WebException ex)
             {
@@ -407,7 +441,7 @@ namespace Naticord
                 if (websocketClient != null) websocketClient.CloseWebSocket();
                 string selectedChannel = channelList.SelectedItems[0].Text;
                 long channelID = (long)channelList.SelectedItems[0].Tag;
-                if (channelID>=0)
+                if (channelID >= 0)
                 {
                     ChatID = channelID;
                     LoadMessages(channelID);

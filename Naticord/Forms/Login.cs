@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace Naticord
@@ -9,10 +10,19 @@ namespace Naticord
     public partial class Login : Form
     {
         private const string TokenFileName = "token.txt";
+        private string accessToken = Properties.Settings.Default.token;
+        private string proxyAddress = Properties.Settings.Default.proxy;
 
         public Login()
         {
             InitializeComponent();
+
+            const string keyName = @"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
+            using (var key = Registry.CurrentUser.OpenSubKey(keyName, true))
+            {
+                key.SetValue("Naticord.exe", 11001, RegistryValueKind.DWord);
+            }
+
         }
 
         protected override void OnLoad(EventArgs e)
@@ -21,7 +31,7 @@ namespace Naticord
 
             if (Environment.OSVersion.Version.Major <= 6 && Environment.OSVersion.Version.Minor <= 0)
             {
-                // do nothin
+                // Do nothing for older OS versions
             }
             else
             {
@@ -51,6 +61,12 @@ namespace Naticord
             {
                 using (var webClient = new WebClient())
                 {
+                    // Set proxy if provided
+                    if (!string.IsNullOrEmpty(proxyAddress))
+                    {
+                        webClient.Proxy = new WebProxy(proxyAddress);
+                    }
+
                     var loginPayload = new
                     {
                         email = email,
@@ -92,6 +108,12 @@ namespace Naticord
 
             using (var webClient = new WebClient())
             {
+                // Set proxy if provided
+                if (!string.IsNullOrEmpty(proxyAddress))
+                {
+                    webClient.Proxy = new WebProxy(proxyAddress);
+                }
+
                 webClient.Headers[HttpRequestHeader.Authorization] = accessToken;
 
                 try
@@ -116,6 +138,12 @@ namespace Naticord
             {
                 using (var webClient = new WebClient())
                 {
+                    // Set proxy if provided
+                    if (!string.IsNullOrEmpty(proxyAddress))
+                    {
+                        webClient.Proxy = new WebProxy(proxyAddress);
+                    }
+
                     var mfaPayload = new
                     {
                         code = code,
@@ -151,8 +179,8 @@ namespace Naticord
         {
             using (var form = new Form())
             using (var label = new Label() { Text = "Enter your 2FA code:" })
-            using (var inputBox = new System.Windows.Forms.TextBox())
-            using (var buttonOk = new System.Windows.Forms.Button() { Text = "OK", DialogResult = DialogResult.OK })
+            using (var inputBox = new TextBox())
+            using (var buttonOk = new Button() { Text = "OK", DialogResult = DialogResult.OK })
             {
                 ConfigureFormControls(form, label, inputBox, buttonOk);
 
@@ -164,11 +192,16 @@ namespace Naticord
         {
             try
             {
-                string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                Properties.Settings.Default.token = accessToken;
+                Properties.Settings.Default.Save();
 
+                string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 string filePath = Path.Combine(homeDirectory, TokenFileName);
 
-                File.WriteAllText(filePath, "token=" + accessToken);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
             }
             catch (Exception ex)
             {
@@ -176,13 +209,42 @@ namespace Naticord
             }
         }
 
-        private void ConfigureFormControls(Form form, Label label, System.Windows.Forms.TextBox inputBox, System.Windows.Forms.Button buttonOk)
+        private void CheckToken()
+        {
+            try
+            {
+                string accessToken = Properties.Settings.Default.token;
+
+                string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string filePath = Path.Combine(homeDirectory, TokenFileName);
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    PerformLogin(accessToken, true);
+                }
+                else
+                {
+                    this.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to check token: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ConfigureFormControls(Form form, Label label, TextBox inputBox, Button buttonOk)
         {
             form.Text = "2FA Required";
             form.StartPosition = FormStartPosition.CenterParent;
             form.Width = 300;
             form.Height = 150;
-            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.FormBorderStyle = FormBorderStyle.Sizable;
             form.MinimizeBox = false;
             form.MaximizeBox = false;
             form.AcceptButton = buttonOk;
@@ -197,35 +259,6 @@ namespace Naticord
             inputBox.Select();
         }
 
-        private void CheckToken()
-        {
-            try
-            {
-                this.Hide();
-
-                string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-
-                string filePath = Path.Combine(homeDirectory, TokenFileName);
-
-                if (File.Exists(filePath))
-                {
-                    foreach (string line in File.ReadLines(filePath))
-                    {
-                        if (line.Contains("token="))
-                        {
-                            PerformLogin(line.Replace("token=", ""), true);
-                            return;
-                        }
-                    }
-                }
-                this.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to save token: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void githubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/n1d3v/naticord");
@@ -238,7 +271,26 @@ namespace Naticord
 
         private void proxyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("This will be in a later beta of 0.2.");
+          
+            using (var form = new Form())
+            using (var label = new Label() { Text = "Enter Proxy Address:" })
+            using (var inputBox = new TextBox())
+            using (var buttonOk = new Button() { Text = "OK", DialogResult = DialogResult.OK })
+            {
+                inputBox.Text = proxyAddress;
+
+                ConfigureFormControls(form, label, inputBox, buttonOk);
+                form.Text = "Proxy";
+                form.FormBorderStyle = FormBorderStyle.Sizable;
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.proxy = inputBox.Text.Trim();
+                    Properties.Settings.Default.Save();
+
+                    proxyAddress = Properties.Settings.Default.proxy;
+                }
+            }
         }
 
         private void tokenLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -251,3 +303,4 @@ namespace Naticord
         }
     }
 }
+

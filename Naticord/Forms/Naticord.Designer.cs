@@ -38,6 +38,8 @@
             this.serversList = new System.Windows.Forms.ListView();
             this.profilepicture = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.friendSearchBar = new System.Windows.Forms.TextBox();
+            this.serverSearchBar = new System.Windows.Forms.TextBox();
             this.fsTabs.SuspendLayout();
             this.friendsTab.SuspendLayout();
             this.serversTab.SuspendLayout();
@@ -80,9 +82,9 @@
             this.friendsList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.friendsList.HideSelection = false;
             this.friendsList.LabelWrap = false;
-            this.friendsList.Location = new System.Drawing.Point(5, 4);
+            this.friendsList.Location = new System.Drawing.Point(5, 32);
             this.friendsList.Name = "friendsList";
-            this.friendsList.Size = new System.Drawing.Size(257, 335);
+            this.friendsList.Size = new System.Drawing.Size(257, 332);
             this.friendsList.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.friendsList.TabIndex = 0;
             this.friendsList.UseCompatibleStateImageBehavior = false;
@@ -99,27 +101,29 @@
             this.fsTabs.Location = new System.Drawing.Point(11, 66);
             this.fsTabs.Name = "fsTabs";
             this.fsTabs.SelectedIndex = 0;
-            this.fsTabs.Size = new System.Drawing.Size(274, 372);
+            this.fsTabs.Size = new System.Drawing.Size(274, 397);
             this.fsTabs.TabIndex = 4;
             // 
             // friendsTab
             // 
+            this.friendsTab.Controls.Add(this.friendSearchBar);
             this.friendsTab.Controls.Add(this.friendsList);
             this.friendsTab.Location = new System.Drawing.Point(4, 22);
             this.friendsTab.Name = "friendsTab";
             this.friendsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.friendsTab.Size = new System.Drawing.Size(266, 346);
+            this.friendsTab.Size = new System.Drawing.Size(266, 371);
             this.friendsTab.TabIndex = 0;
             this.friendsTab.Text = "Friends";
             this.friendsTab.UseVisualStyleBackColor = true;
             // 
             // serversTab
             // 
+            this.serversTab.Controls.Add(this.serverSearchBar);
             this.serversTab.Controls.Add(this.serversList);
             this.serversTab.Location = new System.Drawing.Point(4, 22);
             this.serversTab.Name = "serversTab";
             this.serversTab.Padding = new System.Windows.Forms.Padding(3);
-            this.serversTab.Size = new System.Drawing.Size(266, 346);
+            this.serversTab.Size = new System.Drawing.Size(266, 371);
             this.serversTab.TabIndex = 1;
             this.serversTab.Text = "Servers";
             this.serversTab.UseVisualStyleBackColor = true;
@@ -135,9 +139,9 @@
             this.serversList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.serversList.HideSelection = false;
             this.serversList.LabelWrap = false;
-            this.serversList.Location = new System.Drawing.Point(4, 5);
+            this.serversList.Location = new System.Drawing.Point(4, 32);
             this.serversList.Name = "serversList";
-            this.serversList.Size = new System.Drawing.Size(257, 335);
+            this.serversList.Size = new System.Drawing.Size(257, 333);
             this.serversList.TabIndex = 1;
             this.serversList.UseCompatibleStateImageBehavior = false;
             this.serversList.View = System.Windows.Forms.View.Tile;
@@ -166,7 +170,20 @@
             this.button1.Size = new System.Drawing.Size(24, 24);
             this.button1.TabIndex = 5;
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += button1_Click;
+            // friendSearchBar
+            // 
+            this.friendSearchBar.Location = new System.Drawing.Point(7, 6);
+            this.friendSearchBar.Name = "friendSearchBar";
+            this.friendSearchBar.Size = new System.Drawing.Size(253, 20);
+            this.friendSearchBar.TabIndex = 1;
+            // 
+            // serverSearchBar
+            // 
+            this.serverSearchBar.Location = new System.Drawing.Point(7, 6);
+            this.serverSearchBar.Name = "serverSearchBar";
+            this.serverSearchBar.Size = new System.Drawing.Size(253, 20);
+            this.serverSearchBar.TabIndex = 2;
             // 
             // Naticord
             // 
@@ -174,7 +191,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(296, 449);
+            this.ClientSize = new System.Drawing.Size(296, 468);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.fsTabs);
             this.Controls.Add(this.descriptionLabel);
@@ -186,7 +203,9 @@
             this.Text = "Naticord";
             this.fsTabs.ResumeLayout(false);
             this.friendsTab.ResumeLayout(false);
+            this.friendsTab.PerformLayout();
             this.serversTab.ResumeLayout(false);
+            this.serversTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.profilepicture)).EndInit();
             this.ResumeLayout(false);
 
@@ -203,5 +222,7 @@
         private System.Windows.Forms.ListView friendsList;
         private System.Windows.Forms.ListView serversList;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox friendSearchBar;
+        private System.Windows.Forms.TextBox serverSearchBar;
     }
 }
