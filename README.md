@@ -51,8 +51,6 @@ To update, you can just get the latest version and install it.
 - Other various channels such as fourms and such
 - Edit reply and delete.
 # Bugs
-- Some images do not load. 
-# Screenshots
-![Naticord 1_b1](https://github.com/Naticord/naticord/assets/135556230/7a5dc2a1-7400-483a-bbf6-e91f8b86953a)
-
+- Group chats do not load. This will be fixed in the future.
+- Sometimes markdown glitches out.
 
