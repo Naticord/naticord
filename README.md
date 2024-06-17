@@ -3,7 +3,7 @@
 
 Naticord / Native-cord is a native Discord client made in C#.
 
-Supports Windows 2000 - Windows 11 (Windows 2000 - Vista need proxy settings to work which you can setup with `PROXY.md`)
+Supports Windows Vista - Windows 11 (Windows Vista needs a proxy to work.)
 
 <a href="https://star-history.com/#n1d3v/naticord&Date">
  <picture>
@@ -20,7 +20,7 @@ Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
 Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
 
 # Installation
-Download naticord-setup.exe if you are on Windows Vista+ but if you are on XP download naticord-binaries.zip
+Download naticord-setup.exe if you are on Windows Vista+
 
 ### Updating
 To update, you can just get the latest version and install it.
