@@ -36,10 +36,10 @@ jobs:
       - name: List directory of \setup (debugging)
         run: dir Naticord\bin\setup
       - name: Rename mysetup.exe to naticord-setup.exe
-        run: ren Naticord\bin\setup\mysetup.exe Naticord\bin\setup\naticord-setup.exe 
+        run: ren Naticord\bin\setup\naticord\mysetup.exe Naticord\bin\setup\naticord\naticord-setup.exe 
       - name: Upload Naticord
         uses: actions/upload-artifact@v4.3.3
         with:
           name: Naticord
-          path: Naticord\bin\setup\naticord-setup.exe
+          path: Naticord\bin\setup\naticord\naticord-setup.exe
           compression-level: 0
