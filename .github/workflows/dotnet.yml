@@ -34,10 +34,10 @@ jobs:
           path: Naticord\bin\setup\naticord.iss
           options: /O+
       - name: Rename mysetup.exe to naticord-setup.exe
-        run: ren Naticord\bin\setup\{userappdata}\mysetup.exe Naticord\bin\setup\{userappdata}\naticord-setup.exe 
+        run: ren Naticord\bin\setup\mysetup.exe Naticord\bin\setup\{userappdata}\naticord-setup.exe 
       - name: Upload Naticord
         uses: actions/upload-artifact@v4.3.3
         with:
           name: Naticord
-          path: Naticord\bin\setup\{userappdata}\naticord-setup.exe
+          path: Naticord\bin\setup\naticord-setup.exe
           compression-level: 0
