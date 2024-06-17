@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Setup MSBuild
@@ -24,3 +24,9 @@ jobs:
         run: nuget restore Naticord/Naticord.sln
       - name: Build
         run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Release'
+      - name: Upload Rectify11Installer
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: Naticord
+          path: Naticord\bin\Debug\*
+          compression-level: 0
