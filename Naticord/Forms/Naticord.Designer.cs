@@ -34,12 +34,12 @@
             this.friendsList = new System.Windows.Forms.ListView();
             this.fsTabs = new System.Windows.Forms.TabControl();
             this.friendsTab = new System.Windows.Forms.TabPage();
+            this.friendSearchBar = new System.Windows.Forms.TextBox();
             this.serversTab = new System.Windows.Forms.TabPage();
+            this.serverSearchBar = new System.Windows.Forms.TextBox();
             this.serversList = new System.Windows.Forms.ListView();
             this.profilepicture = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.friendSearchBar = new System.Windows.Forms.TextBox();
-            this.serverSearchBar = new System.Windows.Forms.TextBox();
             this.fsTabs.SuspendLayout();
             this.friendsTab.SuspendLayout();
             this.serversTab.SuspendLayout();
@@ -116,6 +116,13 @@
             this.friendsTab.Text = "Friends";
             this.friendsTab.UseVisualStyleBackColor = true;
             // 
+            // friendSearchBar
+            // 
+            this.friendSearchBar.Location = new System.Drawing.Point(7, 6);
+            this.friendSearchBar.Name = "friendSearchBar";
+            this.friendSearchBar.Size = new System.Drawing.Size(253, 20);
+            this.friendSearchBar.TabIndex = 1;
+            // 
             // serversTab
             // 
             this.serversTab.Controls.Add(this.serverSearchBar);
@@ -127,6 +134,13 @@
             this.serversTab.TabIndex = 1;
             this.serversTab.Text = "Servers";
             this.serversTab.UseVisualStyleBackColor = true;
+            // 
+            // serverSearchBar
+            // 
+            this.serverSearchBar.Location = new System.Drawing.Point(7, 6);
+            this.serverSearchBar.Name = "serverSearchBar";
+            this.serverSearchBar.Size = new System.Drawing.Size(253, 20);
+            this.serverSearchBar.TabIndex = 2;
             // 
             // serversList
             // 
@@ -170,26 +184,11 @@
             this.button1.Size = new System.Drawing.Size(24, 24);
             this.button1.TabIndex = 5;
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += button1_Click;
-            // friendSearchBar
-            // 
-            this.friendSearchBar.Location = new System.Drawing.Point(7, 6);
-            this.friendSearchBar.Name = "friendSearchBar";
-            this.friendSearchBar.Size = new System.Drawing.Size(253, 20);
-            this.friendSearchBar.TabIndex = 1;
-            // 
-            // serverSearchBar
-            // 
-            this.serverSearchBar.Location = new System.Drawing.Point(7, 6);
-            this.serverSearchBar.Name = "serverSearchBar";
-            this.serverSearchBar.Size = new System.Drawing.Size(253, 20);
-            this.serverSearchBar.TabIndex = 2;
             // 
             // Naticord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(296, 468);
             this.Controls.Add(this.button1);
