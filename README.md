@@ -20,10 +20,29 @@ Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
 Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
 
 # Installation
-Download naticord-setup.exe if you are on Windows Vista+
+Download naticord-setup.exe if you are on Windows Vista+ If you are on Vista, you will need to setup a proxy for communicating with the Discord API (this will soon not be needed).
 
 ### Updating
 To update, you can just get the latest version and install it.
+
+# Building Naticord
+There are 2 ways to build Naticord, the easy route or the command-line route.
+
+### The Easy Route
+- Open Visual Studio 2022
+- Launch the solution
+- Install all the NuGet packages (it will do it automatically)
+- Select Build at the top and click Build Solution.
+- You can find your build at {naticordDir}\Naticord\bin\Debug\Naticord.exe or {naticordDir}\Naticord\bin\Release\Naticord.exe depending on what build type you have made.
+### The command-line route
+This requires VS 2022 installed.
+
+- Open CMD
+- Clone the naticord repository (this one)
+- CD into the naticord directory
+- Run `nuget restore Naticord\Naticord.sln` this will restore all the packages Naticord uses.
+- Run `msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Debug` this will generate a debug release of Naticord. If you want a release build switch out Debug for Release.
+- You can find your build at {naticordDir}\Naticord\bin\Debug\Naticord.exe or {naticordDir}\Naticord\bin\Release\Naticord.exe depending on what build type you have made.
 
 # What's working
 - Logging in with an email and password (with MFA)
@@ -51,8 +70,4 @@ To update, you can just get the latest version and install it.
 - Other various channels such as fourms and such
 - Edit reply and delete.
 # Bugs
-- Group chats do not load. This will be fixed in the future.
 - Sometimes markdown glitches out.
-# Projects that have helped out
-- Insomnia: Godsend for fucking around with Discord APIs however I want. Overall great tool
-
