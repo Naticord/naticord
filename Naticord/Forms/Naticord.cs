@@ -15,6 +15,7 @@ namespace Naticord
         private string AccessToken;
         private Login signin;
         private string userPFP;
+        private Dictionary<string, long> groupChatIDs = new Dictionary<string, long>();
 
         private List<ListViewItem> allFriends;
         private List<ListViewItem> allServers;
@@ -227,6 +228,7 @@ namespace Naticord
             }
         }
 
+        // absolute garbo, dont touch this unless necessary (it will combust into pieces). if it compiles thats great and if it works thats even greater.
         private void PopulateFriendsTab()
         {
             try
@@ -288,6 +290,8 @@ namespace Naticord
                             {
                                 namesOrName = (string)channel.name;
                                 channelType = "Group Message";
+
+                                SaveGroupChatID(namesOrName, channelId);
                             }
                             else if (channel.recipients != null && channel.recipients.Count > 0)
                             {
@@ -299,13 +303,22 @@ namespace Naticord
                                 }
                                 namesOrName = string.Join(", ", names);
                                 channelType = "Group Message";
+
+                                SaveGroupChatID(namesOrName, channelId);
                             }
 
                             namesOrName += $" - {channel.recipients.Count} members";
+
+                            if (!groupChatIDs.ContainsKey(namesOrName))
+                            {
+                                groupChatIDs[namesOrName] = channelId;
+                            }
                             break;
                     }
 
-                    allFriends.Add(new ListViewItem(namesOrName));
+                    ListViewItem item = new ListViewItem(namesOrName);
+                    item.Tag = channelType;
+                    allFriends.Add(item);
                     channelIds.Add(channelId);
                 }
 
@@ -318,6 +331,10 @@ namespace Naticord
             }
         }
 
+        private void SaveGroupChatID(string groupName, long chatID)
+        {
+            groupChatIDs[groupName] = chatID;
+        }
 
         private long GetChatID(string name)
         {
@@ -326,18 +343,15 @@ namespace Naticord
                 dynamic channels = GetApiResponse("users/@me/channels");
                 foreach (var channel in channels)
                 {
-                    if (channel.type == 1 && channel.type == 3 && channel.recipients[0].global_name != null)
+                    if (channel.type == 1) // i fucked up this line so bad it once started to load every single group chat i had lmfao great coding skillz 1337
                     {
-                        if ((string)channel.recipients[0].global_name == name)
+                        foreach (var recipient in channel.recipients)
                         {
-                            return (long)channel.id;
-                        }
-                    }
-                    else if (channel.type == 1 && channel.type == 3 && channel.recipients[0].username != null)
-                    {
-                        if ((string)channel.recipients[0].username == name)
-                        {
-                            return (long)channel.id;
+                            string recipientName = recipient.global_name ?? recipient.username;
+                            if (recipientName == name)
+                            {
+                                return (long)channel.id;
+                            }
                         }
                     }
                 }
@@ -345,7 +359,7 @@ namespace Naticord
             }
             catch (WebException ex)
             {
-                ShowErrorMessage("Failed to retrieve friends", ex);
+                ShowErrorMessage("Failed to retrieve chat ID", ex);
                 return -1;
             }
         }
@@ -357,16 +371,10 @@ namespace Naticord
                 dynamic friends = GetApiResponse("users/@me/relationships");
                 foreach (var friend in friends)
                 {
-                    if (friend.type == 1 && friend.user.global_name != null)
+                    if (friend.type == 1)
                     {
-                        if ((string)friend.user.global_name == name)
-                        {
-                            return (long)friend.id;
-                        }
-                    }
-                    else if (friend.type == 1 && friend.user.username != null)
-                    {
-                        if ((string)friend.user.username == name)
+                        string friendName = friend.user.global_name ?? friend.user.username;
+                        if (friendName == name)
                         {
                             return (long)friend.id;
                         }
@@ -376,28 +384,20 @@ namespace Naticord
             }
             catch (WebException ex)
             {
-                ShowErrorMessage("Failed to retrieve friends", ex);
+                ShowErrorMessage("Failed to retrieve friend ID", ex);
                 return -1;
             }
         }
 
         private long GetGroupID(string name)
         {
-            try
+            if (groupChatIDs.ContainsKey(name))
             {
-                dynamic channels = GetApiResponse("users/@me/channels");
-                foreach (var channel in channels)
-                {
-                    if (channel.type == 3 && channel.name == name)
-                    {
-                        return (long)channel.id;
-                    }
-                }
-                return -1;
+                return groupChatIDs[name];
             }
-            catch (WebException ex)
+            else
             {
-                ShowErrorMessage("Failed to retrieve group list", ex);
+                // Handle case when ID is not found
                 return -1;
             }
         }
@@ -466,21 +466,44 @@ namespace Naticord
             signin.Close();
         }
 
-        private void friendsList_DoubleClick(object sender, EventArgs ex)
+        private void friendsList_DoubleClick(object sender, EventArgs e)
         {
             if (friendsList.SelectedItems.Count > 0)
             {
-                string selectedFriend = friendsList.SelectedItems[0].Text;
-                long chatID = GetChatID(selectedFriend);
-                long friendID = GetFriendID(selectedFriend);
-                if (chatID >= 0)
+                string selectedChannel = friendsList.SelectedItems[0].Text;
+                string channelType = friendsList.SelectedItems[0].Tag as string; // Retrieve channel type from Tag
+
+                if (channelType == "Direct Message")
                 {
-                    DM dm = new DM(chatID, friendID, AccessToken, userPFP);
-                    dm.Show();
+                    long chatID = GetChatID(selectedChannel);
+                    if (chatID >= 0)
+                    {
+                        DM dm = new DM(chatID, GetFriendID(selectedChannel), AccessToken, userPFP);
+                        dm.Show();
+                        Console.WriteLine($"Direct Message Chat ID: {chatID}");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unable to open Direct Message chat. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else if (channelType == "Group Message")
+                {
+                    long groupID = GetGroupID(selectedChannel);
+                    if (groupID >= 0)
+                    {
+                        Group groupChat = new Group(groupID, AccessToken, userPFP);
+                        groupChat.Show();
+                        Console.WriteLine($"Group Chat ID: {groupID}");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unable to open Group Message chat. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Unable to open this DM. If you are trying to access a group chat, they will not work for now.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Unknown channel type.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

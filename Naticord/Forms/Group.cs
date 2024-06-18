@@ -29,10 +29,16 @@ namespace Naticord
             AccessToken = token;
             ChatID = chatid;
             userPFP = userpfp;
+            LoadGroupName();
             LoadMessages();
-            LoadGroupMembers();
             websocketClient = new WebSocketClientGroup(AccessToken, this);
         }
+
+        private void Group_Load(object sender, EventArgs e)
+        {
+            chatBox.DocumentText = "";
+        }
+
 
         private void SetProfilePictureShape(PictureBox pictureBox)
         {
@@ -283,25 +289,31 @@ namespace Naticord
             }
         }
 
-        private async void LoadGroupMembers()
+        // this can be easily replaced by something more simple but it works sooooo
+        private async void LoadGroupName()
         {
             try
             {
-                dynamic members = await GetApiResponse($"channels/{ChatID}/members");
+                dynamic channels = await GetApiResponse("users/@me/channels");
+                string groupName = "";
 
-                groupMembersList.Items.Clear();
-
-                foreach (var member in members)
+                foreach (var channel in channels)
                 {
-                    string memberName = member.global_name ?? member.username;
-                    groupMembersList.Items.Add(memberName);
+                    if (channel.type == 3 && (long)channel.id == ChatID)
+                    {
+                        groupName = channel.name ?? "Group Chat"; // group chat is for "we couldnt find out the name go fuck yourself"
+                        break;
+                    }
                 }
+
+                usernameLabel.Text = groupName;
             }
             catch (Exception ex)
             {
-                ShowErrorMessage("Failed to retrieve group members", ex);
+                ShowErrorMessage("Failed to retrieve group name", ex);
             }
         }
+
 
         private void ShowErrorMessage(string message, Exception ex)
         {
