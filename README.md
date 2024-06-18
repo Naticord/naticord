@@ -51,7 +51,6 @@ To update, you can just get the latest version and install it.
 - Other various channels such as fourms and such
 - Edit reply and delete.
 # Bugs
-- Group chats do not load. This will be fixed in the future.
 - Sometimes markdown glitches out.
 # Projects that have helped out
 - Insomnia: Godsend for fucking around with Discord APIs however I want. Overall great tool
