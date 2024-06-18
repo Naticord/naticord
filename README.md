@@ -53,4 +53,6 @@ To update, you can just get the latest version and install it.
 # Bugs
 - Group chats do not load. This will be fixed in the future.
 - Sometimes markdown glitches out.
+# Projects that have helped out
+- Insomnia: Godsend for fucking around with Discord APIs however I want. Overall great tool
 
