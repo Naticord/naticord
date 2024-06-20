@@ -72,8 +72,6 @@ namespace Naticord
 
         private async Task HandleWebSocketMessage(string data)
         {
-            Console.WriteLine($"WebSocket Received: {data}");
-
             var json = JObject.Parse(data);
             int opCode = (int)json["op"];
 
@@ -91,7 +89,7 @@ namespace Naticord
                             HandleTypingStopEvent(json["d"]);
                             break;
                         case "PRESENCE_UPDATE":
-                            //HandlePresenceUpdateEvent(json["d"]);
+                            // soon
                             break;
                     }
                     break;

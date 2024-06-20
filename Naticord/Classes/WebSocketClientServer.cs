@@ -173,7 +173,6 @@ namespace Naticord
             List<Attachment> attachmentsFormed = new List<Attachment>();
             List<Embed> embedsFormed = new List<Embed>();
 
-            // Form attachments
             if (attachmentData != null)
             {
                 foreach (var attachment in attachmentData)
@@ -182,7 +181,6 @@ namespace Naticord
                 }
             }
 
-            // Form embeds
             if (embedData != null)
             {
                 foreach (var embed in embedData)
@@ -199,7 +197,6 @@ namespace Naticord
                 }
             }
 
-            // Directly call AddMessage based on message type
             switch ((int)eventData["type"].Value)
             {
                 case 7:
