@@ -47,7 +47,7 @@ This requires VS 2022 installed.
 # What's working
 - Logging in with an email and password (with MFA)
 - Friends
-- DMs
+- Groups
 - Sending messages
 - Full server functionality
 - Server channel categories
