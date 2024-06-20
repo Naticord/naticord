@@ -23,11 +23,11 @@ jobs:
       - name: Restore Packages
         run: nuget restore Naticord/Naticord.sln
       - name: Build
-        run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Release'
+        run: 'msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Debug'
       - name: Clone naticord-setup
         run: 'git clone https://github.com/Naticord/naticord-setup Naticord\bin\setup'
       - name: Copy Release build to \setup
-        run: copy Naticord\bin\Release\* Naticord\bin\setup
+        run: copy Naticord\bin\Debug\* Naticord\bin\setup
       - name: Compile .ISS to .EXE Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
