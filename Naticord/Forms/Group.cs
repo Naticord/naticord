@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Net;
+using System.IO;
 
 namespace Naticord
 {
@@ -245,7 +246,7 @@ namespace Naticord
             }
         }
 
-        private void SendMessage()
+        private async Task SendMessage()
         {
             string message = messageBox.Text.Trim();
             if (!string.IsNullOrEmpty(message))
@@ -256,24 +257,85 @@ namespace Naticord
                     {
                         content = message
                     };
-                    string jsonPostData = JsonConvert.SerializeObject(postData);
+                    string jsonPostData = Newtonsoft.Json.JsonConvert.SerializeObject(postData);
 
-                    using (var client = new WebClient())
+                    using (var client = new HttpClient())
                     {
-                        byte[] byteArray = Encoding.UTF8.GetBytes(jsonPostData);
-                        client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                        client.Headers[HttpRequestHeader.Authorization] = AccessToken;
-                        byte[] responseArray = client.UploadData($"{DiscordApiBaseUrl}channels/{ChatID}/messages", "POST", byteArray);
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(AccessToken);
+                        HttpContent content = new StringContent(jsonPostData, Encoding.UTF8, "application/json");
 
-                        string response = Encoding.UTF8.GetString(responseArray);
+                        HttpResponseMessage response = await client.PostAsync($"{DiscordApiBaseUrl}channels/{ChatID}/messages", content);
+                        response.EnsureSuccessStatusCode();
+
+                        if (Clipboard.ContainsImage())
+                        {
+                            Image image = Clipboard.GetImage();
+                            byte[] imageBytes = ImageToBytes(image);
+                            await UploadImage(imageBytes);
+                        }
                     }
 
                     messageBox.Clear();
                 }
-                catch (WebException ex)
+                catch (Exception ex)
                 {
                     ShowErrorMessage("Failed to send message", ex);
                 }
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.V))
+            {
+                if (Clipboard.ContainsImage())
+                {
+                    try
+                    {
+                        Image clipboardImage = Clipboard.GetImage();
+                        byte[] imageBytes = ImageToBytes(clipboardImage);
+
+                        Task.Run(() => UploadImage(imageBytes)).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessage("Failed to upload image", ex);
+                    }
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private async Task UploadImage(byte[] imageBytes)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(AccessToken);
+
+                    MultipartFormDataContent formData = new MultipartFormDataContent();
+                    formData.Add(new ByteArrayContent(imageBytes), "file", "image.png");
+
+                    HttpResponseMessage response = await client.PostAsync($"{DiscordApiBaseUrl}channels/{ChatID}/messages", formData);
+                    response.EnsureSuccessStatusCode();
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("Failed to upload image", ex);
+            }
+        }
+
+        private byte[] ImageToBytes(Image image)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return ms.ToArray();
             }
         }
 
