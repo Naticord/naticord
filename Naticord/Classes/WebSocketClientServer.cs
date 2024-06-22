@@ -95,6 +95,12 @@ namespace Naticord
         {
             dynamic eventData = data;
             string channelId = eventData["channel_id"];
+
+            if (channelId != parentServerForm.ChatID.ToString())
+            {
+                return;
+            }
+
             string author = eventData["author"]["global_name"] ?? eventData["author"]["username"];
             string content = eventData["content"];
             dynamic attachmentData = eventData["attachments"];
@@ -151,7 +157,7 @@ namespace Naticord
                     bool found = false;
                     try
                     {
-                        var messages = await parentServerForm.GetApiResponse($"channels/{parentServerForm.ChatID.ToString()}/messages");
+                        var messages = await parentServerForm.GetApiResponse($"channels/{parentServerForm.ChatID}/messages");
 
                         foreach (var message in messages)
                         {
