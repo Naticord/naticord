@@ -113,7 +113,7 @@
             this.friendsTab.Padding = new System.Windows.Forms.Padding(3);
             this.friendsTab.Size = new System.Drawing.Size(266, 371);
             this.friendsTab.TabIndex = 0;
-            this.friendsTab.Text = "Friends";
+            this.friendsTab.Text = "DMs";
             this.friendsTab.UseVisualStyleBackColor = true;
             // 
             // friendSearchBar
