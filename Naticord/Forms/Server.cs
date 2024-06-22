@@ -14,9 +14,9 @@ namespace Naticord
     {
         private const string DiscordApiBaseUrl = "https://discord.com/api/v9/";
         private WebSocketClientServer websocketClient;
-        const string htmlStart = "<!DOCTYPE html><html><head><meta http-equiv=\"X-UA-Compatible\" content=\"edge\" ><style>* {font-family: \"Segoe UI\", sans-serif; font-size: 10pt; overflow-x: hidden;} p,strong,b,i,em,mark,small,del,ins,sub,sup,h1,h2,h3,h4,h5,h6 {display: inline;} img {width: auto; height: auto; max-width: 60% !important; max-height: 60% !important;} .spoiler {background-color: black; color: black; border-radius: 5px;} .spoiler:hover {background-color: black; color: white; border-radius: 5px;} .ping {background-color: #e6e8fd; color: #5865f3; border-radius: 5px;} .rich {width: 60%; border-style: solid; border-radius: 5px; border-width: 2px; border-color: black; padding: 10px;}</style></head><body>";
-        string htmlMiddle = "";
-        const string htmlEnd = "</body></head></html>";
+        public string htmlStart = "<!DOCTYPE html><html><head><meta http-equiv=\"X-UA-Compatible\" content=\"edge\" ><style>* {font-family: \"Segoe UI\", sans-serif; font-size: 10pt; overflow-x: hidden;} p,strong,b,i,em,mark,small,del,ins,sub,sup,h1,h2,h3,h4,h5,h6 {display: inline;} img {width: auto; height: auto; max-width: 60% !important; max-height: 60% !important;} .spoiler {background-color: black; color: black; border-radius: 5px;} .spoiler:hover {background-color: black; color: white; border-radius: 5px;} .ping {background-color: #e6e8fd; color: #5865f3; border-radius: 5px;} .rich {width: 60%; border-style: solid; border-radius: 5px; border-width: 2px; border-color: black; padding: 10px;}</style></head><body>";
+        public string htmlMiddle = "";
+        public string htmlEnd = "</body></head></html>";
         private string AccessToken;
         public long ServerID;
         public long ChatID;
@@ -26,7 +26,7 @@ namespace Naticord
             InitializeComponent();
             AccessToken = token;
             ServerID = serverid;
-            Thread.Sleep(1000);
+            Thread.Sleep(750);
             PopulateFields();
         }
         private void PopulateFields()
@@ -120,6 +120,23 @@ namespace Naticord
             if (scroll) ScrollToBottom();
 
             return result;
+        }
+
+        public void UpdateChatBox(string htmlContent)
+        {
+            if (chatBox.InvokeRequired)
+            {
+                chatBox.Invoke((MethodInvoker)(() =>
+                {
+                    chatBox.DocumentText = htmlContent;
+                    ScrollToBottom();
+                }));
+            }
+            else
+            {
+                chatBox.DocumentText = htmlContent;
+                ScrollToBottom();
+            }
         }
 
         private async Task<string> DiscordMDToHtml(string md)

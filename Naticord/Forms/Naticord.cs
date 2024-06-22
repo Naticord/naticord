@@ -32,6 +32,7 @@ namespace Naticord
             PopulateFriendsTab();
             PopulateServersTab();
             SetProfilePictureRegion();
+            Settings settingsForm = new Settings();
 
             Application.EnableVisualStyles();
 
@@ -39,6 +40,8 @@ namespace Naticord
             serverSearchBar.TextChanged += ServersSearchBar_TextChanged;
 
             InitializeContextMenus();
+
+            settingsForm.darkModeToggle.Checked = Properties.Settings.Default.darkmode;
         }
 
         private void SetProfilePictureRegion()

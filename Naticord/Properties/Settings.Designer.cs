@@ -46,5 +46,17 @@ namespace Naticord.Properties {
                 this["proxy"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool darkmode {
+            get {
+                return ((bool)(this["darkmode"]));
+            }
+            set {
+                this["darkmode"] = value;
+            }
+        }
     }
 }

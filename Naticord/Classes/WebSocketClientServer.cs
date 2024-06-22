@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using System.Net;
 using WebSocketSharp;
-using System.Security.Authentication;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Naticord
 {
@@ -14,12 +15,10 @@ namespace Naticord
         private WebSocket webSocket;
         private string accessToken;
         private const SslProtocols Tls12 = (SslProtocols)0x00000C00;
-        bool tryingRandomStuffAtThisPoint = false;
 
         public WebSocketClientServer(string accessToken, Server parentServerForm)
         {
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-            //Console.WriteLine($"Using Access Token: {accessToken}");
 
             this.accessToken = accessToken;
             this.parentServerForm = parentServerForm;
@@ -73,8 +72,6 @@ namespace Naticord
 
         private void HandleWebSocketMessage(string data)
         {
-            Console.WriteLine($"WebSocket Received: {data}");
-
             var json = JObject.Parse(data);
             int opCode = (int)json["op"];
 
@@ -84,81 +81,14 @@ namespace Naticord
                     string eventType = (string)json["t"];
                     switch (eventType)
                     {
-                        /*case "TYPING_START":
-                            HandleTypingStartEvent(json["d"]);
-                            break;
-                        case "TYPING_STOP":
-                            HandleTypingStopEvent(json["d"]);
-                            break;*/
                         case "MESSAGE_CREATE":
                             HandleMessageCreateEvent(json["d"]);
                             break;
                     }
                     break;
                 default:
-                    // handle other op codes when needed ig
                     break;
             }
-        }
-
-        /*private void HandleTypingStartEvent(JToken jToken)
-        {
-            string channelId = (string)jToken["channel_id"];
-            if (channelId == parentServerForm.CurrentChannelId)
-            {
-                string userId = (string)jToken["user_id"];
-                string username = GetUsernameById(userId);
-                string message = $"{username} is typing...";
-
-                parentServerForm.Invoke((MethodInvoker)(() =>
-                {
-                    parentServerForm.typingStatus.Text = message;
-                }));
-            }
-        }
-
-        private void HandleTypingStopEvent(JToken jToken)
-        {
-            string channelId = (string)jToken["channel_id"];
-            if (channelId == parentServerForm.CurrentChannelId)
-            {
-                string message = "";
-
-                parentServerForm.Invoke((MethodInvoker)(() =>
-                {
-                    parentServerForm.typingStatus.Text = message;
-                }));
-            }
-        }*/
-
-        public string GetUsernameById(string userId)
-        {
-            try
-            {
-                dynamic user = parentServerForm.GetApiResponse($"users/{userId}");
-                return user.username;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to get username for user ID {userId}: {ex.Message}");
-                return "Unknown";
-            }
-        }
-
-        public class Attachment
-        {
-            public string URL { get; set; }
-            public string Type { get; set; }
-        }
-
-        public class Embed
-        {
-            public string Type { get; set; }
-            public string Author { get; set; }
-            public string AuthorURL { get; set; }
-            public string Title { get; set; }
-            public string TitleURL { get; set; }
-            public string Description { get; set; }
         }
 
         private async void HandleMessageCreateEvent(JToken data)
@@ -197,10 +127,25 @@ namespace Naticord
                 }
             }
 
+            if (parentServerForm.InvokeRequired)
+            {
+                parentServerForm.Invoke((MethodInvoker)(async () =>
+                {
+                    await ProcessMessageAndUpdateChat(author, content, attachmentsFormed.ToArray(), embedsFormed.ToArray(), eventData);
+                }));
+            }
+            else
+            {
+                await ProcessMessageAndUpdateChat(author, content, attachmentsFormed.ToArray(), embedsFormed.ToArray(), eventData);
+            }
+        }
+
+        private async Task ProcessMessageAndUpdateChat(string author, string content, Attachment[] attachments, Embed[] embeds, dynamic eventData)
+        {
             switch ((int)eventData["type"].Value)
             {
                 case 7:
-                    await parentServerForm.AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray());
+                    await parentServerForm.AddMessage(author, "*Say hi!*", "slid in the server", attachments, embeds);
                     break;
                 case 19:
                     bool found = false;
@@ -213,7 +158,7 @@ namespace Naticord
                             if (message.id == eventData["message_reference"]["message_id"])
                             {
                                 string replyAuthor = message.author.global_name ?? message.author.username;
-                                await parentServerForm.AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), found, true);
+                                await parentServerForm.AddMessage(author, content, "replied", attachments, embeds, found, true);
                                 found = true;
                                 break;
                             }
@@ -226,42 +171,53 @@ namespace Naticord
 
                     if (!found)
                     {
-                        await parentServerForm.AddMessage(author, content, "replied", attachmentsFormed.ToArray(), embedsFormed.ToArray(), false, false);
+                        await parentServerForm.AddMessage(author, content, "replied", attachments, embeds, false, false);
                     }
                     break;
                 default:
-                    await parentServerForm.AddMessage(author, content, "said", attachmentsFormed.ToArray(), embedsFormed.ToArray());
+                    await parentServerForm.AddMessage(author, content, "said", attachments, embeds);
                     break;
             }
+
+            parentServerForm.UpdateChatBox(parentServerForm.htmlStart + parentServerForm.htmlMiddle + parentServerForm.htmlEnd);
         }
 
         private void HandleWebSocketError(string errorMessage)
         {
             parentServerForm.Invoke((MethodInvoker)(() =>
             {
-                // really shitty code on getting the websocket back but works fine, will be patched nevr!!!1!!!
                 InitializeWebSocket();
             }));
         }
 
         private void HandleWebSocketClose()
         {
-            if (!tryingRandomStuffAtThisPoint) try
-                {
-                    parentServerForm.Invoke((MethodInvoker)(() =>
-                    {
-                        // really shitty code on getting the websocket back but works fine, will be patched nevr!!!1!!!
-                        InitializeWebSocket();
-                    }));
-                }
-                catch { }
+            parentServerForm.Invoke((MethodInvoker)(() =>
+            {
+                InitializeWebSocket();
+            }));
         }
 
         public void CloseWebSocket()
         {
-            tryingRandomStuffAtThisPoint = true;
             webSocket.Close();
             GC.Collect();
+        }
+
+        public class Attachment
+        {
+            public string URL { get; set; }
+            public string Type { get; set; }
+        }
+
+        public class Embed
+        {
+            public string Type { get; set; }
+            public string Author { get; set; }
+            public string AuthorURL { get; set; }
+            public string Title { get; set; }
+            public string TitleURL { get; set; }
+            public string Description { get; set; }
         }
     }
 }

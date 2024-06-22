@@ -72,8 +72,6 @@ namespace Naticord
 
         private async Task HandleWebSocketMessage(string data)
         {
-            Console.WriteLine($"WebSocket Received: {data}");
-
             var json = JObject.Parse(data);
             int opCode = (int)json["op"];
 
@@ -87,12 +85,11 @@ namespace Naticord
                             await HandleMessageCreateEventAsync(json["d"]);
                             break;
                         case "PRESENCE_UPDATE":
-                            //HandlePresenceUpdateEvent(json["d"]);
+                            // soon
                             break;
                     }
                     break;
                 default:
-                    // handle other op codes when needed
                     break;
             }
         }
@@ -160,12 +157,10 @@ namespace Naticord
                 switch ((int)eventData["type"].Value)
                 {
                     case 7:
-                        // Join message
                         parentGroupForm.AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
                         break;
 
                     case 19:
-                        // Reply
                         bool found = false;
                         var messages = await parentGroupForm.GetApiResponse($"channels/{parentGroupForm.ChatID}/messages");
                         foreach (var message in messages)
@@ -183,27 +178,12 @@ namespace Naticord
                         break;
 
                     default:
-                        // Normal text or unimplemented
                         parentGroupForm.AddMessage(author, content, "said", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
                         break;
                 }
                 parentGroupForm.Invoke((MethodInvoker)(() => parentGroupForm.ScrollToBottom()));
             }
         }
-
-        /*private void HandlePresenceUpdateEvent(JToken data)
-        {
-            dynamic eventData = data;
-            string userId = eventData["user"]["id"];
-            string status = eventData["status"];
-
-            string username = GetUsernameById(userId);
-
-            parentGroupForm.Invoke((MethodInvoker)(() =>
-            {
-                // nothing for now
-            }));
-        }*/
 
         private void HandleWebSocketError(string errorMessage)
         {

@@ -35,6 +35,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'GitHub Release|AnyCPU'">
     <OutputPath>bin\GitHub Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>E68F444FC8AD9F4A843008BAF483F32FF5768955</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Naticord_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
@@ -58,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\DarkMode.cs" />
     <Compile Include="Classes\WebSocketClientGroup.cs" />
     <Compile Include="Forms\Group.cs">
       <SubType>Form</SubType>

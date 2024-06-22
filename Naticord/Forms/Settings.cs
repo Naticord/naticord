@@ -226,6 +226,12 @@ namespace Naticord
             [DllImport("kernel32.dll", SetLastError = true)]
             private static extern bool FreeLibrary(IntPtr hModule);
         }
+
+        private void darkModeToggle_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.darkmode = darkModeToggle.Checked;
+            Properties.Settings.Default.Save();
+        }
     }
 }
 

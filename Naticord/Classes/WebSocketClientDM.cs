@@ -94,7 +94,6 @@ namespace Naticord
                     }
                     break;
                 default:
-                    // handle other op codes when needed
                     break;
             }
         }
@@ -190,12 +189,10 @@ namespace Naticord
                 switch ((int)eventData["type"].Value)
                 {
                     case 7:
-                        // Join message
                         parentDMForm.AddMessage(author, "*Say hi!*", "slid in the server", attachmentsFormed.ToArray(), embedsFormed.ToArray(), true, true);
                         break;
 
                     case 19:
-                        // Reply
                         bool found = false;
                         var messages = await parentDMForm.GetApiResponse($"channels/{parentDMForm.ChatID}/messages");
                         foreach (var message in messages)
@@ -220,20 +217,6 @@ namespace Naticord
                 parentDMForm.Invoke((MethodInvoker)(() => parentDMForm.ScrollToBottom()));
             }
         }
-
-        /*private void HandlePresenceUpdateEvent(JToken data)
-        {
-            dynamic eventData = data;
-            string userId = eventData["user"]["id"];
-            string status = eventData["status"];
-
-            string username = GetUsernameById(userId);
-
-            parentDMForm.Invoke((MethodInvoker)(() =>
-            {
-                // nothing for now
-            }));
-        }*/
 
         private void HandleWebSocketError(string errorMessage)
         {
