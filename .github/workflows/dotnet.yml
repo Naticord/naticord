@@ -39,5 +39,5 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           name: naticord-setup
-          path: Naticord\bin\setup\naticord\mysetup.exe
+          path: Naticord\bin\setup\naticord\naticord-setup.exe
           compression-level: 0
