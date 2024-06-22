@@ -61,7 +61,7 @@ This requires VS 2022 installed.
 - Embeds
 - Plugins (experimental)
 - Searching for either friends or servers
-- Copying and pasting images from the clipboard (DMs only)
+- Copying and pasting images from the clipboard
 - Block, unfriend and leave groups / friends.
 # Planned functions
 - Voice calling
