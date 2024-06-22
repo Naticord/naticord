@@ -315,7 +315,19 @@ namespace Naticord
 
         public void ScrollToBottom()
         {
-            chatBox.Document.Window.ScrollTo(0, chatBox.Document.Body.ScrollRectangle.Height);
+            try
+            {
+                if (chatBox.Document != null && chatBox.Document.Body != null)
+                {
+                    chatBox.Document.OpenNew(true);
+                    chatBox.Document.Write(htmlStart + htmlMiddle + htmlEnd);
+                    chatBox.Document.Window.ScrollTo(0, chatBox.Document.Body.ScrollRectangle.Bottom);
+                }
+            }
+            catch (Exception ex)
+            {
+                // who tf cares bro it works
+            }
         }
 
         private void messageBox_KeyDown(object sender, KeyEventArgs e)

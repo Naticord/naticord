@@ -338,7 +338,6 @@ namespace Naticord
             }
         }
 
-
         private void messageBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && !e.Shift)

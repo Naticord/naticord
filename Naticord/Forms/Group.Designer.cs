@@ -51,7 +51,8 @@ namespace Naticord
             this.messageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messageBox.Location = new System.Drawing.Point(13, 457);
-            this.messageBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.messageBox.Margin = new System.Windows.Forms.Padding(4);
+            this.messageBox.Multiline = true;
             this.messageBox.Name = "messageBox";
             this.messageBox.Size = new System.Drawing.Size(975, 22);
             this.messageBox.TabIndex = 6;
@@ -63,7 +64,7 @@ namespace Naticord
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chatBox.Location = new System.Drawing.Point(13, 34);
-            this.chatBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chatBox.Margin = new System.Windows.Forms.Padding(4);
             this.chatBox.MinimumSize = new System.Drawing.Size(23, 21);
             this.chatBox.Name = "chatBox";
             this.chatBox.ScriptErrorsSuppressed = true;
@@ -81,7 +82,7 @@ namespace Naticord
             this.Controls.Add(this.chatBox);
             this.Controls.Add(this.messageBox);
             this.Controls.Add(this.usernameLabel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Group";
             this.ShowIcon = false;
             this.Text = "Group Name - Naticord";

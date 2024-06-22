@@ -468,10 +468,22 @@ namespace Naticord
             }
         }
 
-        private void ScrollToBottom()
+        public void ScrollToBottom()
         {
-            Application.DoEvents();
-            chatBox.Navigate("javascript:window.scroll(0,document.body.scrollHeight);");
+            try
+            {
+                Application.DoEvents();
+                if (chatBox.Document != null && chatBox.Document.Body != null)
+                {
+                    chatBox.Document.OpenNew(true);
+                    chatBox.Document.Write(htmlStart + htmlMiddle + htmlEnd);
+                    chatBox.Document.Window.ScrollTo(0, chatBox.Document.Body.ScrollRectangle.Bottom);
+                }
+            }
+            catch (Exception ex)
+            {
+                // who tf cares bro it works
+            }
         }
 
         protected override void OnShown(EventArgs e)

@@ -56,7 +56,8 @@
             this.messageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messageBox.Location = new System.Drawing.Point(3, 447);
-            this.messageBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.messageBox.Margin = new System.Windows.Forms.Padding(4);
+            this.messageBox.Multiline = true;
             this.messageBox.Name = "messageBox";
             this.messageBox.Size = new System.Drawing.Size(781, 22);
             this.messageBox.TabIndex = 6;
@@ -68,7 +69,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chatBox.Location = new System.Drawing.Point(1, 37);
-            this.chatBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chatBox.Margin = new System.Windows.Forms.Padding(4);
             this.chatBox.MinimumSize = new System.Drawing.Size(27, 25);
             this.chatBox.Name = "chatBox";
             this.chatBox.Size = new System.Drawing.Size(783, 402);
@@ -83,7 +84,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.channelList.HideSelection = false;
             this.channelList.Location = new System.Drawing.Point(9, 46);
-            this.channelList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.channelList.Margin = new System.Windows.Forms.Padding(4);
             this.channelList.Name = "channelList";
             this.channelList.Size = new System.Drawing.Size(215, 424);
             this.channelList.TabIndex = 10;
@@ -130,7 +131,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1024, 485);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Server";
             this.ShowIcon = false;
             this.Text = "Naticord - Chat";

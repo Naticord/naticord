@@ -59,7 +59,8 @@ namespace Naticord
             this.messageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messageBox.Location = new System.Drawing.Point(149, 444);
-            this.messageBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.messageBox.Margin = new System.Windows.Forms.Padding(4);
+            this.messageBox.Multiline = true;
             this.messageBox.Name = "messageBox";
             this.messageBox.Size = new System.Drawing.Size(839, 22);
             this.messageBox.TabIndex = 6;
@@ -71,7 +72,7 @@ namespace Naticord
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chatBox.Location = new System.Drawing.Point(149, 43);
-            this.chatBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chatBox.Margin = new System.Windows.Forms.Padding(4);
             this.chatBox.MinimumSize = new System.Drawing.Size(23, 21);
             this.chatBox.Name = "chatBox";
             this.chatBox.ScriptErrorsSuppressed = true;
@@ -88,7 +89,7 @@ namespace Naticord
             this.profilepicture.Image = global::Naticord.Properties.Resources.defaultpfp;
             this.profilepicture.InitialImage = global::Naticord.Properties.Resources.defaultpfp;
             this.profilepicture.Location = new System.Drawing.Point(13, 373);
-            this.profilepicture.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.profilepicture.Margin = new System.Windows.Forms.Padding(4);
             this.profilepicture.Name = "profilepicture";
             this.profilepicture.Size = new System.Drawing.Size(120, 111);
             this.profilepicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -102,7 +103,7 @@ namespace Naticord
             this.profilepicturefriend.Image = global::Naticord.Properties.Resources.defaultpfp;
             this.profilepicturefriend.InitialImage = global::Naticord.Properties.Resources.defaultpfp;
             this.profilepicturefriend.Location = new System.Drawing.Point(16, 15);
-            this.profilepicturefriend.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.profilepicturefriend.Margin = new System.Windows.Forms.Padding(4);
             this.profilepicturefriend.Name = "profilepicturefriend";
             this.profilepicturefriend.Size = new System.Drawing.Size(120, 111);
             this.profilepicturefriend.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -131,7 +132,7 @@ namespace Naticord
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.profilepicturefriend);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "DM";
             this.ShowIcon = false;
             this.Text = "Naticord - Chat";
