@@ -20,7 +20,7 @@ Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
 Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
 
 # Installation
-Download naticord-setup.exe if you are on Windows Vista+ If you are on Vista, you will need to setup a proxy for communicating with the Discord API (this will soon not be needed).
+Download naticord-setup.exe if you are on Windows Vista+ If you are on Vista, you will need to setup a proxy for communicating with the Discord API (this will soon not be needed). If you are on Linux, your best bet is using Wine.
 
 ### Updating
 To update, you can just get the latest version and install it.
