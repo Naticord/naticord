@@ -1,10 +1,3 @@
-# Why was this archived?
-Well.
-
-1. This was a pain to maintain and support for. It was buggy as fuck too.
-2. This was just stolen Aerocord. I did get permission from the owner to do so
-
-If you still want a custom Discord client, check out [Aerocord](https://github.com/jukfiuune/aerocord).
 # naticord
 ![skillicns](https://skillicons.dev/icons?i=discord,cs,dotnet)
 
