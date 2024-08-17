@@ -64,7 +64,7 @@ This requires VS 2022 installed.
 - Copying and pasting images from the clipboard
 - Block, unfriend and leave groups / friends.
 # Planned functions
-- Voice calling
+- Voice calling (do not expect this, ever)
 - Statuses
 - Hide hidden channels in servers
 - Other various channels such as fourms and such
