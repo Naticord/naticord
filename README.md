@@ -71,3 +71,6 @@ This requires VS 2022 installed.
 - Edit reply and delete.
 # Bugs
 - Sometimes markdown glitches out.
+# naticord Timeline
+![image](https://github.com/user-attachments/assets/14a4c793-a583-4ee6-bcb8-366d1a9b31c2)
+
