@@ -3,7 +3,10 @@
 
 Naticord / Native-cord is a native Discord client made in C#.
 
-Supports Windows Vista - Windows 11 (Windows Vista needs a proxy to work.)
+Supports Windows 7 - Windows 11
+
+> [!NOTE]
+> Using Rectify 11 could break the theming using naticord. Only fix is to disable Rectify's theming.
 
 <a href="https://star-history.com/#n1d3v/naticord&Date">
  <picture>
@@ -20,7 +23,7 @@ Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
 Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
 
 # Installation
-Download naticord-setup.exe if you are on Windows Vista+ If you are on Vista, you will need to setup a proxy for communicating with the Discord API (this will soon not be needed). If you are on Linux, your best bet is using Wine.
+Download naticord-setup.exe if you are on Windows 7 and above. If you are on Linux, your best bet is using Wine.
 
 ### Updating
 To update, you can just get the latest version and install it.
