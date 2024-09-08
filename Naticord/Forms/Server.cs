@@ -31,6 +31,8 @@ namespace Naticord
             Thread.Sleep(750);
             PopulateFields();
         }
+        private CancellationTokenSource cts = new CancellationTokenSource();
+
         private void PopulateFields()
         {
             try
@@ -86,6 +88,10 @@ namespace Naticord
         {
             string result = string.Empty;
 
+            // Check if task is canceled
+            if (cts.Token.IsCancellationRequested)
+                return result;
+
             if (name == lastMessageAuthor && action == "said")
             {
                 htmlMiddle += "<br><p>" + await DiscordMDToHtml(message) + "</p>";
@@ -98,15 +104,26 @@ namespace Naticord
             {
                 htmlMiddle += "<br><strong>" + name + " " + action + ":</strong><br><p>" + await DiscordMDToHtml(message) + "</p>";
             }
+
             lastMessageAuthor = name;
+
+            // Check if task is canceled
+            if (cts.Token.IsCancellationRequested)
+                return result;
 
             if (attachments.Length > 0)
             {
                 foreach (var attachment in attachments)
                 {
+                    if (cts.Token.IsCancellationRequested)
+                        return result;
+
                     chatBox.ScriptErrorsSuppressed = true;
-                    if (attachment.Type.Contains("image")) htmlMiddle += "<br><img src=\"" + attachment.URL + "\"></img>";
-                    if (attachment.Type.Contains("video")) htmlMiddle += "<br><embed src=\"" + attachment.URL + "\" type=\"" + attachment.Type + "\" width=\"60%\" height=\"60%\">";
+
+                    if (attachment.Type.Contains("image"))
+                        htmlMiddle += "<br><img src=\"" + attachment.URL + "\"></img>";
+                    if (attachment.Type.Contains("video"))
+                        htmlMiddle += "<br><embed src=\"" + attachment.URL + "\" type=\"" + attachment.Type + "\" width=\"60%\" height=\"60%\">";
                 }
             }
 
@@ -114,32 +131,55 @@ namespace Naticord
             {
                 foreach (var embed in embeds)
                 {
-                    if (embed.Type == "rich") htmlMiddle += "<br><div class=\"rich\"><a style=\"color: black\" href=\"" + embed.AuthorURL + "\">" + embed.Author + "</a><br><br><a href=\"" + embed.TitleURL + "\">" + embed.Title + "</a><br><br><p>" + embed.Description + "</p></div>";
+                    if (cts.Token.IsCancellationRequested)
+                        return result;
+
+                    if (embed.Type == "rich")
+                        htmlMiddle += "<br><div class=\"rich\"><a style=\"color: black\" href=\"" + embed.AuthorURL + "\">" + embed.Author + "</a><br><br><a href=\"" + embed.TitleURL + "\">" + embed.Title + "</a><br><br><p>" + embed.Description + "</p></div>";
                 }
             }
 
-            if (reload) chatBox.DocumentText = (htmlStart + htmlMiddle + htmlEnd).ToString();
-            if (scroll) ScrollToBottom();
+            if (reload && !chatBox.IsDisposed)
+            {
+                chatBox.DocumentText = (htmlStart + htmlMiddle + htmlEnd).ToString();
+            }
+
+            if (scroll && !chatBox.IsDisposed)
+            {
+                ScrollToBottom();
+            }
 
             return result;
         }
 
+
         public void UpdateChatBox(string htmlContent)
         {
+            if (chatBox.IsDisposed || this.IsDisposed)
+            {
+                return;
+            }
             if (chatBox.InvokeRequired)
             {
                 chatBox.Invoke((MethodInvoker)(() =>
                 {
-                    chatBox.DocumentText = htmlContent;
-                    ScrollToBottom();
+                    if (!chatBox.IsDisposed && !this.IsDisposed)
+                    {
+                        chatBox.DocumentText = htmlContent;
+                        ScrollToBottom();
+                    }
                 }));
             }
             else
             {
-                chatBox.DocumentText = htmlContent;
-                ScrollToBottom();
+                if (!chatBox.IsDisposed && !this.IsDisposed)
+                {
+                    chatBox.DocumentText = htmlContent;
+                    ScrollToBottom();
+                }
             }
         }
+
 
         private async Task<string> DiscordMDToHtml(string md)
         {
@@ -562,6 +602,7 @@ namespace Naticord
             base.OnFormClosing(e);
             if (websocketClient != null) websocketClient.CloseWebSocket();
             GC.Collect();
+            cts.Cancel();
         }
     }
 }

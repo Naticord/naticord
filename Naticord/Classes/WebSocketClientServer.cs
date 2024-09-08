@@ -198,11 +198,19 @@ namespace Naticord
 
         private void HandleWebSocketClose()
         {
-            parentServerForm.Invoke((MethodInvoker)(() =>
+            if (parentServerForm != null && !parentServerForm.IsDisposed && parentServerForm.IsHandleCreated)
             {
-                InitializeWebSocket();
-            }));
+                parentServerForm.Invoke((MethodInvoker)(() =>
+                {
+                    InitializeWebSocket();
+                }));
+            }
+            else
+            {
+                CloseWebSocket();
+            }
         }
+
 
         public void CloseWebSocket()
         {

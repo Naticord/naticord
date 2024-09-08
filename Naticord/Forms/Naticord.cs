@@ -400,7 +400,6 @@ namespace Naticord
             }
             else
             {
-                // Handle case when ID is not found
                 return -1;
             }
         }
@@ -474,7 +473,7 @@ namespace Naticord
             if (friendsList.SelectedItems.Count > 0)
             {
                 string selectedChannel = friendsList.SelectedItems[0].Text;
-                string channelType = friendsList.SelectedItems[0].Tag as string; // Retrieve channel type from Tag
+                string channelType = friendsList.SelectedItems[0].Tag as string;
 
                 if (channelType == "Direct Message")
                 {
