@@ -5,6 +5,9 @@ Naticord / Native-cord is a native Discord client made in C#.
 
 Supports Windows 7 - Windows 11
 
+> [!NOTE]
+> Using Rectify 11 could break the theming using naticord. Only fix is to disable Rectify's theming.
+
 <a href="https://star-history.com/#n1d3v/naticord&Date">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date&theme=dark" />
