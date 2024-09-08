@@ -40,8 +40,6 @@ namespace Naticord
             serverSearchBar.TextChanged += ServersSearchBar_TextChanged;
 
             InitializeContextMenus();
-
-            settingsForm.darkModeToggle.Checked = Properties.Settings.Default.darkmode;
         }
 
         private void SetProfilePictureRegion()

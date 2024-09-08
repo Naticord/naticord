@@ -40,14 +40,6 @@ namespace Naticord
             chatBox.DocumentText = "";
         }
 
-
-        private void SetProfilePictureShape(PictureBox pictureBox)
-        {
-            var path = new System.Drawing.Drawing2D.GraphicsPath();
-            path.AddEllipse(0, 0, pictureBox.Width, pictureBox.Height);
-            pictureBox.Region = new Region(path);
-        }
-
         private async void LoadMessages()
         {
             try
@@ -394,7 +386,7 @@ namespace Naticord
                     chatBox.Document.Window.ScrollTo(0, chatBox.Document.Body.ScrollRectangle.Bottom);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // who tf cares bro it works
             }

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Ionic.Zip;
+using Naticord.Forms;
 
 namespace Naticord
 {
@@ -227,11 +228,13 @@ namespace Naticord
             private static extern bool FreeLibrary(IntPtr hModule);
         }
 
-        private void darkModeToggle_CheckedChanged(object sender, EventArgs e)
+        private void shikanokobutton_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.darkmode = darkModeToggle.Checked;
-            Properties.Settings.Default.Save();
+            shikanokonokonokokoshitantan form = new shikanokonokonokokoshitantan();
+
+            form.Show();
         }
+
     }
 }
 
