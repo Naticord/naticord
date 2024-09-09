@@ -235,6 +235,13 @@ namespace Naticord
             form.Show();
         }
 
+        private void logoutButton_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.token = null;
+            Properties.Settings.Default.Save();
+
+            Environment.Exit(0);
+        }
     }
 }
 

@@ -386,7 +386,7 @@ namespace Naticord
                     chatBox.Document.Window.ScrollTo(0, chatBox.Document.Body.ScrollRectangle.Bottom);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // who tf cares bro it works
             }

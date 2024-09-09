@@ -61,7 +61,6 @@ namespace Naticord
             {
                 using (var webClient = new WebClient())
                 {
-                    // Set proxy if provided
                     if (!string.IsNullOrEmpty(proxyAddress))
                     {
                         webClient.Proxy = new WebProxy(proxyAddress);
@@ -108,7 +107,6 @@ namespace Naticord
 
             using (var webClient = new WebClient())
             {
-                // Set proxy if provided
                 if (!string.IsNullOrEmpty(proxyAddress))
                 {
                     webClient.Proxy = new WebProxy(proxyAddress);
@@ -138,7 +136,6 @@ namespace Naticord
             {
                 using (var webClient = new WebClient())
                 {
-                    // Set proxy if provided
                     if (!string.IsNullOrEmpty(proxyAddress))
                     {
                         webClient.Proxy = new WebProxy(proxyAddress);
