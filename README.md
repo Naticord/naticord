@@ -1,79 +1,73 @@
-# naticord
-![skillicns](https://skillicons.dev/icons?i=discord,cs,dotnet)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/f688e553-ca56-4c1b-af2d-385766540ad6" />
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/72f612cb-6b3e-4d9e-b9df-a5480d624ba2" />
+    <img src="https://github.com/user-attachments/assets/72f612cb-6b3e-4d9e-b9df-a5480d624ba2" alt="Naticord Logo" />
+  </picture>
+</p>
 
-Naticord / Native-cord is a native Discord client made in C#.
+<p align="center">Naticord is a native Discord client made using C# with Windows Forms.</p>
 
-Supports Windows 7 - Windows 11
+<p align="center">
+ <a href="https://naticord.lol">Website</a> · <a href="https://example.com">Discord Server</a>
+</p>
 
-> [!NOTE]
-> Using Rectify 11 could break the theming using naticord. Only fix is to disable Rectify's theming.
-
-<a href="https://star-history.com/#n1d3v/naticord&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date" />
- </picture>
-</a>
-
-# Changelog
-Changelog can be found in the root directory of this repo as `CHANGELOG.md`.
-
-# Contributing
-Contributing guide can be found in the root directory of this repo as `CONTRIBUTORS.md`.
-
-# Installation
-Download naticord-setup.exe if you are on Windows 7 and above. If you are on Linux, your best bet is using Wine.
-
-### Updating
-To update, you can just get the latest version and install it.
+---
 
 # Building Naticord
-There are 2 ways to build Naticord, the easy route or the command-line route.
+
+There are two ways to build Naticord: the **Easy Route** or the **Command-Line Route**.
 
 ### The Easy Route
-- Open Visual Studio 2022
-- Launch the solution
-- Install all the NuGet packages (it will do it automatically)
-- Select Build at the top and click Build Solution.
-- You can find your build at {naticordDir}\Naticord\bin\Debug\Naticord.exe or {naticordDir}\Naticord\bin\Release\Naticord.exe depending on what build type you have made.
-### The command-line route
-This requires VS 2022 installed.
+1. Open **Visual Studio 2022**.
+2. Launch the solution.
+3. Allow Visual Studio to automatically install all the required NuGet packages.
+4. From the top menu, select **Build** and click on **Build Solution**.
+5. You can find your build at:
+   - `{naticordDir}\Naticord\bin\Debug\Naticord.exe` for a Debug build
+   - `{naticordDir}\Naticord\bin\Release\Naticord.exe` for a Release build
 
-- Open CMD
-- Clone the naticord repository (this one)
-- CD into the naticord directory
-- Run `nuget restore Naticord\Naticord.sln` this will restore all the packages Naticord uses.
-- Run `msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Debug` this will generate a debug release of Naticord. If you want a release build switch out Debug for Release.
-- You can find your build at {naticordDir}\Naticord\bin\Debug\Naticord.exe or {naticordDir}\Naticord\bin\Release\Naticord.exe depending on what build type you have made.
+### The Command-Line Route
+*This method requires Visual Studio 2022 to be installed.*
+
+1. Open **CMD** (Command Prompt).
+2. Clone the Naticord repository using **git** or **GitHub Desktop**.
+3. Change directory into the Naticord folder:
+   ```bash
+   cd naticord
+   ```
+4. Run the following command to restore all packages
+   ```bash
+   nuget restore Naticord\Naticord.sln
+   ```
+5. Run the command to generate a debug build
+   ```bash
+   msbuild Naticord/Naticord.sln -t:rebuild -property:Configuration=Debug
+   ```
+   - For a release build, replace `Debug` with `Release`
+5. You can find your build at:
+   - `{naticordDir}\Naticord\bin\Debug\Naticord.exe` for a Debug build
+   - `{naticordDir}\Naticord\bin\Release\Naticord.exe` for a Release build
 
 # What's working
-- Logging in with an email and password (with MFA)
-- Friends
-- Groups
-- Sending messages
-- Full server functionality
-- Server channel categories
-- File uploading
-- Pings
-- Hyperlinks
+- Logging in via email and password (incl, 2FA)
+- Friends / Groups / Servers
+- Searching functionality
+- Blocking people, leaving groups and unfriending people
+- File uploading (Does not bypass Discord's limit)
 - Typing indicators
-- Display names and friend nicknames
-- Websockets
 - Image viewing
+- Messaging
 - Embeds
-- Plugins (experimental)
-- Searching for either friends or servers
-- Copying and pasting images from the clipboard
-- Block, unfriend and leave groups / friends.
-# Planned functions
-- Voice calling (do not expect this, ever)
+- Plugins
+- Pings
+# Planned functionality
+- Voice chat
+  - This may be implemented very soon, thanks to Aerovoice!
 - Statuses
-- Hide hidden channels in servers
-- Other various channels such as fourms and such
+  - Still a work in progress, definitely soon though. 
 - Edit reply and delete.
+  - Will be very soon! Once DMs, groups and servers get a revamp.
 # Bugs
 - Sometimes markdown glitches out.
-# naticord Timeline
-![image](https://github.com/user-attachments/assets/14a4c793-a583-4ee6-bcb8-366d1a9b31c2)
-
+- If theres an image before the message you send, it might resend the image with your message.
