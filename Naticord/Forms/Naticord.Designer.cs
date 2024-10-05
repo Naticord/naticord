@@ -51,10 +51,10 @@
             this.usernameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.usernameLabel.BackColor = System.Drawing.Color.Transparent;
-            this.usernameLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.usernameLabel.Location = new System.Drawing.Point(67, 10);
+            this.usernameLabel.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.usernameLabel.Location = new System.Drawing.Point(64, 12);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(183, 20);
+            this.usernameLabel.Size = new System.Drawing.Size(183, 38);
             this.usernameLabel.TabIndex = 1;
             this.usernameLabel.Text = "username";
             // 
@@ -63,9 +63,9 @@
             this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.descriptionLabel.BackColor = System.Drawing.Color.Transparent;
-            this.descriptionLabel.Font = new System.Drawing.Font("Segoe UI Semilight", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.descriptionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descriptionLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.descriptionLabel.Location = new System.Drawing.Point(67, 36);
+            this.descriptionLabel.Location = new System.Drawing.Point(66, 38);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(183, 18);
             this.descriptionLabel.TabIndex = 3;
@@ -120,7 +120,7 @@
             // 
             this.friendSearchBar.Location = new System.Drawing.Point(7, 6);
             this.friendSearchBar.Name = "friendSearchBar";
-            this.friendSearchBar.Size = new System.Drawing.Size(253, 20);
+            this.friendSearchBar.Size = new System.Drawing.Size(253, 22);
             this.friendSearchBar.TabIndex = 1;
             // 
             // serversTab
@@ -139,7 +139,7 @@
             // 
             this.serverSearchBar.Location = new System.Drawing.Point(7, 6);
             this.serverSearchBar.Name = "serverSearchBar";
-            this.serverSearchBar.Size = new System.Drawing.Size(253, 20);
+            this.serverSearchBar.Size = new System.Drawing.Size(253, 22);
             this.serverSearchBar.TabIndex = 2;
             // 
             // serversList

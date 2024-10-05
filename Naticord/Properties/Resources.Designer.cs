@@ -63,6 +63,16 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap defaultdmbg {
+            get {
+                object obj = ResourceManager.GetObject("defaultdmbg", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap defaultpfp {
             get {
                 object obj = ResourceManager.GetObject("defaultpfp", resourceCulture);

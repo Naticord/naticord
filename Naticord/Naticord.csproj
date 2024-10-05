@@ -206,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\defaultdmbg.png" />
     <Content Include="Resources\youdeer.mp3" />
     <None Include="Resources\tune-vertical.png" />
   </ItemGroup>

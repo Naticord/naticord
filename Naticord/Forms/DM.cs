@@ -36,9 +36,6 @@ namespace Naticord
             SetFriendInfo();
             LoadMessages();
             websocketClient = new WebSocketClientDM(AccessToken, this);
-            // user pfp
-            profilepicture.ImageLocation = "user.png";
-            SetProfilePictureShape(profilepicture);
             // friend pfp
             SetProfilePictureShape(profilepicturefriend);
         }
@@ -59,7 +56,6 @@ namespace Naticord
                 string bio = userProfile.user.bio;
                 usernameLabel.Text = displayname;
                 profilepicturefriend.ImageLocation = $"https://cdn.discordapp.com/avatars/{userProfile.user.id}/{userProfile.user.avatar}.png";
-                profilepicture.ImageLocation = userPFP;
             }
             catch (Exception ex)
             {
