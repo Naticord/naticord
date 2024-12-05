@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows.Forms;
@@ -22,7 +23,6 @@ namespace Naticord
             {
                 key.SetValue("Naticord.exe", 11001, RegistryValueKind.DWord);
             }
-
         }
 
         protected override void OnLoad(EventArgs e)
@@ -68,15 +68,20 @@ namespace Naticord
 
                     var loginPayload = new
                     {
-                        email = email,
-                        password = password
+                        gift_code_sku_id = (string)null,
+                        login = email,
+                        login_source = (string)null, 
+                        password = password,
+                        undelete = false
                     };
 
+                    Debug.WriteLine("Login Payload: " + Newtonsoft.Json.JsonConvert.SerializeObject(loginPayload));
                     webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
 
                     string response = webClient.UploadString("https://discord.com/api/v9/auth/login", Newtonsoft.Json.JsonConvert.SerializeObject(loginPayload));
                     var json = JObject.Parse(response);
+
+                    Debug.WriteLine("Login Response: " + response);
 
                     if (json["token"] != null)
                     {
@@ -116,7 +121,9 @@ namespace Naticord
 
                 try
                 {
+                    Debug.WriteLine("Requesting user profile with token: " + accessToken);
                     string userProfileJson = webClient.DownloadString("https://discord.com/api/v9/users/@me");
+                    Debug.WriteLine("User Profile Response: " + userProfileJson);
 
                     if (!isAutomated) SaveToken(accessToken);
 
@@ -144,16 +151,18 @@ namespace Naticord
                     var mfaPayload = new
                     {
                         code = code,
-                        ticket = ticket,
+                        gift_code_sku_id = (string)null,
                         login_source = (string)null,
-                        gift_code_sku_id = (string)null
+                        ticket = ticket
                     };
 
+                    Debug.WriteLine("2FA Payload: " + Newtonsoft.Json.JsonConvert.SerializeObject(mfaPayload));
                     webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
-                    webClient.Headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
 
-                    string response = webClient.UploadString("https://discord.com/api/v9/auth/mfa/totp", Newtonsoft.Json.JsonConvert.SerializeObject(mfaPayload));
-                    var json = JObject.Parse(response);
+                    string jsonResponse = webClient.UploadString("https://discord.com/api/v9/auth/mfa/totp", Newtonsoft.Json.JsonConvert.SerializeObject(mfaPayload));
+                    var json = JObject.Parse(jsonResponse);
+
+                    Debug.WriteLine("2FA Response: " + jsonResponse);
 
                     if (json["token"] != null)
                     {
@@ -162,12 +171,25 @@ namespace Naticord
                     }
                     else
                     {
+                        Debug.WriteLine("2FA failed. Response: " + json["message"]?.ToString());
+                        Debug.WriteLine("Full Response JSON: " + jsonResponse);
+
                         MessageBox.Show("2FA failed. Please check your 2FA code.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             catch (WebException ex)
             {
+                if (ex.Response != null)
+                {
+                    using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                    {
+                        string responseBody = reader.ReadToEnd();
+                        Debug.WriteLine("WebException Response Body: " + responseBody);
+                    }
+                }
+
+                Debug.WriteLine("2FA failed. Exception Message: " + ex.Message);
                 MessageBox.Show("2FA failed. Please check your 2FA code! Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -263,41 +285,7 @@ namespace Naticord
 
         private void discordStatusLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://discordstatus.com");
-        }
-
-        private void proxyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-          
-            using (var form = new Form())
-            using (var label = new Label() { Text = "Enter Proxy Address:" })
-            using (var inputBox = new TextBox())
-            using (var buttonOk = new Button() { Text = "OK", DialogResult = DialogResult.OK })
-            {
-                inputBox.Text = proxyAddress;
-
-                ConfigureFormControls(form, label, inputBox, buttonOk);
-                form.Text = "Proxy";
-                form.FormBorderStyle = FormBorderStyle.Sizable;
-
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    Properties.Settings.Default.proxy = inputBox.Text.Trim();
-                    Properties.Settings.Default.Save();
-
-                    proxyAddress = Properties.Settings.Default.proxy;
-                }
-            }
-        }
-
-        private void tokenLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Hide();
-
-            TokenLogin token = new TokenLogin(this);
-
-            token.Show();
+            System.Diagnostics.Process.Start("https://discord.gg/naticord");
         }
     }
 }
-

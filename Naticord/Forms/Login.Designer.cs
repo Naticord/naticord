@@ -147,7 +147,6 @@
             this.proxyLink.TabStop = true;
             this.proxyLink.Text = "Proxy Settings";
             this.proxyLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            this.proxyLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.proxyLink_LinkClicked);
             // 
             // tokenLink
             // 
@@ -164,7 +163,6 @@
             this.tokenLink.TabStop = true;
             this.tokenLink.Text = "Token";
             this.tokenLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
-            this.tokenLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tokenLink_LinkClicked);
             // 
             // Login
             // 
