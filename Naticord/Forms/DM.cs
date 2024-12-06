@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Drawing;
 using System.Net;
 using System.IO;
+using System.Linq;
 
 namespace Naticord
 {
@@ -25,6 +26,7 @@ namespace Naticord
         public long FriendID { get; }
         private readonly string userPFP;
         private string lastMessageAuthor = "";
+        private Image _lastUploadedImage = null;
 
         public DM(long chatid, long friendid, string token, string userpfp)
         {
@@ -284,9 +286,14 @@ namespace Naticord
 
                         if (Clipboard.ContainsImage())
                         {
-                            Image image = Clipboard.GetImage();
-                            byte[] imageBytes = ImageToBytes(image);
-                            await UploadImage(imageBytes);
+                            Image currentImage = Clipboard.GetImage();
+
+                            if (_lastUploadedImage == null || !ImagesAreEqual(_lastUploadedImage, currentImage))
+                            {
+                                byte[] imageBytes = ImageToBytes(currentImage);
+                                await UploadImage(imageBytes);
+                                _lastUploadedImage = currentImage;
+                            }
                         }
                     }
 
@@ -296,6 +303,21 @@ namespace Naticord
                 {
                     ShowErrorMessage("Failed to send message", ex);
                 }
+            }
+        }
+
+        private bool ImagesAreEqual(Image img1, Image img2)
+        {
+            if (img1 == null || img2 == null)
+                return false;
+
+            using (MemoryStream ms1 = new MemoryStream(), ms2 = new MemoryStream())
+            {
+                img1.Save(ms1, System.Drawing.Imaging.ImageFormat.Png);
+                img2.Save(ms2, System.Drawing.Imaging.ImageFormat.Png);
+                byte[] bytes1 = ms1.ToArray();
+                byte[] bytes2 = ms2.ToArray();
+                return bytes1.SequenceEqual(bytes2);
             }
         }
 

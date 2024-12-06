@@ -108,7 +108,7 @@
             this.githubLink.LinkColor = System.Drawing.Color.Fuchsia;
             this.githubLink.Location = new System.Drawing.Point(16, 243);
             this.githubLink.Name = "githubLink";
-            this.githubLink.Size = new System.Drawing.Size(44, 13);
+            this.githubLink.Size = new System.Drawing.Size(40, 13);
             this.githubLink.TabIndex = 11;
             this.githubLink.TabStop = true;
             this.githubLink.Text = "GitHub";
@@ -125,7 +125,7 @@
             this.discordStatusLink.LinkColor = System.Drawing.Color.Fuchsia;
             this.discordStatusLink.Location = new System.Drawing.Point(66, 243);
             this.discordStatusLink.Name = "discordStatusLink";
-            this.discordStatusLink.Size = new System.Drawing.Size(81, 13);
+            this.discordStatusLink.Size = new System.Drawing.Size(76, 13);
             this.discordStatusLink.TabIndex = 13;
             this.discordStatusLink.TabStop = true;
             this.discordStatusLink.Text = "Discord Status";
@@ -142,11 +142,12 @@
             this.proxyLink.LinkColor = System.Drawing.Color.Fuchsia;
             this.proxyLink.Location = new System.Drawing.Point(155, 243);
             this.proxyLink.Name = "proxyLink";
-            this.proxyLink.Size = new System.Drawing.Size(79, 13);
+            this.proxyLink.Size = new System.Drawing.Size(74, 13);
             this.proxyLink.TabIndex = 16;
             this.proxyLink.TabStop = true;
             this.proxyLink.Text = "Proxy Settings";
             this.proxyLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.proxyLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.proxyLink_LinkClicked);
             // 
             // tokenLink
             // 
@@ -158,11 +159,12 @@
             this.tokenLink.LinkColor = System.Drawing.Color.Fuchsia;
             this.tokenLink.Location = new System.Drawing.Point(242, 243);
             this.tokenLink.Name = "tokenLink";
-            this.tokenLink.Size = new System.Drawing.Size(37, 13);
+            this.tokenLink.Size = new System.Drawing.Size(38, 13);
             this.tokenLink.TabIndex = 18;
             this.tokenLink.TabStop = true;
             this.tokenLink.Text = "Token";
             this.tokenLink.VisitedLinkColor = System.Drawing.Color.Fuchsia;
+            this.tokenLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tokenLink_LinkClicked);
             // 
             // Login
             // 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -23,6 +24,7 @@ namespace Naticord
         public long ServerID;
         public long ChatID;
         private string lastMessageAuthor = "";
+        private Image _lastUploadedImage = null;
         public Server(long serverid, String token)
         {
             InitializeComponent();
@@ -42,7 +44,7 @@ namespace Naticord
                 {
                     if ((long)guild.id == ServerID)
                     {
-                        servernameLabel.Text = guild.name.ToString();
+                        usernameLabel.Text = guild.name.ToString();
                     }
                 }
                 dynamic channels = GetApiResponseSynchronus($"guilds/{ServerID}/channels");
@@ -479,9 +481,14 @@ namespace Naticord
 
                         if (Clipboard.ContainsImage())
                         {
-                            Image image = Clipboard.GetImage();
-                            byte[] imageBytes = ImageToBytes(image);
-                            await UploadImage(imageBytes);
+                            Image currentImage = Clipboard.GetImage();
+
+                            if (_lastUploadedImage == null || !ImagesAreEqual(_lastUploadedImage, currentImage))
+                            {
+                                byte[] imageBytes = ImageToBytes(currentImage);
+                                await UploadImage(imageBytes);
+                                _lastUploadedImage = currentImage;
+                            }
                         }
                     }
 
@@ -491,6 +498,21 @@ namespace Naticord
                 {
                     ShowErrorMessage("Failed to send message", ex);
                 }
+            }
+        }
+
+        private bool ImagesAreEqual(Image img1, Image img2)
+        {
+            if (img1 == null || img2 == null)
+                return false;
+
+            using (MemoryStream ms1 = new MemoryStream(), ms2 = new MemoryStream())
+            {
+                img1.Save(ms1, System.Drawing.Imaging.ImageFormat.Png);
+                img2.Save(ms2, System.Drawing.Imaging.ImageFormat.Png);
+                byte[] bytes1 = ms1.ToArray();
+                byte[] bytes2 = ms2.ToArray();
+                return bytes1.SequenceEqual(bytes2);
             }
         }
 
@@ -603,6 +625,11 @@ namespace Naticord
             if (websocketClient != null) websocketClient.CloseWebSocket();
             GC.Collect();
             cts.Cancel();
+        }
+
+        private void Server_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

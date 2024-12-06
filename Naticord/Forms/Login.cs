@@ -285,7 +285,35 @@ namespace Naticord
 
         private void discordStatusLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://discord.gg/naticord");
+            System.Diagnostics.Process.Start("https://discordstatus.com");
+        }
+
+        private void tokenLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Hide();
+            TokenLogin token = new TokenLogin(this);
+            token.Show();
+        }
+
+        private void proxyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+            using (var form = new Form())
+            using (var label = new Label() { Text = "Enter Proxy Address:" })
+            using (var inputBox = new TextBox())
+            using (var buttonOk = new Button() { Text = "OK", DialogResult = DialogResult.OK })
+            {
+                inputBox.Text = proxyAddress;
+                ConfigureFormControls(form, label, inputBox, buttonOk);
+                form.Text = "Proxy";
+                form.FormBorderStyle = FormBorderStyle.Sizable;
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    Properties.Settings.Default.proxy = inputBox.Text.Trim();
+                    Properties.Settings.Default.Save();
+                    proxyAddress = Properties.Settings.Default.proxy;
+                }
+            }
         }
     }
 }
