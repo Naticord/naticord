@@ -40,7 +40,7 @@ namespace Naticord
             serverSearchBar.TextChanged += ServersSearchBar_TextChanged;
 
             InitializeContextMenus();
-            websocketClient = new WebSocketClient(AccessToken, this);
+            WebSocketClient client = WebSocketClient.Instance(AccessToken);
         }
 
         private void SetProfilePictureRegion()

@@ -33,7 +33,6 @@ namespace Naticord
             InitializeWebSocket();
         }
 
-        // Public property to get the single instance of WebSocketClient
         public static WebSocketClient Instance(string accessToken, Naticord parentClientForm = null, DM parentDMForm = null, Group parentGroupForm = null, Server parentServerForm = null)
         {
             if (_instance == null)
