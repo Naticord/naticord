@@ -94,6 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\WebSocketClient.cs" />
     <Compile Include="Classes\WebSocketClientGroup.cs" />
     <Compile Include="Forms\Group.cs">
       <SubType>Form</SubType>

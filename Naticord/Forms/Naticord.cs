@@ -16,10 +16,9 @@ namespace Naticord
         private Login signin;
         private string userPFP;
         private Dictionary<string, long> groupChatIDs = new Dictionary<string, long>();
-
         private List<ListViewItem> allFriends;
+        private WebSocketClient websocketClient;
         private List<ListViewItem> allServers;
-
         private ContextMenuStrip friendsContextMenu;
         private ContextMenuStrip serversContextMenu;
 
@@ -28,6 +27,7 @@ namespace Naticord
             InitializeComponent();
             signin = signinArg;
             AccessToken = token;
+            descriptionLabel = new Label();
             SetUserInfo();
             PopulateFriendsTab();
             PopulateServersTab();
@@ -40,6 +40,7 @@ namespace Naticord
             serverSearchBar.TextChanged += ServersSearchBar_TextChanged;
 
             InitializeContextMenus();
+            websocketClient = new WebSocketClient(AccessToken, this);
         }
 
         private void SetProfilePictureRegion()
@@ -207,9 +208,7 @@ namespace Naticord
             {
                 dynamic userProfile = GetApiResponse("users/@me");
                 string displayname = userProfile.global_name ?? userProfile.username;
-                string bio = userProfile.bio;
                 usernameLabel.Text = displayname;
-                descriptionLabel.Text = bio;
 
                 userPFP = $"https://cdn.discordapp.com/avatars/{userProfile.id}/{userProfile.avatar}.png";
 

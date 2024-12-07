@@ -69,7 +69,7 @@
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(183, 18);
             this.descriptionLabel.TabIndex = 3;
-            this.descriptionLabel.Text = "description";
+            this.descriptionLabel.Text = "No status...";
             // 
             // friendsList
             // 
@@ -120,7 +120,7 @@
             // 
             this.friendSearchBar.Location = new System.Drawing.Point(7, 6);
             this.friendSearchBar.Name = "friendSearchBar";
-            this.friendSearchBar.Size = new System.Drawing.Size(253, 22);
+            this.friendSearchBar.Size = new System.Drawing.Size(253, 20);
             this.friendSearchBar.TabIndex = 1;
             // 
             // serversTab
@@ -139,7 +139,7 @@
             // 
             this.serverSearchBar.Location = new System.Drawing.Point(7, 6);
             this.serverSearchBar.Name = "serverSearchBar";
-            this.serverSearchBar.Size = new System.Drawing.Size(253, 22);
+            this.serverSearchBar.Size = new System.Drawing.Size(253, 20);
             this.serverSearchBar.TabIndex = 2;
             // 
             // serversList
@@ -215,7 +215,7 @@
 
         private System.Windows.Forms.PictureBox profilepicture;
         private System.Windows.Forms.Label usernameLabel;
-        private System.Windows.Forms.Label descriptionLabel;
+        public System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.TabControl fsTabs;
         private System.Windows.Forms.TabPage friendsTab;
         private System.Windows.Forms.TabPage serversTab;
