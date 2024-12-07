@@ -50,7 +50,7 @@ There are two ways to build Naticord: the **Easy Route** or the **Command-Line R
    - `{naticordDir}\Naticord\bin\Release\Naticord.exe` for a Release build
 
 # What's working
-- Logging in via email and password (incl, 2FA)
+- Logging in via email and password ~~(incl, 2FA)~~ (2FA is broken for now)
 - Friends / Groups / Servers
 - Searching functionality
 - Blocking people, leaving groups and unfriending people
