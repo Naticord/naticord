@@ -9,7 +9,7 @@
 <p align="center">Naticord is a native Discord client made using C# with Windows Forms.</p>
 
 <p align="center">
- <a href="https://naticord.lol">Website</a> · <a href="https://example.com">Discord Server</a>
+ <a href="https://naticord.lol">Website</a> · <a href="https://discord.com/invite/Hr7tC837ZW">Discord Server</a>
 </p>
 
 ---
