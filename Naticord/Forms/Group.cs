@@ -16,7 +16,7 @@ namespace Naticord
     public partial class Group : Form
     {
         private const string DiscordApiBaseUrl = "https://discord.com/api/v9/";
-        private WebSocketClientGroup websocketClient;
+        private WebSocketClient websocketClient;
         private const string htmlStart = "<!DOCTYPE html><html><head><meta http-equiv=\"X-UA-Compatible\" content=\"edge\" ><style>* {background-color: transparent; font-family: \"Segoe UI\", sans-serif; font-size: 10pt; overflow-x: hidden;} p,strong,b,i,em,mark,small,del,ins,sub,sup,h1,h2,h3,h4,h5,h6 {display: inline;} img {width: auto; height: auto; max-width: 60% !important; max-height: 60% !important;} .spoiler {background-color: black; color: black; border-radius: 5px;} .spoiler:hover {background-color: black; color: white; border-radius: 5px;} .ping {background-color: #e6e8fd; color: #5865f3; border-radius: 5px;} .rich {width: 60%; border-style: solid; border-radius: 5px; border-width: 2px; border-color: black; padding: 10px;}</style></head><body>";
         private string htmlMiddle = "";
         private const string htmlEnd = "</body></html>";
@@ -34,7 +34,15 @@ namespace Naticord
             userPFP = userpfp;
             LoadGroupName();
             LoadMessages();
-            websocketClient = new WebSocketClientGroup(AccessToken, this);
+            WebSocketClient client = WebSocketClient.Instance(AccessToken);
+            SetProfilePictureShape(profilepicturefriend);
+        }
+
+        private void SetProfilePictureShape(PictureBox pictureBox)
+        {
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddEllipse(0, 0, pictureBox.Width, pictureBox.Height);
+            pictureBox.Region = new Region(path);
         }
 
         private void Group_Load(object sender, EventArgs e)
@@ -53,21 +61,21 @@ namespace Naticord
                 {
                     string author = messages[i].author.global_name ?? messages[i].author.username;
                     string content = messages[i].content;
-                    var attachmentsFormed = new List<WebSocketClientGroup.Attachment>();
-                    var embedsFormed = new List<WebSocketClientGroup.Embed>();
+                    var attachmentsFormed = new List<WebSocketClient.Attachment>();
+                    var embedsFormed = new List<WebSocketClient.Embed>();
 
                     if (messages[i].attachments != null)
                     {
                         foreach (var attachment in messages[i].attachments)
                         {
-                            attachmentsFormed.Add(new WebSocketClientGroup.Attachment { URL = attachment.url, Type = attachment.content_type });
+                            attachmentsFormed.Add(new WebSocketClient.Attachment { URL = attachment.url, Type = attachment.content_type });
                         }
                     }
                     if (messages[i].embeds != null)
                     {
                         foreach (var embed in messages[i].embeds)
                         {
-                            embedsFormed.Add(new WebSocketClientGroup.Embed { Type = embed?.type ?? "", Author = embed?.author?.name ?? "", AuthorURL = embed?.author?.url ?? "", Title = embed?.title ?? "", TitleURL = embed?.url ?? "", Description = embed?.description ?? "" });
+                            embedsFormed.Add(new WebSocketClient.Embed { Type = embed?.type ?? "", Author = embed?.author?.name ?? "", AuthorURL = embed?.author?.url ?? "", Title = embed?.title ?? "", TitleURL = embed?.url ?? "", Description = embed?.description ?? "" });
                         }
                     }
 
@@ -107,7 +115,7 @@ namespace Naticord
             }
         }
 
-        public void AddMessage(string name, string message, string action, WebSocketClientGroup.Attachment[] attachments, WebSocketClientGroup.Embed[] embeds, bool reload = true, bool scroll = true, string replyname = "", string replymessage = "")
+        public void AddMessage(string name, string message, string action, WebSocketClient.Attachment[] attachments, WebSocketClient.Embed[] embeds, bool reload = true, bool scroll = true, string replyname = "", string replymessage = "")
         {
             if (name == lastMessageAuthor && action == "said")
             {

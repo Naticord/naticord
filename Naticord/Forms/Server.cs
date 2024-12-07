@@ -16,7 +16,7 @@ namespace Naticord
     public partial class Server : Form
     {
         private const string DiscordApiBaseUrl = "https://discord.com/api/v9/";
-        private WebSocketClientServer websocketClient;
+        private WebSocketClient websocketClient;
         public string htmlStart = "<!DOCTYPE html><html><head><meta http-equiv=\"X-UA-Compatible\" content=\"edge\" ><style>* {font-family: \"Segoe UI\", sans-serif; font-size: 10pt; overflow-x: hidden;} p,strong,b,i,em,mark,small,del,ins,sub,sup,h1,h2,h3,h4,h5,h6 {display: inline;} img {width: auto; height: auto; max-width: 60% !important; max-height: 60% !important;} .spoiler {background-color: black; color: black; border-radius: 5px;} .spoiler:hover {background-color: black; color: white; border-radius: 5px;} .ping {background-color: #e6e8fd; color: #5865f3; border-radius: 5px;} .rich {width: 60%; border-style: solid; border-radius: 5px; border-width: 2px; border-color: black; padding: 10px;}</style></head><body>";
         public string htmlMiddle = "";
         public string htmlEnd = "</body></head></html>";
@@ -25,6 +25,7 @@ namespace Naticord
         public long ChatID;
         private string lastMessageAuthor = "";
         private Image _lastUploadedImage = null;
+
         public Server(long serverid, String token)
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace Naticord
             Thread.Sleep(750);
             PopulateFields();
         }
+
         private CancellationTokenSource cts = new CancellationTokenSource();
 
         private void PopulateFields()
@@ -86,7 +88,7 @@ namespace Naticord
             }
         }
 
-        public async Task<string> AddMessage(string name, string message, string action, WebSocketClientServer.Attachment[] attachments, WebSocketClientServer.Embed[] embeds, bool reload = true, bool scroll = true, string replyname = "", string replymessage = "")
+        public async Task<string> AddMessage(string name, string message, string action, WebSocketClient.Attachment[] attachments, WebSocketClient.Embed[] embeds, bool reload = true, bool scroll = true, string replyname = "", string replymessage = "")
         {
             string result = string.Empty;
 
@@ -380,14 +382,14 @@ namespace Naticord
                     string author = messages[i].author.global_name ?? messages[i].author.username;
                     string content = messages[i].content;
 
-                    List<WebSocketClientServer.Attachment> attachmentsFormed = new List<WebSocketClientServer.Attachment>();
-                    List<WebSocketClientServer.Embed> embedsFormed = new List<WebSocketClientServer.Embed>();
+                    List<WebSocketClient.Attachment> attachmentsFormed = new List<WebSocketClient.Attachment>();
+                    List<WebSocketClient.Embed> embedsFormed = new List<WebSocketClient.Embed>();
 
                     if (messages[i].attachments != null)
                     {
                         foreach (var attachment in messages[i].attachments)
                         {
-                            attachmentsFormed.Add(new WebSocketClientServer.Attachment { URL = attachment.url, Type = attachment.content_type });
+                            attachmentsFormed.Add(new WebSocketClient.Attachment { URL = attachment.url, Type = attachment.content_type });
                         }
                     }
 
@@ -395,7 +397,7 @@ namespace Naticord
                     {
                         foreach (var embed in messages[i].embeds)
                         {
-                            embedsFormed.Add(new WebSocketClientServer.Embed
+                            embedsFormed.Add(new WebSocketClient.Embed
                             {
                                 Type = embed?.type ?? "",
                                 Author = embed?.author?.name ?? "",
@@ -587,7 +589,7 @@ namespace Naticord
                 {
                     ChatID = channelID;
                     LoadMessages(channelID);
-                    websocketClient = new WebSocketClientServer(AccessToken, this);
+                    WebSocketClient client = WebSocketClient.Instance(AccessToken);
                 }
                 else MessageBox.Show("Unable to open this channel", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

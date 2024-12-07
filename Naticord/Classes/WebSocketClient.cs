@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Security.Authentication;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using WebSocketSharp;
 
@@ -11,19 +12,35 @@ namespace Naticord
 {
     public class WebSocketClient
     {
-        private Naticord parentClientForm;
-        private WebSocket webSocket;
+        private static WebSocketClient _instance;
+        public Naticord parentClientForm;
+        public DM parentDMForm;
+        public Group parentGroupForm;
+        public Server parentServerForm;
+        public WebSocket webSocket;
         private string accessToken;
         private const SslProtocols Tls12 = (SslProtocols)0x00000C00;
         private bool tryingRandomStuffAtThisPoint = false;
 
-        public WebSocketClient(string accessToken, Naticord parentClientForm)
+        private WebSocketClient(string accessToken, Naticord parentClientForm = null, DM parentDMForm = null, Group parentGroupForm = null, Server parentServerForm = null)
         {
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
             this.accessToken = accessToken;
             this.parentClientForm = parentClientForm;
-            PrintToken();
+            this.parentDMForm = parentDMForm;
+            this.parentGroupForm = parentGroupForm;
+            this.parentServerForm = parentServerForm;
             InitializeWebSocket();
+        }
+
+        // Public property to get the single instance of WebSocketClient
+        public static WebSocketClient Instance(string accessToken, Naticord parentClientForm = null, DM parentDMForm = null, Group parentGroupForm = null, Server parentServerForm = null)
+        {
+            if (_instance == null)
+            {
+                _instance = new WebSocketClient(accessToken, parentClientForm, parentDMForm, parentGroupForm, parentServerForm);
+            }
+            return _instance;
         }
 
         private void InitializeWebSocket()
@@ -31,6 +48,7 @@ namespace Naticord
             webSocket = new WebSocket($"wss://gateway.discord.gg/?v=9&encoding=json");
             webSocket.SslConfiguration.EnabledSslProtocols = Tls12;
             webSocket.OnMessage += async (sender, e) => await HandleWebSocketMessage(e.Data);
+            webSocket.OnError += (sender, e) => HandleWebSocketError(e.Message);
             webSocket.OnClose += (sender, e) => HandleWebSocketClose();
             webSocket.Connect();
             SendIdentifyPayload();
@@ -58,7 +76,6 @@ namespace Naticord
                 try
                 {
                     string payloadJson = Newtonsoft.Json.JsonConvert.SerializeObject(identifyPayload);
-                    Console.WriteLine($"Sending Identify Payload: {payloadJson}");
                     webSocket.Send(payloadJson);
                 }
                 catch (Exception ex)
@@ -74,118 +91,59 @@ namespace Naticord
 
         private async Task HandleWebSocketMessage(string data)
         {
-            Debug.WriteLine($"Received WebSocket Message: {data}");
+            var json = JObject.Parse(data);
+            int opCode = (int)json["op"];
 
-            try
+            switch (opCode)
             {
-                var json = JObject.Parse(data);
-                int opCode = (int)json["op"];
+                case 0:
+                    string eventType = (string)json["t"];
+                    switch (eventType)
+                    {
+                        case "READY":
+                            ParseReadyEvent(data);
+                            break;
+                        case "USER_SETTINGS_UPDATE":
+                            ParseCustomStatusText(data);
+                            break;
+                        case "TYPING_START":
+                            HandleTypingStartEvent(json["d"]);
+                            break;
+                        case "MESSAGE_CREATE":
+                            await HandleMessageCreateEventAsync(json["d"]);
+                            HandleTypingStopEvent(json["d"]);
+                            break;
+                        default:
+                            Debug.WriteLine($"Unhandled event type: {eventType}");
+                            break;
+                    }
+                    break;
 
-                Debug.WriteLine($"OpCode: {opCode}");
+                case 1:
+                    Debug.WriteLine("Heartbeat event received");
+                    break;
 
-                switch (opCode)
-                {
-                    case 0:
-                        string eventType = (string)json["t"];
-                        Debug.WriteLine($"Event Type: {eventType}");
-
-                        switch (eventType)
-                        {
-                            case "READY":
-                                ParseReadyEvent(data, parentClientForm);
-                                break;
-                            case "USER_SETTINGS_UPDATE":
-                                Debug.WriteLine("Status updated!");
-                                ParseCustomStatusText(data, parentClientForm);
-                                break;
-
-                            default:
-                                Debug.WriteLine($"Unhandled event type: {eventType}");
-                                break;
-                        }
-                        break;
-
-                    case 1:
-                        Debug.WriteLine("Heartbeat event received");
-                        break;
-
-                    default:
-                        Debug.WriteLine($"Unhandled OpCode: {opCode}");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing message: {ex.Message}");
+                default:
+                    Debug.WriteLine($"Unhandled OpCode: {opCode}");
+                    break;
             }
         }
 
-        public static void ParseReadyEvent(string data, Naticord parentClientForm)
+        private void ParseReadyEvent(string data)
         {
             try
             {
-                // Null check for parentClientForm
-                if (parentClientForm == null)
-                {
-                    Debug.WriteLine("parentClientForm is null. Cannot update status.");
-                    return;
-                }
-
                 var json = JObject.Parse(data);
+                var user = json["d"]?["user"];
+                string username = (string)user?["username"];
+                string discriminator = (string)user?["discriminator"];
+                Debug.WriteLine($"Logged in as {username}#{discriminator}");
 
-                string eventType = (string)json["t"];
-                if (eventType == "READY")
+                string userStatusText = (string)json["d"]?["user"]?["presence"]?["status"] ?? "Unknown";
+
+                if (parentClientForm != null)
                 {
-                    Debug.WriteLine("Received READY event data: " + data);
-
-                    var user = json["d"]["user"];
-                    if (user == null)
-                    {
-                        Debug.WriteLine("User data is null.");
-                        return;
-                    }
-
-                    string userId = (string)user["id"];
-                    string username = (string)user["username"];
-                    string discriminator = (string)user["discriminator"];
-                    Debug.WriteLine($"Logged in as {username}#{discriminator}");
-
-                    var presence = json["d"]["user"]["presence"];
-                    if (presence == null)
-                    {
-                        Debug.WriteLine("Presence data is null.");
-                        return;
-                    }
-
-                    Debug.WriteLine("Presence data: " + presence);
-
-                    string normalStatus = (string)presence["status"];
-                    Debug.WriteLine($"Normal Status: {normalStatus}");
-
-                    var customStatus = presence?["custom_status"];
-                    string userStatusText = normalStatus;
-
-                    if (customStatus != null)
-                    {
-                        userStatusText = (string)customStatus["text"];
-                        Debug.WriteLine($"Custom Status Text: {userStatusText}");
-                    }
-
-                    if (parentClientForm.InvokeRequired)
-                    {
-                        parentClientForm.Invoke((Action)(() =>
-                        {
-                            parentClientForm.descriptionLabel.Text = userStatusText;
-                        }));
-                    }
-                    else
-                    {
-                        parentClientForm.descriptionLabel.Text = userStatusText;
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("Unhandled event type.");
+                    UpdateFormLabel(parentClientForm.descriptionLabel, userStatusText);
                 }
             }
             catch (Exception ex)
@@ -194,85 +152,190 @@ namespace Naticord
             }
         }
 
-        public static void ParseCustomStatusText(string data, Naticord parentClientForm)
+        private void ParseCustomStatusText(string data)
         {
             try
             {
-                if (parentClientForm == null)
-                {
-                    Debug.WriteLine("parentClientForm is null. Cannot update status.");
-                    return;
-                }
-
                 var json = JObject.Parse(data);
-                string eventType = (string)json["t"];
+                var customStatus = json["d"]?["custom_status"];
+                string statusText = (string)customStatus?["text"] ?? "";
 
-                if (eventType == "USER_SETTINGS_UPDATE")
+                if (parentClientForm != null)
                 {
-                    var customStatus = json["d"]?["custom_status"];
-                    if (customStatus != null)
-                    {
-                        string statusText = (string)customStatus["text"];
-                        Debug.WriteLine($"Custom Status Text: {statusText}");
-
-                        if (parentClientForm.InvokeRequired)
-                        {
-                            parentClientForm.Invoke((Action)(() =>
-                            {
-                                parentClientForm.descriptionLabel.Text = statusText;
-                                Debug.WriteLine("Changed status on UI level!");
-                            }));
-                        }
-                        else
-                        {
-                            parentClientForm.descriptionLabel.Text = statusText;
-                        }
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Custom status not found.");
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("Unhandled event type.");
+                    UpdateFormLabel(parentClientForm.descriptionLabel, statusText);
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error parsing message: {ex.Message}");
+                Debug.WriteLine($"Error parsing custom status: {ex.Message}");
             }
         }
 
-        public void PrintToken()
+        private void HandleTypingStartEvent(JToken jToken)
         {
-            Console.WriteLine($"Using Token: {accessToken}");
+            if (parentDMForm != null)
+            {
+                string channelId = (string)jToken["channel_id"];
+                if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentDMForm.ChatID)
+                {
+                    string userId = (string)jToken["user_id"];
+                    string username = GetUsernameById(userId);
+                    UpdateFormLabel(parentDMForm.typingStatus, $"{username} is typing...");
+                }
+            }
+
+            if (parentGroupForm != null)
+            {
+                string channelId = (string)jToken["channel_id"];
+                if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentGroupForm.ChatID)
+                {
+                    string userId = (string)jToken["user_id"];
+                    string username = GetUsernameById(userId);
+                }
+            }
+
+            if (parentServerForm != null)
+            {
+                string channelId = (string)jToken["channel_id"];
+                if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentServerForm.ChatID)
+                {
+                    string userId = (string)jToken["user_id"];
+                    string username = GetUsernameById(userId);
+                }
+            }
+        }
+
+        private void HandleTypingStopEvent(JToken jToken)
+        {
+            if (parentDMForm != null)
+            {
+                string channelId = (string)jToken["channel_id"];
+                if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentDMForm.ChatID)
+                {
+                    UpdateFormLabel(parentDMForm.typingStatus, string.Empty);
+                }
+            }
+
+            if (parentGroupForm != null)
+            {
+                string channelId = (string)jToken["channel_id"];
+                if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentGroupForm.ChatID)
+                {
+                    // do nothing
+                }
+            }
+
+            if (parentServerForm != null)
+            {
+                string channelId = (string)jToken["channel_id"];
+                if (long.TryParse(channelId, out long parsedChannelId) && parsedChannelId == parentServerForm.ChatID)
+                {
+                    // do nothing
+                }
+            }
+        }
+
+        private async Task HandleMessageCreateEventAsync(JToken data)
+        {
+            if (parentDMForm != null)
+            {
+                string channelId = (string)data["channel_id"];
+                if (channelId == parentDMForm.ChatID.ToString())
+                {
+                    string author = (string)data["author"]?["global_name"] ?? (string)data["author"]?["username"];
+                    string content = (string)data["content"];
+                    parentDMForm.AddMessage(author, content, "said", null, null, true, true);
+                    parentDMForm.Invoke((MethodInvoker)(() => parentDMForm.ScrollToBottom()));
+                }
+            }
+
+            if (parentGroupForm != null)
+            {
+                string channelId = (string)data["channel_id"];
+                if (channelId == parentGroupForm.ChatID.ToString())
+                {
+                    string author = (string)data["author"]?["global_name"] ?? (string)data["author"]?["username"];
+                    string content = (string)data["content"];
+                    parentGroupForm.AddMessage(author, content, "said", null, null, true, true);
+                    parentGroupForm.Invoke((MethodInvoker)(() => parentGroupForm.ScrollToBottom()));
+                }
+            }
+
+            if (parentServerForm != null)
+            {
+                string channelId = (string)data["channel_id"];
+                if (channelId == parentServerForm.ChatID.ToString())
+                {
+                    string author = (string)data["author"]?["global_name"] ?? (string)data["author"]?["username"];
+                    string content = (string)data["content"];
+                    parentServerForm.AddMessage(author, content, "said", null, null, true, true);
+                    parentServerForm.Invoke((MethodInvoker)(() => parentServerForm.ScrollToBottom()));
+                }
+            }
+        }
+
+        private string GetUsernameById(string userId)
+        {
+            try
+            {
+                dynamic user = parentDMForm?.GetApiResponse($"users/{userId}") ?? parentGroupForm?.GetApiResponse($"users/{userId}") ?? parentServerForm?.GetApiResponse($"users/{userId}");
+                return user?.username ?? "Unknown";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to get username for user ID {userId}: {ex.Message}");
+                return "Unknown";
+            }
+        }
+
+        private void UpdateFormLabel(Control label, string text)
+        {
+            if (label.InvokeRequired)
+            {
+                label.Invoke((Action)(() => label.Text = text));
+            }
+            else
+            {
+                label.Text = text;
+            }
+        }
+
+        private void HandleWebSocketError(string errorMessage)
+        {
+            Console.WriteLine($"WebSocket Error: {errorMessage}");
+            InitializeWebSocket();
         }
 
         private void HandleWebSocketClose()
         {
-            Console.WriteLine("WebSocket Closed");
             if (!tryingRandomStuffAtThisPoint)
             {
-                try
-                {
-                    Console.WriteLine("Attempting to reconnect...");
-                    InitializeWebSocket();
-                    Debug.WriteLine("Started again!");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during reconnect: {ex.Message}");
-                }
+                Console.WriteLine("WebSocket connection closed. Attempting to reconnect...");
+                InitializeWebSocket();
             }
         }
 
         public void CloseWebSocket()
         {
             tryingRandomStuffAtThisPoint = true;
-            Console.WriteLine("Closing WebSocket");
             webSocket.Close();
             GC.Collect();
+        }
+
+        public class Attachment
+        {
+            public string URL { get; set; }
+            public string Type { get; set; }
+        }
+
+        public class Embed
+        {
+            public string Type { get; set; }
+            public string Author { get; set; }
+            public string AuthorURL { get; set; }
+            public string Title { get; set; }
+            public string TitleURL { get; set; }
+            public string Description { get; set; }
         }
     }
 }
