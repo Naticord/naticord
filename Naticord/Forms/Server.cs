@@ -268,7 +268,6 @@ namespace Naticord
                                 html.Append(ping);
                             }
 
-                            GC.Collect();
                             break;
                         }
                         break;
@@ -323,7 +322,6 @@ namespace Naticord
                         break;
                 }
             }
-            GC.Collect();
             return html.ToString();
         }
 
@@ -625,7 +623,6 @@ namespace Naticord
         {
             base.OnFormClosing(e);
             if (websocketClient != null) websocketClient.CloseWebSocket();
-            GC.Collect();
             cts.Cancel();
         }
 

@@ -20,7 +20,7 @@ namespace Naticord
         public WebSocket webSocket;
         private string accessToken;
         private const SslProtocols Tls12 = (SslProtocols)0x00000C00;
-        private bool tryingRandomStuffAtThisPoint = false;
+        private bool websocketClosed = false;
 
         private WebSocketClient(string accessToken, Naticord parentClientForm = null, DM parentDMForm = null, Group parentGroupForm = null, Server parentServerForm = null)
         {
@@ -112,6 +112,9 @@ namespace Naticord
                             await HandleMessageCreateEventAsync(json["d"]);
                             HandleTypingStopEvent(json["d"]);
                             break;
+                        case "PRESENCE_UPDATE":
+                            Debug.WriteLine("Received status update");
+                            break;
                         default:
                             Debug.WriteLine($"Unhandled event type: {eventType}");
                             break;
@@ -120,6 +123,10 @@ namespace Naticord
 
                 case 1:
                     Debug.WriteLine("Heartbeat event received");
+                    break;
+
+                case 10:
+                    Debug.WriteLine("Hello! From Discord Gateway");
                     break;
 
                 default:
@@ -307,7 +314,7 @@ namespace Naticord
 
         private void HandleWebSocketClose()
         {
-            if (!tryingRandomStuffAtThisPoint)
+            if (!websocketClosed)
             {
                 Console.WriteLine("WebSocket connection closed. Attempting to reconnect...");
                 InitializeWebSocket();
@@ -316,9 +323,8 @@ namespace Naticord
 
         public void CloseWebSocket()
         {
-            tryingRandomStuffAtThisPoint = true;
+            websocketClosed = true;
             webSocket.Close();
-            GC.Collect();
         }
 
         public class Attachment
