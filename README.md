@@ -71,3 +71,5 @@ There are two ways to build Naticord: the **Easy Route** or the **Command-Line R
 # Bugs
 - Sometimes markdown glitches out.
 - If theres an image before the message you send, it might resend the image with your message.
+# Credits
+- [jukfiuune](https://github.com/jukfiuune): Original source of Naticord (Aerocord) and alot of help!
