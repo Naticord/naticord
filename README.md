@@ -56,7 +56,6 @@ There are two ways to build Naticord: the **Easy Route** or the **Command-Line R
 - Blocking people, leaving groups and unfriending people
 - File uploading (Does not bypass Discord's limit)
 - Typing indicators
-- Image viewing
 - Messaging
 - Embeds
 - Plugins
@@ -64,10 +63,15 @@ There are two ways to build Naticord: the **Easy Route** or the **Command-Line R
 # Planned functionality
 - Voice chat
   - This may be implemented very soon, thanks to Aerovoice!
-- Statuses
-  - Still a work in progress, definitely soon though. 
+- Markdown
+  - Should be very soon due to labels having the option to use HTML-like formatting.
 - Edit reply and delete.
-  - Will be very soon! Once DMs, groups and servers get a revamp.
+  - Will be very soon! It really will!
+- Blocking people, leaving groups and unfriending people (with the new friends / servers list)
+  - This will be somewhere in the future, but not really needed.
+# Not planned functionality
+- Image viewing in client (with native chat box)
+  - This is not planned, but it may come eventually. Instead there is a "View Image" link for now.
 # Bugs
 - When starting the WebSocket / the WebSocket starts to reconnect it will cause a memory spike and go up to 280MB and go back down to 80MB, the reason for this is unknown and will most likely not be fixed.
 # Credits
