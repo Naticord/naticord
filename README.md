@@ -69,7 +69,6 @@ There are two ways to build Naticord: the **Easy Route** or the **Command-Line R
 - Edit reply and delete.
   - Will be very soon! Once DMs, groups and servers get a revamp.
 # Bugs
-- Sometimes markdown glitches out.
-- If theres an image before the message you send, it might resend the image with your message.
+- When starting the WebSocket / the WebSocket starts to reconnect it will cause a memory spike and go up to 280MB and go back down to 80MB, the reason for this is unknown and will most likely not be fixed.
 # Credits
 - [jukfiuune](https://github.com/jukfiuune): Original source of Naticord (Aerocord) and alot of help!
