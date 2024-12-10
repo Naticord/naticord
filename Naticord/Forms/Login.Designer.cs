@@ -61,7 +61,7 @@
             this.emailBox.Location = new System.Drawing.Point(41, 144);
             this.emailBox.Name = "emailBox";
             this.emailBox.Size = new System.Drawing.Size(215, 25);
-            this.emailBox.TabIndex = 7;
+            this.emailBox.TabIndex = 1;
             // 
             // signinButton
             // 
@@ -69,7 +69,7 @@
             this.signinButton.Location = new System.Drawing.Point(104, 206);
             this.signinButton.Name = "signinButton";
             this.signinButton.Size = new System.Drawing.Size(86, 23);
-            this.signinButton.TabIndex = 8;
+            this.signinButton.TabIndex = 3;
             this.signinButton.Text = "Sign in";
             this.signinButton.UseVisualStyleBackColor = true;
             this.signinButton.Click += new System.EventHandler(this.signinButton_Click);
@@ -95,7 +95,7 @@
             this.passBox.Location = new System.Drawing.Point(41, 175);
             this.passBox.Name = "passBox";
             this.passBox.Size = new System.Drawing.Size(215, 25);
-            this.passBox.TabIndex = 10;
+            this.passBox.TabIndex = 2;
             this.passBox.UseSystemPasswordChar = true;
             // 
             // githubLink
