@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Naticord")]
-[assembly: AssemblyDescription("The awesome sauce Discord replacement.")]
+[assembly: AssemblyDescription("A native (Win32) Discord client.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Naticord")]
+[assembly: AssemblyCompany("patricktbp")]
 [assembly: AssemblyProduct("Naticord")]
-[assembly: AssemblyCopyright("Licensed under Apache License")]
+[assembly: AssemblyCopyright("Licensed under the 'Apache 2.0 license.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1d209443-49d6-4e9d-ae19-e4990777b522")]
+[assembly: Guid("74a15e76-c412-443b-8a31-a988897b999d")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,8 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

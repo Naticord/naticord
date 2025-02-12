@@ -63,9 +63,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap defaultdmbg {
+        internal static System.Drawing.Bitmap default_pfp_logon {
             get {
-                object obj = ResourceManager.GetObject("defaultdmbg", resourceCulture);
+                object obj = ResourceManager.GetObject("default-pfp-logon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,40 +73,10 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap defaultpfp {
+        internal static System.Drawing.Bitmap pink_top_thingy {
             get {
-                object obj = ResourceManager.GetObject("defaultpfp", resourceCulture);
+                object obj = ResourceManager.GetObject("pink-top-thingy", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icon {
-            get {
-                object obj = ResourceManager.GetObject("icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap tune_vertical {
-            get {
-                object obj = ResourceManager.GetObject("tune_vertical", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] youdeer {
-            get {
-                object obj = ResourceManager.GetObject("youdeer", resourceCulture);
-                return ((byte[])(obj));
             }
         }
     }
