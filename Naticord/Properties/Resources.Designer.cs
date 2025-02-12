@@ -73,6 +73,16 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap naticord_logo_64 {
+            get {
+                object obj = ResourceManager.GetObject("naticord-logo-64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap pink_top_thingy {
             get {
                 object obj = ResourceManager.GetObject("pink-top-thingy", resourceCulture);
