@@ -32,12 +32,13 @@
             this.welcomeLabel = new System.Windows.Forms.Label();
             this.noticeLabel = new System.Windows.Forms.Label();
             this.emailLabel = new System.Windows.Forms.Label();
-            this.tokenBox = new System.Windows.Forms.TextBox();
+            this.emailBox = new System.Windows.Forms.TextBox();
             this.loginButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.passwordBox = new System.Windows.Forms.TextBox();
             this.profilePictureLogon = new System.Windows.Forms.PictureBox();
             this.topPinkThingy = new System.Windows.Forms.PictureBox();
-            this.tokenLink = new System.Windows.Forms.LinkLabel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureLogon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.topPinkThingy)).BeginInit();
@@ -68,26 +69,26 @@
             // 
             this.emailLabel.AutoSize = true;
             this.emailLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.emailLabel.Location = new System.Drawing.Point(14, 22);
+            this.emailLabel.Location = new System.Drawing.Point(14, 19);
             this.emailLabel.Name = "emailLabel";
-            this.emailLabel.Size = new System.Drawing.Size(38, 15);
+            this.emailLabel.Size = new System.Drawing.Size(41, 15);
             this.emailLabel.TabIndex = 5;
-            this.emailLabel.Text = "Token";
+            this.emailLabel.Text = "E-mail";
             // 
-            // tokenBox
+            // emailBox
             // 
-            this.tokenBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tokenBox.Location = new System.Drawing.Point(17, 40);
-            this.tokenBox.Name = "tokenBox";
-            this.tokenBox.Size = new System.Drawing.Size(165, 23);
-            this.tokenBox.TabIndex = 6;
+            this.emailBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.emailBox.Location = new System.Drawing.Point(17, 37);
+            this.emailBox.Name = "emailBox";
+            this.emailBox.Size = new System.Drawing.Size(165, 23);
+            this.emailBox.TabIndex = 6;
             // 
             // loginButton
             // 
             this.loginButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loginButton.Location = new System.Drawing.Point(108, 331);
+            this.loginButton.Location = new System.Drawing.Point(106, 369);
             this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(75, 23);
+            this.loginButton.Size = new System.Drawing.Size(75, 27);
             this.loginButton.TabIndex = 5;
             this.loginButton.Text = "Login!";
             this.loginButton.UseVisualStyleBackColor = true;
@@ -95,14 +96,35 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.passwordBox);
             this.groupBox1.Controls.Add(this.emailLabel);
-            this.groupBox1.Controls.Add(this.tokenBox);
+            this.groupBox1.Controls.Add(this.emailBox);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(47, 239);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 84);
+            this.groupBox1.Size = new System.Drawing.Size(200, 124);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(14, 67);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(57, 15);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Password";
+            // 
+            // passwordBox
+            // 
+            this.passwordBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.passwordBox.Location = new System.Drawing.Point(17, 85);
+            this.passwordBox.Name = "passwordBox";
+            this.passwordBox.Size = new System.Drawing.Size(165, 23);
+            this.passwordBox.TabIndex = 8;
+            this.passwordBox.UseSystemPasswordChar = true;
             // 
             // profilePictureLogon
             // 
@@ -124,29 +146,12 @@
             this.topPinkThingy.TabIndex = 0;
             this.topPinkThingy.TabStop = false;
             // 
-            // tokenLink
-            // 
-            this.tokenLink.ActiveLinkColor = System.Drawing.Color.RoyalBlue;
-            this.tokenLink.AutoSize = true;
-            this.tokenLink.Cursor = System.Windows.Forms.Cursors.Default;
-            this.tokenLink.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tokenLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-            this.tokenLink.LinkColor = System.Drawing.Color.RoyalBlue;
-            this.tokenLink.Location = new System.Drawing.Point(16, 407);
-            this.tokenLink.Name = "tokenLink";
-            this.tokenLink.Size = new System.Drawing.Size(138, 15);
-            this.tokenLink.TabIndex = 7;
-            this.tokenLink.TabStop = true;
-            this.tokenLink.Text = "How can I get my token?";
-            this.tokenLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tokenLink_LinkClicked);
-            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(299, 436);
-            this.Controls.Add(this.tokenLink);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.noticeLabel);
@@ -174,11 +179,12 @@
         private System.Windows.Forms.PictureBox profilePictureLogon;
         private System.Windows.Forms.Label welcomeLabel;
         private System.Windows.Forms.Label noticeLabel;
-        private System.Windows.Forms.TextBox tokenBox;
+        private System.Windows.Forms.TextBox emailBox;
         private System.Windows.Forms.Label emailLabel;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.LinkLabel tokenLink;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox passwordBox;
     }
 }
 

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿#nullable enable
+using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Naticord
 {
@@ -11,52 +12,43 @@ namespace Naticord
         public Login()
         {
             InitializeComponent();
+            SetUpAPI();
+        }
+
+        private async void SetUpAPI()
+        {
+            await API.InitializeFingerprint();
         }
 
         private async void loginButton_Click(object sender, EventArgs e)
         {
-            string token = tokenBox.Text;
+            string email = emailBox.Text;
+            string password = passwordBox.Text;
 
-            if (string.IsNullOrWhiteSpace(token))
+            var data = new { login = email, password = password };
+            string response = await API.SendAPI(null, "auth/login", HttpMethod.Post, data);
+
+            dynamic? jsonResponse = JsonConvert.DeserializeObject(response);
+            if (jsonResponse == null)
             {
-                CMessageBox errorMessageBox = new CMessageBox("Authentication error", "Please enter your Discord token in the text box.");
-                errorMessageBox.ShowDialog();
+                new CMessageBox("Login Failed", "Invalid response from server.").Show();
                 return;
             }
 
-            try
+            if (jsonResponse.token != null)
             {
-                string response = await API.SendAPI(token, "users/@me", HttpMethod.Get);
-                JObject jsonResponse = JObject.Parse(response);
-
-                if (jsonResponse.ContainsKey("id"))
-                {
-                    string userId = jsonResponse["id"].ToString();
-                    Debug.WriteLine(userId);
-
-                    CMessageBox successMessageBox = new CMessageBox("Authentication successful", $"User ID: {userId}");
-                    successMessageBox.ShowDialog();
-                }
-                else
-                {
-                    CMessageBox errorMessageBox = new CMessageBox("Authentication error", "Login failed. Please check if your token is correct.");
-                    errorMessageBox.ShowDialog();
-                }
+                new CMessageBox("Login Successful", $"Token: {jsonResponse.token}").Show();
             }
-            catch (Exception ex)
+            else if (jsonResponse.mfa == true && jsonResponse.ticket != null)
             {
-                CMessageBox errorMessageBox = new CMessageBox("Error", $"Error: {ex.Message}");
-                errorMessageBox.ShowDialog();
+                string ticket = jsonResponse.ticket;
+                TwoFA twoFAForm = new TwoFA(ticket);
+                twoFAForm.Show();
             }
-        }
-
-        private void tokenLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo
+            else
             {
-                FileName = "https://github.com/Naticord/naticord/wiki/How-can-I-get-my-token%3F",
-                UseShellExecute = true
-            });
+                new CMessageBox("Login Failed", "Unexpected response from server.").Show();
+            }
         }
     }
 }
