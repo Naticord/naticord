@@ -19,6 +19,10 @@ Rewrite coming soon.
 # Screenshots 
 ![login](https://github.com/user-attachments/assets/ba4b761c-80d4-4192-ba51-d2e9a2f9311c)
 
+# Functionality
+- Login
+  - Email (with 2FA): ✔️
+  - Token: ✔️
 # Credits
 - Microsoft: Assets from WLM and inspiration (Logon screen)
 - Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
