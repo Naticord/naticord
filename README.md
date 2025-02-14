@@ -21,3 +21,5 @@ Rewrite coming soon.
 
 # Credits
 - Microsoft: Assets from WLM and inspiration (Logon screen)
+- Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
+- Tech Stuff: Helping out with some stuff (2FA)

@@ -59,11 +59,10 @@
             // 
             // messageContent
             // 
-            this.messageContent.AutoSize = true;
             this.messageContent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.messageContent.Location = new System.Drawing.Point(68, 37);
             this.messageContent.Name = "messageContent";
-            this.messageContent.Size = new System.Drawing.Size(96, 15);
+            this.messageContent.Size = new System.Drawing.Size(404, 49);
             this.messageContent.TabIndex = 2;
             this.messageContent.Text = "messageContent";
             // 
@@ -91,7 +90,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "CMessageBox";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CMessageBox";
             ((System.ComponentModel.ISupportInitialize)(this.naticordLogo)).EndInit();
             this.ResumeLayout(false);
