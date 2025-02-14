@@ -1,6 +1,6 @@
 ﻿// Using cURL makes this look ugly, but it's the only solution that works.
 // This was a mess to get working in the first place and at the end of the day I'm happy enough this works.
-// I don't know what Discord has made it this complicated to make 2FA work, I'm guessing to make 3rd party client developers to stop?
+// I don't know why Discord has made it this complicated to make 2FA work, I'm guessing to make 3rd party client developers to stop making them?
 // I have no idea. This works and is the only one viable **for now**
 
 using System;
@@ -59,7 +59,10 @@ namespace Naticord
 
             if (jsonResponse.token != null)
             {
-                new CMessageBox("MFA Successful", $"Token: {jsonResponse.token}").Show();
+                Properties.Settings.Default.token = jsonResponse.token.ToString();
+                Properties.Settings.Default.Save();
+                Client naticordMain = new Client();
+                naticordMain.Show();
                 this.Close();
             }
             else

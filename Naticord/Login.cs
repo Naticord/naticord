@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -14,6 +13,24 @@ namespace Naticord
             InitializeComponent();
             SetUpAPI();
         }
+
+        private void CheckTokenAutoLogin()
+        {
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.token))
+            {
+                this.BeginInvoke(new Action(() =>
+                {
+                    this.Hide();
+                    Client naticordMain = new Client();
+                    naticordMain.Show();
+                }));
+            }
+            else
+            {
+                // Continue execution (Nothing to be done)
+            }
+        }
+
 
         private async void SetUpAPI()
         {
@@ -37,18 +54,38 @@ namespace Naticord
 
             if (jsonResponse.token != null)
             {
-                new CMessageBox("Login Successful", $"Token: {jsonResponse.token}").Show();
+                Properties.Settings.Default.token = jsonResponse.token.ToString();
+                Properties.Settings.Default.Save();
+
+                this.BeginInvoke(new Action(() =>
+                {
+                    this.Hide();
+                    Client naticordMain = new Client();
+                    naticordMain.Show();
+                }));
             }
             else if (jsonResponse.mfa == true && jsonResponse.ticket != null)
             {
                 string ticket = jsonResponse.ticket;
-                TwoFA twoFAForm = new TwoFA(ticket);
-                twoFAForm.Show();
+
+                this.BeginInvoke(new Action(() =>
+                {
+                    this.Hide();
+                    TwoFA twoFAForm = new TwoFA(ticket);
+                    twoFAForm.Show();
+                }));
             }
             else
             {
                 new CMessageBox("Login Failed", "Unexpected response from server. Please check your details and file a GitHub issue if it's still not working.").Show();
             }
+        }
+
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+            // Just a simple check.
+            CheckTokenAutoLogin();
         }
     }
 }

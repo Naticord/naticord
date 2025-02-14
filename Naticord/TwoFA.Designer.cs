@@ -55,7 +55,7 @@
             this.noticeLabel.Name = "noticeLabel";
             this.noticeLabel.Size = new System.Drawing.Size(337, 30);
             this.noticeLabel.TabIndex = 4;
-            this.noticeLabel.Text = "Naticord has detected you have 2FA enabled. please enter your\r\nauthentication cod" +
+            this.noticeLabel.Text = "Naticord has detected you have 2FA enabled, please enter your\r\nauthentication cod" +
     "e. ";
             // 
             // noticeTitle
