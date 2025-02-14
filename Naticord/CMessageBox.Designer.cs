@@ -33,6 +33,7 @@
             this.messageTitle = new System.Windows.Forms.Label();
             this.messageContent = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
+            this.copyButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.naticordLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,12 +77,24 @@
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
+            // copyButton
+            // 
+            this.copyButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.copyButton.Location = new System.Drawing.Point(296, 89);
+            this.copyButton.Name = "copyButton";
+            this.copyButton.Size = new System.Drawing.Size(105, 23);
+            this.copyButton.TabIndex = 4;
+            this.copyButton.Text = "Copy message";
+            this.copyButton.UseVisualStyleBackColor = true;
+            this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
+            // 
             // CMessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(484, 124);
+            this.Controls.Add(this.copyButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.messageContent);
             this.Controls.Add(this.messageTitle);
@@ -104,5 +117,6 @@
         public System.Windows.Forms.Label messageTitle;
         public System.Windows.Forms.Label messageContent;
         private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button copyButton;
     }
 }

@@ -18,5 +18,10 @@ namespace Naticord
         {
             this.Close();
         }
+
+        private void copyButton_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(messageContent.Text);
+        }
     }
 }

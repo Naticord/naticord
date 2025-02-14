@@ -31,7 +31,7 @@ namespace Naticord
             dynamic? jsonResponse = JsonConvert.DeserializeObject(response);
             if (jsonResponse == null)
             {
-                new CMessageBox("Login Failed", "Invalid response from server.").Show();
+                new CMessageBox("Login Failed", "Invalid response from server. Please check your details and file a GitHub issue if it's still not working.").Show();
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace Naticord
             }
             else
             {
-                new CMessageBox("Login Failed", "Unexpected response from server.").Show();
+                new CMessageBox("Login Failed", "Unexpected response from server. Please check your details and file a GitHub issue if it's still not working.").Show();
             }
         }
     }
