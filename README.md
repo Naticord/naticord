@@ -23,6 +23,8 @@ Rewrite coming soon.
 - Login
   - Email (with 2FA): ✔️
   - Token: ✔️
+- Client
+  - **Work in progress**
 # Credits
 - Microsoft: Assets from WLM and inspiration (Login screen)
 - Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
