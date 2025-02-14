@@ -24,6 +24,6 @@ Rewrite coming soon.
   - Email (with 2FA): ✔️
   - Token: ✔️
 # Credits
-- Microsoft: Assets from WLM and inspiration (Logon screen)
+- Microsoft: Assets from WLM and inspiration (Overall client design)
 - Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
 - Tech Stuff: Helping out with some stuff (2FA)
