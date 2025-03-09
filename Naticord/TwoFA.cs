@@ -1,8 +1,9 @@
 ﻿// Using cURL makes this look ugly, but it's the only solution that works.
 // This was a mess to get working in the first place and at the end of the day I'm happy enough this works.
-// I don't know why Discord has made it this complicated to make 2FA work, I'm guessing to make 3rd party client developers to stop making them?
+// I don't know why Discord has made it this complicated to make 2FA work, I'm guessing to make 3rd party client developers stop making them?
 // I have no idea. This works and is the only one viable **for now**
 
+#nullable enable
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace Naticord
         public TwoFA(string ticket)
         {
             InitializeComponent();
-            this.ticket = ticket;
+            this.ticket = ticket;   
             Debug.WriteLine(ticket);
         }
 
@@ -53,7 +54,7 @@ namespace Naticord
             dynamic? jsonResponse = JsonConvert.DeserializeObject(output);
             if (jsonResponse == null)
             {
-                new CMessageBox("MFA Failed", "Invalid response from server.").Show();
+                new CMessageBox("Authentication failed", "Invalid response from server.").Show();
                 return;
             }
 
@@ -67,7 +68,7 @@ namespace Naticord
             }
             else
             {
-                new CMessageBox("MFA Failed", "Invalid authentication code.").Show();
+                new CMessageBox("Authentication failed", "Invalid authentication code.").Show();
             }
         }
     }

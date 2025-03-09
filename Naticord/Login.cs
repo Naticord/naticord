@@ -11,7 +11,6 @@ namespace Naticord
         public Login()
         {
             InitializeComponent();
-            SetUpAPI();
         }
 
         private void CheckTokenAutoLogin()
@@ -29,12 +28,6 @@ namespace Naticord
             {
                 // Continue execution (Nothing to be done)
             }
-        }
-
-
-        private async void SetUpAPI()
-        {
-            await API.InitializeFingerprint();
         }
 
         private async void loginButton_Click(object sender, EventArgs e)

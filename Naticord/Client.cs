@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Naticord
@@ -10,8 +11,25 @@ namespace Naticord
         public Client()
         {
             InitializeComponent();
-            TruncateLabels(usernameLabel, statusLabel);
             InitializeContextMenu();
+            this.FormClosing += Client_FormClosing;
+
+            // WinForms image rendering is horrible, this applies anti-aliasing to it.
+            usernameLabelandImage.Paint += (sender, e) =>
+            {
+                ToolStripLabel label = (ToolStripLabel)sender;
+                Graphics g = e.Graphics;
+
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                if (label.Image != null)
+                {
+                    Rectangle imgRect = new Rectangle(0, 0, label.Height, label.Height);
+                    g.DrawImage(label.Image, imgRect);
+                }
+            };
         }
 
         private void InitializeContextMenu()
@@ -43,17 +61,9 @@ namespace Naticord
             aboutDialog.ShowDialog();
         }
 
-        public void TruncateLabels(Label usernameLabel, Label statusLabel)
+        private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (usernameLabel.Text.Length >= 17)
-            {
-                usernameLabel.Text = usernameLabel.Text.Substring(0, usernameLabel.Text.Length - 3) + "...";
-            }
-
-            if (statusLabel.Text.Length >= 23)
-            {
-                statusLabel.Text = statusLabel.Text.Substring(0, statusLabel.Text.Length - 3) + "...";
-            }
+            Application.Exit();
         }
     }
 }
