@@ -11,6 +11,7 @@
 <p align="center">
  <a href="https://naticord.lol">Website</a> · <a href="https://discord.com/invite/Hr7tC837ZW">Discord Server</a>
 </p>
+
 ---
 
 Rewrite coming soon.
