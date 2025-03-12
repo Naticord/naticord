@@ -9,23 +9,22 @@
 <p align="center">Naticord is a native Discord client made using C# with Windows Forms.</p>
 
 <p align="center">
- <a href="https://naticord.lol">Website</a> · <a href="https://discord.com/invite/Hr7tC837ZW">Discord Server</a>
+ <a href="https://naticord.lol">Website</a> · <a href="https://discord.com/invite/Hr7tC837ZW">Discord Server</a> <br>
 </p>
-
 ---
 
 Rewrite coming soon.
 
-# Screenshots 
-![login](https://github.com/user-attachments/assets/ba4b761c-80d4-4192-ba51-d2e9a2f9311c)
+# Screenshots
+![login](https://github.com/user-attachments/assets/76c43a2e-6702-4439-9d9a-17e250656872)
 
 # Functionality
 - Login
   - Email (with 2FA): ✔️
-  - Token: ✔️
+  - Token: Not implemented (Planned)
 - Client
   - **Work in progress**
 # Credits
-- Microsoft: Assets from WLM and inspiration (Login screen)
 - Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
+- Discord Messenger: Some design inspiration
 - Tech Stuff: Helping out with some stuff (2FA)
