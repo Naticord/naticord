@@ -1,31 +1,19 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/f688e553-ca56-4c1b-af2d-385766540ad6" />
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/72f612cb-6b3e-4d9e-b9df-a5480d624ba2" />
-    <img src="https://github.com/user-attachments/assets/72f612cb-6b3e-4d9e-b9df-a5480d624ba2" alt="Naticord Logo" />
-  </picture>
-</p>
+# Naticord
+Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was made with the intention of looking good on all Windows versions from 7 - 11 and reducing the RAM and CPU usage of Discord.
 
-<p align="center">Naticord is a native Discord client made using C# with Windows Forms.</p>
+> **Note:** Discord may break the client at any time, if that happens, please report it here.
 
-<p align="center">
- <a href="https://naticord.lol">Website</a> · <a href="https://discord.com/invite/Hr7tC837ZW">Discord Server</a>
-</p>
-
----
-
-Rewrite coming soon.
-
-# Screenshots 
-![login](https://github.com/user-attachments/assets/ba4b761c-80d4-4192-ba51-d2e9a2f9311c)
+> **Motto:** *A native Discord experience.*
+# Screenshots
+![login](https://github.com/user-attachments/assets/6fe3fe8d-adcb-4979-b574-110ea36b3742)
 
 # Functionality
 - Login
   - Email (with 2FA): ✔️
-  - Token: ✔️
+  - Token: Not implemented (Planned)
 - Client
   - **Work in progress**
 # Credits
-- Microsoft: Assets from WLM and inspiration (Login screen)
 - Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
+- Discord Messenger: Some design inspiration
 - Tech Stuff: Helping out with some stuff (2FA)
