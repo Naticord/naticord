@@ -5,7 +5,7 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 
 > **Motto:** *The Win32 styled Discord client...*
 # Screenshots
-![login](https://github.com/user-attachments/assets/76c43a2e-6702-4439-9d9a-17e250656872)
+![login](https://github.com/user-attachments/assets/6fe3fe8d-adcb-4979-b574-110ea36b3742)
 
 # Functionality
 - Login
