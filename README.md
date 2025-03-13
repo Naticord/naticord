@@ -3,7 +3,7 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 
 > **Note:** Discord may break the client at any time, if that happens, please report it here.
 
-> **Motto:** *A native Discord experience*
+> **Motto:** *A native Discord experience.*
 # Screenshots
 ![login](https://github.com/user-attachments/assets/6fe3fe8d-adcb-4979-b574-110ea36b3742)
 
