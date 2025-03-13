@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Naticord")]
-[assembly: AssemblyDescription("A native (Win32) Discord client.")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("patricktbp")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Naticord")]
-[assembly: AssemblyCopyright("Licensed under the 'Apache 2.0 license.")]
+[assembly: AssemblyCopyright("Licensed under the Apache License 2.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("74a15e76-c412-443b-8a31-a988897b999d")]
+[assembly: Guid("e3a7011e-b367-49d0-89f7-9fe2d30ccd25")]
 
 // Version information for an assembly consists of the following four values:
 //

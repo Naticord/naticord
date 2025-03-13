@@ -29,23 +29,13 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CMessageBox));
-            this.naticordLogo = new System.Windows.Forms.PictureBox();
             this.messageTitle = new System.Windows.Forms.Label();
             this.messageContent = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.copyButton = new System.Windows.Forms.Button();
+            this.naticordLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.naticordLogo)).BeginInit();
             this.SuspendLayout();
-            // 
-            // naticordLogo
-            // 
-            this.naticordLogo.Image = global::Naticord.Properties.Resources.naticord_logo_64;
-            this.naticordLogo.Location = new System.Drawing.Point(13, 11);
-            this.naticordLogo.Name = "naticordLogo";
-            this.naticordLogo.Size = new System.Drawing.Size(48, 48);
-            this.naticordLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.naticordLogo.TabIndex = 0;
-            this.naticordLogo.TabStop = false;
             // 
             // messageTitle
             // 
@@ -61,15 +51,15 @@
             // messageContent
             // 
             this.messageContent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageContent.Location = new System.Drawing.Point(68, 37);
+            this.messageContent.Location = new System.Drawing.Point(68, 36);
             this.messageContent.Name = "messageContent";
-            this.messageContent.Size = new System.Drawing.Size(404, 49);
+            this.messageContent.Size = new System.Drawing.Size(453, 49);
             this.messageContent.TabIndex = 2;
             this.messageContent.Text = "messageContent";
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(407, 89);
+            this.okButton.Location = new System.Drawing.Point(456, 89);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(65, 23);
             this.okButton.TabIndex = 3;
@@ -80,7 +70,7 @@
             // copyButton
             // 
             this.copyButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.copyButton.Location = new System.Drawing.Point(296, 89);
+            this.copyButton.Location = new System.Drawing.Point(345, 89);
             this.copyButton.Name = "copyButton";
             this.copyButton.Size = new System.Drawing.Size(105, 23);
             this.copyButton.TabIndex = 4;
@@ -88,12 +78,22 @@
             this.copyButton.UseVisualStyleBackColor = true;
             this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
             // 
+            // naticordLogo
+            // 
+            this.naticordLogo.Image = global::Naticord.Properties.Resources.naticord_logo_64;
+            this.naticordLogo.Location = new System.Drawing.Point(13, 11);
+            this.naticordLogo.Name = "naticordLogo";
+            this.naticordLogo.Size = new System.Drawing.Size(48, 48);
+            this.naticordLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.naticordLogo.TabIndex = 0;
+            this.naticordLogo.TabStop = false;
+            // 
             // CMessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(484, 124);
+            this.ClientSize = new System.Drawing.Size(533, 124);
             this.Controls.Add(this.copyButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.messageContent);

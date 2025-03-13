@@ -1,16 +1,95 @@
-﻿#nullable enable
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace Naticord
 {
-    public partial class Login : Form
+    public partial class Login: Form
     {
+        string email;
+        string password;
+
         public Login()
         {
+            API api = new API();
             InitializeComponent();
+            CheckIfInternetConnectionExists();
+        }
+
+        private void loginButton_Click(object sender, EventArgs e)
+        {
+            email = emailBox.Text;
+            password = passwordBox.Text;
+            LoginToDiscord(email, password);
+        }
+
+        public async void LoginToDiscord(string email, string password)
+        {
+            var body = new
+            {
+                login = email,
+                password = password,
+                undelete = false
+            };
+
+            try
+            {
+                string response = await API.SendAPI(null, "auth/login", HttpMethod.Post, body);
+
+                if (response.Contains("\"token\"")) // No 2FA
+                {
+                    var json = JObject.Parse(response);
+                    string token = json["token"]?.ToString();
+
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        Properties.Settings.Default.token = token;
+                        Properties.Settings.Default.Save();
+                    }
+
+                    // Continue onto the client
+                }
+                if (response.Contains("\"ticket\"")) // With 2FA
+                {
+                    var json = JObject.Parse(response);
+                    string ticket = json["ticket"]?.ToString();
+
+                    TwoFA twoFAForm = new TwoFA(ticket);
+                    twoFAForm.Show();
+                }
+                else // Wrong credentials or Discord is down
+                {
+                    new CMessageBox("Couldn't login", "You may have entered the wrong credentials or Discord's API is down. Please check Discord's status and your details.").Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                new CMessageBox("An error has occured", $"An error trying to send data to the Discord API has occured. Please report this to the GitHub. {ex.Message}");
+            }
+        }
+
+        private void CheckIfInternetConnectionExists()
+        {
+            try
+            {
+                using (Ping ping = new Ping())
+                {
+                    PingReply reply = ping.Send("8.8.8.8", 3000);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        // Do nothing if a connection is active
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore exceptions (no network)
+            }
+
+            new CMessageBox("No internet connection was found", "We have failed to find an internet connection. The client will load, but may not function as intended.");
         }
 
         private void CheckTokenAutoLogin()
@@ -20,8 +99,7 @@ namespace Naticord
                 this.BeginInvoke(new Action(() =>
                 {
                     this.Hide();
-                    Client naticordMain = new Client();
-                    naticordMain.Show();
+                    // Continue onto the client
                 }));
             }
             else
@@ -30,54 +108,8 @@ namespace Naticord
             }
         }
 
-        private async void loginButton_Click(object sender, EventArgs e)
-        {
-            string email = emailBox.Text;
-            string password = passwordBox.Text;
-
-            var data = new { login = email, password = password };
-            string response = await API.SendAPI(null, "auth/login", HttpMethod.Post, data);
-
-            dynamic? jsonResponse = JsonConvert.DeserializeObject(response);
-            if (jsonResponse == null)
-            {
-                new CMessageBox("Login Failed", "Invalid response from server. Please check your details and file a GitHub issue if it's still not working.").Show();
-                return;
-            }
-
-            if (jsonResponse.token != null)
-            {
-                Properties.Settings.Default.token = jsonResponse.token.ToString();
-                Properties.Settings.Default.Save();
-
-                this.BeginInvoke(new Action(() =>
-                {
-                    this.Hide();
-                    Client naticordMain = new Client();
-                    naticordMain.Show();
-                }));
-            }
-            else if (jsonResponse.mfa == true && jsonResponse.ticket != null)
-            {
-                string ticket = jsonResponse.ticket;
-
-                this.BeginInvoke(new Action(() =>
-                {
-                    this.Hide();
-                    TwoFA twoFAForm = new TwoFA(ticket);
-                    twoFAForm.Show();
-                }));
-            }
-            else
-            {
-                new CMessageBox("Login Failed", "Unexpected response from server. Please check your details and file a GitHub issue if it's still not working.").Show();
-            }
-        }
-
-
         private void Login_Load(object sender, EventArgs e)
         {
-            // Just a simple check.
             CheckTokenAutoLogin();
         }
     }

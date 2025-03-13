@@ -1,40 +1,24 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naticord", "Naticord\Naticord.csproj", "{74A15E76-C412-443B-8A31-A988897B999D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Naticord", "Naticord\Naticord.csproj", "{E3A7011E-B367-49D0-89F7-9FE2D30CCD25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|ARM64 = Debug|ARM64
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|ARM64 = Release|ARM64
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|ARM64.Build.0 = Debug|ARM64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|x64.ActiveCfg = Debug|x64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|x64.Build.0 = Debug|x64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|x86.ActiveCfg = Debug|x86
-		{74A15E76-C412-443B-8A31-A988897B999D}.Debug|x86.Build.0 = Debug|x86
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|ARM64.ActiveCfg = Release|ARM64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|ARM64.Build.0 = Release|ARM64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|x64.ActiveCfg = Release|x64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|x64.Build.0 = Release|x64
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|x86.ActiveCfg = Release|x86
-		{74A15E76-C412-443B-8A31-A988897B999D}.Release|x86.Build.0 = Release|x86
+		{E3A7011E-B367-49D0-89F7-9FE2D30CCD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3A7011E-B367-49D0-89F7-9FE2D30CCD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3A7011E-B367-49D0-89F7-9FE2D30CCD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3A7011E-B367-49D0-89F7-9FE2D30CCD25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B96DBA3D-8520-4384-AFF6-55553A49BE88}
 	EndGlobalSection
 EndGlobal
