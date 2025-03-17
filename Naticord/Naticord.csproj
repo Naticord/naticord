@@ -83,12 +83,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ServerControl.Designer.cs">
-      <DependentUpon>ServerControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="TwoFA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,9 +108,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="ServerControl.resx">
-      <DependentUpon>ServerControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="TwoFA.resx">
       <DependentUpon>TwoFA.cs</DependentUpon>
     </EmbeddedResource>

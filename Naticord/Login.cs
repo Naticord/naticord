@@ -8,8 +8,8 @@ namespace Naticord
 {
     public partial class Login: Form
     {
-        string email;
-        string password;
+        private string email;
+        private string password;
 
         public Login()
         {
