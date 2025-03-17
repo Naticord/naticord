@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 
 namespace Naticord
 {
@@ -87,6 +88,45 @@ namespace Naticord
                 Debug.WriteLine($"Parse error: {ex.Message}");
             }
         }
+        
+        private async Task LoadFriendsList()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new MethodInvoker(async () => await LoadFriendsList()));
+                return;
+            }
+
+            string relationshipList = await API.SendAPI(token, "users/@me/relationships", HttpMethod.Get, null);
+            JArray relationships = JArray.Parse(relationshipList);
+
+            foreach (var relationship in relationships)
+            {
+                string globalName = relationship["user"]?["global_name"]?.ToString();
+                string username = relationship["user"]?["username"]?.ToString();
+                string avatarHash = relationship["user"]?["avatar"]?.ToString();
+                string userId = relationship["user"]?["id"]?.ToString();
+
+                FSControl friendControl = new FSControl
+                {
+                    LText = !string.IsNullOrWhiteSpace(globalName) ? globalName : username,
+                    PFPPic = await GetCachedAvatar(userId, avatarHash)
+                };
+
+                PictureBox profilePic = friendControl.Controls.Find("profilePictureItem", true).FirstOrDefault() as PictureBox;
+                if (profilePic != null)
+                {
+                    profilePic.Paint += Antialias_Paint;
+                }
+
+                friendsPanelList.Controls.Add(friendControl);
+            }
+        }
+
+        private async Task LoadServersList()
+        {
+            // TODO
+        }
 
         // Helper functions
         private async Task<Image> GetCachedAvatar(string userId, string avatarHash)
@@ -112,7 +152,7 @@ namespace Naticord
         {
             bool isGif = avatarHash.StartsWith("a_");
             string extension = isGif ? "gif" : "png";
-            return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=1024";
+            return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=128";
         }
 
         // Anti-aliasing
@@ -167,6 +207,8 @@ namespace Naticord
             }));
 
             await SetUserInfo().ConfigureAwait(false);
+            await LoadFriendsList();
+            await LoadServersList();
         }
 
         private void uploadButton_Click(object sender, EventArgs e)

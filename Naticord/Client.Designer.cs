@@ -38,7 +38,11 @@
             this.messagesPanel = new System.Windows.Forms.Panel();
             this.messageTextBox = new System.Windows.Forms.TextBox();
             this.uploadButton = new System.Windows.Forms.Button();
+            this.friendsPanelList = new System.Windows.Forms.FlowLayoutPanel();
+            this.serversPanelList = new System.Windows.Forms.FlowLayoutPanel();
             this.FSTabControl.SuspendLayout();
+            this.friendsTab.SuspendLayout();
+            this.serversTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // usernameLabelAndImage
@@ -64,7 +68,7 @@
             this.naticordVersion.Image = global::Naticord.Properties.Resources.naticord_logo_64;
             this.naticordVersion.Name = "naticordVersion";
             this.naticordVersion.Size = new System.Drawing.Size(197, 18);
-            this.naticordVersion.Text = "You are on Naticord version 1.0.0";
+            this.naticordVersion.Text = "Naticord v1.0.0";
             // 
             // FSTabControl
             // 
@@ -79,6 +83,7 @@
             // 
             // friendsTab
             // 
+            this.friendsTab.Controls.Add(this.friendsPanelList);
             this.friendsTab.Location = new System.Drawing.Point(4, 24);
             this.friendsTab.Name = "friendsTab";
             this.friendsTab.Padding = new System.Windows.Forms.Padding(3);
@@ -89,10 +94,11 @@
             // 
             // serversTab
             // 
-            this.serversTab.Location = new System.Drawing.Point(4, 22);
+            this.serversTab.Controls.Add(this.serversPanelList);
+            this.serversTab.Location = new System.Drawing.Point(4, 24);
             this.serversTab.Name = "serversTab";
             this.serversTab.Padding = new System.Windows.Forms.Padding(3);
-            this.serversTab.Size = new System.Drawing.Size(192, 523);
+            this.serversTab.Size = new System.Drawing.Size(192, 521);
             this.serversTab.TabIndex = 1;
             this.serversTab.Text = "Servers";
             this.serversTab.UseVisualStyleBackColor = true;
@@ -124,6 +130,20 @@
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
+            // friendsPanelList
+            // 
+            this.friendsPanelList.Location = new System.Drawing.Point(6, 6);
+            this.friendsPanelList.Name = "friendsPanelList";
+            this.friendsPanelList.Size = new System.Drawing.Size(180, 509);
+            this.friendsPanelList.TabIndex = 0;
+            // 
+            // serversPanelList
+            // 
+            this.serversPanelList.Location = new System.Drawing.Point(6, 6);
+            this.serversPanelList.Name = "serversPanelList";
+            this.serversPanelList.Size = new System.Drawing.Size(180, 509);
+            this.serversPanelList.TabIndex = 1;
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -143,6 +163,8 @@
             this.Text = "Naticord - Home";
             this.Load += new System.EventHandler(this.Client_Load);
             this.FSTabControl.ResumeLayout(false);
+            this.friendsTab.ResumeLayout(false);
+            this.serversTab.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,5 +181,7 @@
         private System.Windows.Forms.Panel messagesPanel;
         private System.Windows.Forms.TextBox messageTextBox;
         private System.Windows.Forms.Button uploadButton;
+        private System.Windows.Forms.FlowLayoutPanel friendsPanelList;
+        private System.Windows.Forms.FlowLayoutPanel serversPanelList;
     }
 }

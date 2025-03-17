@@ -75,6 +75,12 @@
     <Compile Include="CommandLink.Designer.cs">
       <DependentUpon>CommandLink.cs</DependentUpon>
     </Compile>
+    <Compile Include="FSControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FSControl.Designer.cs">
+      <DependentUpon>FSControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CMessageBox.resx">
       <DependentUpon>CMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FSControl.resx">
+      <DependentUpon>FSControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
