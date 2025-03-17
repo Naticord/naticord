@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -56,6 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.cs" />
+    <Compile Include="Client.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Client.Designer.cs">
+      <DependentUpon>Client.cs</DependentUpon>
+    </Compile>
     <Compile Include="CMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,12 +83,21 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerControl.Designer.cs">
+      <DependentUpon>ServerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="TwoFA.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TwoFA.Designer.cs">
       <DependentUpon>TwoFA.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Client.resx">
+      <DependentUpon>Client.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CMessageBox.resx">
       <DependentUpon>CMessageBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +114,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ServerControl.resx">
+      <DependentUpon>ServerControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TwoFA.resx">
       <DependentUpon>TwoFA.cs</DependentUpon>
     </EmbeddedResource>
@@ -117,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="naticord.ico" />
+    <None Include="Resources\discord-profile.png" />
     <None Include="Resources\banner.png" />
     <None Include="Resources\naticord-logo-64.png" />
   </ItemGroup>

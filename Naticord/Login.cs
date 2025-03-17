@@ -49,7 +49,10 @@ namespace Naticord
                         Properties.Settings.Default.Save();
                     }
 
-                    // Continue onto the client
+                    // Continues to the client
+                    Client clientForm = new Client();
+                    clientForm.Show();
+                    this.Hide();
                 }
                 if (response.Contains("\"ticket\"")) // With 2FA
                 {
@@ -98,8 +101,9 @@ namespace Naticord
             {
                 this.BeginInvoke(new Action(() =>
                 {
+                    Client clientForm = new Client();
+                    clientForm.Show();
                     this.Hide();
-                    // Continue onto the client
                 }));
             }
             else

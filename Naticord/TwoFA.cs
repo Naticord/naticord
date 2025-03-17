@@ -62,6 +62,10 @@ namespace Naticord
             {
                 Properties.Settings.Default.token = jsonResponse.token.ToString();
                 Properties.Settings.Default.Save();
+
+                // Continues to the client
+                Client clientForm = new Client();
+                clientForm.Show();
                 this.Close();
             }
             else

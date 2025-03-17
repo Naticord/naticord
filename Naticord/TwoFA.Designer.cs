@@ -52,7 +52,7 @@
             this.messageTitle.AutoSize = true;
             this.messageTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.messageTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
-            this.messageTitle.Location = new System.Drawing.Point(67, 15);
+            this.messageTitle.Location = new System.Drawing.Point(67, 11);
             this.messageTitle.Name = "messageTitle";
             this.messageTitle.Size = new System.Drawing.Size(172, 21);
             this.messageTitle.TabIndex = 2;
@@ -61,7 +61,7 @@
             // messageContent
             // 
             this.messageContent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageContent.Location = new System.Drawing.Point(68, 36);
+            this.messageContent.Location = new System.Drawing.Point(68, 32);
             this.messageContent.Name = "messageContent";
             this.messageContent.Size = new System.Drawing.Size(254, 32);
             this.messageContent.TabIndex = 3;
@@ -71,7 +71,7 @@
             // authenticationBox
             // 
             this.authenticationBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.authenticationBox.Location = new System.Drawing.Point(71, 72);
+            this.authenticationBox.Location = new System.Drawing.Point(71, 68);
             this.authenticationBox.Name = "authenticationBox";
             this.authenticationBox.Size = new System.Drawing.Size(251, 23);
             this.authenticationBox.TabIndex = 4;
