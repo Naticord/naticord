@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Collections.Generic;
 
 namespace Naticord
 {
@@ -35,6 +33,9 @@ namespace Naticord
             Directory.CreateDirectory(AvatarCachePath);
 
             InitializeComponent();
+
+            Websocket websocketClient = new Websocket();
+            _ = websocketClient.InitWS();
 
             // A bunch of events (mostly Paint events)
             infoBar.Paint += InfoBar_Paint;
@@ -125,15 +126,14 @@ namespace Naticord
                 FSControl friendControl = new FSControl
                 {
                     LText = displayName,
-                    PFPPic = await GetCachedAvatar(userId, avatarHash),
-                    Username = displayName
+                    PFPPic = await GetCachedAvatar(userId, avatarHash)
                 };
 
                 EventHandler clickHandler = async (sender, e) =>
                 {
                     if (sender is FSControl control)
                     {
-                        await FriendClicked(control, displayName, channelId);
+                        await FriendClicked(control, displayName, userId, channelId);
                     }
                 };
 
@@ -153,17 +153,8 @@ namespace Naticord
                 }
 
                 friendsPanelList.Controls.Add(friendControl);
+                GC.Collect();
             }
-        }
-
-        private async Task FriendClicked(FSControl selectedFriend, string username, string channelId)
-        {
-            foreach (FSControl friend in friendsPanelList.Controls)
-            {
-                friend.ClickedDesignChange(false);
-            }
-
-            selectedFriend.ClickedDesignChange(true);
         }
 
         private async Task LoadServersList()
@@ -172,24 +163,93 @@ namespace Naticord
             Debug.WriteLine(serversList);
         }
 
+        private async Task LoadMessages(string userId, string channelId)
+        {
+            messagesPanel.Controls.Clear();
+            string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=20", HttpMethod.Get, null);
+            JArray messages = JArray.Parse(messageStack);
+            messages = new JArray(messages.Reverse());
+            Debug.WriteLine(messages);
+
+            foreach (var message in messages)
+            {
+                string attachmentUrl = null;
+
+                var attachments = message["attachments"] as JArray;
+                if (attachments != null && attachments.Count > 0)
+                {
+                    attachmentUrl = attachments[0]["url"]?.ToString();
+                }
+
+                string authorDisplay = message["author"]?["global_name"]?.ToString();
+                string authorUser = message["author"]?["username"]?.ToString();
+                string authorPFP = message["author"]?["avatar"]?.ToString();
+                string authorID = message["author"]?["id"]?.ToString();
+                string content = message["content"]?.ToString();
+
+                string displayName = !string.IsNullOrWhiteSpace(authorDisplay) ? authorDisplay :
+                                     !string.IsNullOrWhiteSpace(authorUser) ? authorUser : "Unknown";
+
+                await AddMessage(displayName, content, authorID, authorPFP, attachmentUrl);
+            }
+        }
+
         // Helper functions
+        private static readonly HttpClient httpClient = new();
+
+        private async Task<Image> DownloadImage(string url, string? savePath = null)
+        {
+            try
+            {
+                byte[] imageBytes = await httpClient.GetByteArrayAsync(url);
+
+                if (!string.IsNullOrEmpty(savePath))
+                {
+                    File.WriteAllBytes(savePath, imageBytes);
+                }
+
+                using var ms = new MemoryStream(imageBytes);
+                return Image.FromStream(ms);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to download or load image: {ex.Message}");
+                return Properties.Resources.discord_profile;
+            }
+        }
+
+        private void RenderPlaceholderMessageBox()
+        {
+            Label placeholderLabel = new Label
+            {
+                Text = "Open a DM / server to get started!",
+                AutoSize = false,
+                Font = new Font("Segoe UI", 18, FontStyle.Regular | FontStyle.Italic),
+                ForeColor = Color.DarkGray,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Width = messagesPanel.ClientSize.Width,
+                Height = messagesPanel.ClientSize.Height
+            };
+
+            messagesPanel.Controls.Add(placeholderLabel);
+        }
+
         private async Task<Image> GetCachedAvatar(string userId, string avatarHash)
         {
             if (string.IsNullOrEmpty(avatarHash))
                 return Properties.Resources.discord_profile;
+
             string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
 
-            if (!File.Exists(avatarFile))
+            if (File.Exists(avatarFile))
+            {
+                return Image.FromFile(avatarFile);
+            }
+            else
             {
                 string avatarUrl = GetAvatarUrl(userId, avatarHash);
-                using (HttpClient client = new HttpClient())
-                {
-                    byte[] imageBytes = await client.GetByteArrayAsync(avatarUrl);
-                    File.WriteAllBytes(avatarFile, imageBytes);
-                }
+                return await DownloadImage(avatarUrl, avatarFile);
             }
-
-            return Image.FromFile(avatarFile);
         }
 
         private string GetAvatarUrl(string userId, string avatarHash)
@@ -199,9 +259,47 @@ namespace Naticord
             return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=128";
         }
 
-        public async Task AddMessage()
+        private async Task FriendClicked(FSControl pickedUser, string username, string userId, string channelId)
         {
-            // TODO
+            foreach (FSControl friend in friendsPanelList.Controls)
+            {
+                friend.ClickedDesignChange(false);
+            }
+
+            pickedUser.ClickedDesignChange(true);
+            await LoadMessages(userId, channelId);
+        }
+
+        public async Task AddMessage(string author, string content, string userId, string avatarHash, string? attachmentImage)
+        {
+            Message messageControl = new Message
+            {
+                authorText = author,
+                messageContentText = content,
+                PFPPicAuthor = await GetCachedAvatar(userId, avatarHash)
+            };
+
+            if (!string.IsNullOrEmpty(attachmentImage))
+            {
+                messageControl.attachmentImageDisplay = await DownloadImage(attachmentImage, null);
+            }
+
+            messagesPanel.Controls.Add(messageControl);
+            ScrollToBottom();
+            GC.Collect();
+        }
+
+        private bool IsImageUrl(string url)
+        {
+            string[] validExtensions = { ".jpg", ".jpeg", ".png", ".gif"};
+            string extension = Path.GetExtension(url).ToLower();
+            return validExtensions.Contains(extension);
+        }
+
+        private void ScrollToBottom()
+        {
+            messagesPanel.AutoScroll = true;
+            messagesPanel.AutoScrollPosition = new Point(0, messagesPanel.VerticalScroll.Maximum);
         }
 
         // Anti-aliasing
@@ -256,13 +354,23 @@ namespace Naticord
             }));
 
             await SetUserInfo();
+            RenderPlaceholderMessageBox();
             await LoadFriendsList();
             await LoadServersList();
         }
 
+        // Button handlers
         private void uploadButton_Click(object sender, EventArgs e)
         {
-            // TODO
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "All Files|*.*";
+            openFileDialog.Title = "Select a file to upload...";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                Debug.WriteLine($"Selected file: {filePath}");
+            }
         }
     }
 }

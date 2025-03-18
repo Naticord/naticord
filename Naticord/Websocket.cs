@@ -26,7 +26,7 @@ namespace Naticord
             _ = InitWS(); // To run it without async
         }
 
-        private async Task InitWS()
+        public async Task InitWS()
         {
             WebSocket = new WebSocket(gatewayUrl);
             WebSocket.SslConfiguration.EnabledSslProtocols = Tls12;

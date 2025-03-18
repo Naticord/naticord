@@ -37,14 +37,12 @@
             this.friendsPanelList = new System.Windows.Forms.FlowLayoutPanel();
             this.serversTab = new System.Windows.Forms.TabPage();
             this.serversPanelList = new System.Windows.Forms.FlowLayoutPanel();
-            this.messagesPanel = new System.Windows.Forms.Panel();
             this.messageTextBox = new System.Windows.Forms.TextBox();
             this.uploadButton = new System.Windows.Forms.Button();
-            this.mdLabel1 = new Naticord.MDLabel();
+            this.messagesPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.FSTabControl.SuspendLayout();
             this.friendsTab.SuspendLayout();
             this.serversTab.SuspendLayout();
-            this.messagesPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // usernameLabelAndImage
@@ -120,15 +118,6 @@
             this.serversPanelList.Size = new System.Drawing.Size(180, 509);
             this.serversPanelList.TabIndex = 1;
             // 
-            // messagesPanel
-            // 
-            this.messagesPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.messagesPanel.Controls.Add(this.mdLabel1);
-            this.messagesPanel.Location = new System.Drawing.Point(219, 14);
-            this.messagesPanel.Name = "messagesPanel";
-            this.messagesPanel.Size = new System.Drawing.Size(711, 520);
-            this.messagesPanel.TabIndex = 8;
-            // 
             // messageTextBox
             // 
             this.messageTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -148,16 +137,13 @@
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
             // 
-            // mdLabel1
+            // messagesPanel
             // 
-            this.mdLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mdLabel1.Location = new System.Drawing.Point(9, 8);
-            this.mdLabel1.MDImage = global::Naticord.Properties.Resources.discord_profile;
-            this.mdLabel1.Name = "mdLabel1";
-            this.mdLabel1.Size = new System.Drawing.Size(644, 245);
-            this.mdLabel1.TabIndex = 0;
-            this.mdLabel1.Text = "this is a preview of what **markdown** is like natively on winforms and heres *it" +
-    "alic* too cuz why not and **ALSO** heres an image";
+            this.messagesPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.messagesPanel.Location = new System.Drawing.Point(219, 14);
+            this.messagesPanel.Name = "messagesPanel";
+            this.messagesPanel.Size = new System.Drawing.Size(711, 520);
+            this.messagesPanel.TabIndex = 11;
             // 
             // Client
             // 
@@ -165,9 +151,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(944, 602);
+            this.Controls.Add(this.messagesPanel);
             this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.messageTextBox);
-            this.Controls.Add(this.messagesPanel);
             this.Controls.Add(this.FSTabControl);
             this.Controls.Add(this.infoBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -180,7 +166,6 @@
             this.FSTabControl.ResumeLayout(false);
             this.friendsTab.ResumeLayout(false);
             this.serversTab.ResumeLayout(false);
-            this.messagesPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -194,11 +179,10 @@
         private System.Windows.Forms.TabControl FSTabControl;
         private System.Windows.Forms.TabPage friendsTab;
         private System.Windows.Forms.TabPage serversTab;
-        private System.Windows.Forms.Panel messagesPanel;
         private System.Windows.Forms.TextBox messageTextBox;
         private System.Windows.Forms.Button uploadButton;
         private System.Windows.Forms.FlowLayoutPanel friendsPanelList;
         private System.Windows.Forms.FlowLayoutPanel serversPanelList;
-        private MDLabel mdLabel1;
+        private System.Windows.Forms.FlowLayoutPanel messagesPanel;
     }
 }

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Naticord
@@ -30,109 +30,157 @@ namespace Naticord
         protected override async void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            Graphics g = e.Graphics;
+            Graphics graphics = e.Graphics;
 
-            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             using (SolidBrush brush = new SolidBrush(BackColor))
-            {
-                g.FillRectangle(brush, ClientRectangle);
-            }
+                graphics.FillRectangle(brush, ClientRectangle);
 
             if (string.IsNullOrEmpty(Text)) return;
 
             var parsedContent = await ParseMarkdownAsync(Text);
-            RenderContent(g, parsedContent);
+            RenderContent(graphics, parsedContent);
         }
 
-        private async Task<(string Text, Font FontType, Image Image)[]> ParseMarkdownAsync(string text)
+        private async Task<(string Text, Font FontType, Image Image, bool IsNewLine, bool IsLink)[]> ParseMarkdownAsync(string markdownText)
         {
-            var parts = Regex.Split(text, @"(\*\*.*?\*\*|\*.*?\*|!\[.*?\]\(.*?\))");
-            var result = new (string, Font, Image)[parts.Length];
+            var lines = markdownText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+            var parsedContent = new List<(string Text, Font FontType, Image Image, bool IsNewLine, bool IsLink)>();
 
-            for (int i = 0; i < parts.Length; i++)
+            foreach (var line in lines)
             {
-                string part = parts[i];
-                Font font = Font;
-                Image image = null;
-
-                if (part.StartsWith("**") && part.EndsWith("**"))
+                if (string.IsNullOrWhiteSpace(line))
                 {
-                    font = new Font(Font, FontStyle.Bold);
-                    part = part.Substring(2, part.Length - 4);
-                }
-                else if (part.StartsWith("*") && part.EndsWith("*"))
-                {
-                    font = new Font(Font, FontStyle.Italic);
-                    part = part.Substring(1, part.Length - 2);
-                }
-                else if (part.StartsWith("![") && part.EndsWith(")"))
-                {
-                    var imageUrl = Regex.Match(part, @"\!\[.*?\]\((.*?)\)").Groups[1].Value;
-                    image = await LoadImageAsync(imageUrl);
-                    part = "";
+                    parsedContent.Add((string.Empty, Font, null, true, false));
+                    continue;
                 }
 
-                result[i] = (part, font, image);
-            }
-
-            return result;
-        }
-
-        private async Task<Image> LoadImageAsync(string imageUrl)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                try
+                var segments = Regex.Split(line, @"(\#\#\#\s.*|\#\#\s.*|\#\s.*|\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*.*?\*|__.*?__|\~\~.*?\~\~|\!\[.*?\]\(.*?\)|\[.*?\]\(https?://[^\s]+\)|https?://[^\s]+)");
+                foreach (var segment in segments)
                 {
-                    byte[] imageBytes = await client.GetByteArrayAsync(imageUrl);
-                    using (var ms = new System.IO.MemoryStream(imageBytes))
+                    if (string.IsNullOrWhiteSpace(segment)) continue;
+
+                    string textSegment = segment.Trim();
+                    bool isLink = false;
+                    Font font = Font;
+                    Image image = null;
+
+                    if (textSegment.StartsWith("[") && textSegment.Contains("](") && textSegment.EndsWith(")"))
                     {
-                        return Image.FromStream(ms);
+                        isLink = true;
+                        font = new Font(Font.FontFamily, Font.Size, FontStyle.Underline);
+                        textSegment = Regex.Replace(textSegment, @"\[([^\]]+)\]\([^\)]+\)", "$1");
                     }
+                    else if (Uri.IsWellFormedUriString(textSegment, UriKind.Absolute))
+                    {
+                        isLink = true;
+                        font = new Font(Font.FontFamily, Font.Size, FontStyle.Underline);
+                    }
+                    else
+                    {
+                        textSegment = HandleMarkdownFormatting(ref font, textSegment);
+                    }
+
+                    parsedContent.Add((textSegment, font, image, false, isLink));
                 }
-                catch
-                {
-                    return null;
-                }
+
+                parsedContent.Add((string.Empty, Font, null, true, false));
             }
+
+            return parsedContent.ToArray();
         }
 
-        private void RenderContent(Graphics g, (string Text, Font FontType, Image Image)[] parsedContent)
+        private string HandleMarkdownFormatting(ref Font font, string textSegment)
         {
-            float x = 0;
-            float y = 0;
-            int lineHeight = 0;
-            int contentWidth = 0;
-
-            foreach (var (partText, font, image) in parsedContent)
+            if (textSegment.StartsWith("### "))
             {
+                font = new Font(Font.FontFamily, Font.Size + 4, FontStyle.Bold);
+                return textSegment.Substring(4);
+            }
+            if (textSegment.StartsWith("## "))
+            {
+                font = new Font(Font.FontFamily, Font.Size + 6, FontStyle.Bold);
+                return textSegment.Substring(3);
+            }
+            if (textSegment.StartsWith("# "))
+            {
+                font = new Font(Font.FontFamily, Font.Size + 8, FontStyle.Bold);
+                return textSegment.Substring(2);
+            }
+            if (textSegment.StartsWith("***") && textSegment.EndsWith("***"))
+            {
+                font = new Font(Font, FontStyle.Bold | FontStyle.Italic);
+                return textSegment.Substring(3, textSegment.Length - 6);
+            }
+            if (textSegment.StartsWith("**") && textSegment.EndsWith("**"))
+            {
+                font = new Font(Font, FontStyle.Bold);
+                return textSegment.Substring(2, textSegment.Length - 4);
+            }
+            if (textSegment.StartsWith("*") && textSegment.EndsWith("*"))
+            {
+                font = new Font(Font, FontStyle.Italic);
+                return textSegment.Substring(1, textSegment.Length - 2);
+            }
+            if (textSegment.StartsWith("__") && textSegment.EndsWith("__"))
+            {
+                font = new Font(Font, FontStyle.Underline);
+                return textSegment.Substring(2, textSegment.Length - 4);
+            }
+            if (textSegment.StartsWith("~~") && textSegment.EndsWith("~~"))
+            {
+                font = new Font(Font, FontStyle.Strikeout);
+                return textSegment.Substring(2, textSegment.Length - 4);
+            }
+
+            return textSegment;
+        }
+
+        private void RenderContent(Graphics graphics, (string Text, Font FontType, Image Image, bool IsNewLine, bool IsLink)[] parsedContent)
+        {
+            StringFormat stringFormat = new StringFormat { FormatFlags = StringFormatFlags.NoWrap };
+            Color linkColor = Color.FromArgb(0, 102, 204);
+            int lineHeight = 0, contentWidth = 0;
+            bool isFirstWord = true;
+            float x = 0, y = 0;
+
+            foreach (var (text, font, image, isNewLine, isLink) in parsedContent)
+            {
+                if (isNewLine)
+                {
+                    y += lineHeight; x = 0;
+                    isFirstWord = true;
+                    lineHeight = 0;
+                    continue;
+                }
+
                 if (image != null)
                 {
-                    g.DrawImage(image, (int)x, (int)y, image.Width, image.Height);
-                    x += image.Width + 5;
+                    graphics.DrawImage(image, (int)x, (int)y, image.Width, image.Height);
+                    x += image.Width + 4;
                     lineHeight = Math.Max(lineHeight, image.Height);
                 }
-                else if (!string.IsNullOrEmpty(partText))
+                else if (!string.IsNullOrEmpty(text))
                 {
-                    Size textSize = TextRenderer.MeasureText(partText, font, new Size(int.MaxValue, int.MaxValue),
-                        TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-                    TextRenderer.DrawText(g, partText, font, new Point((int)x, (int)y), ForeColor,
-                        TextFormatFlags.NoPadding | TextFormatFlags.NoClipping);
-                    x += textSize.Width - 7;
-                    lineHeight = Math.Max(lineHeight, textSize.Height);
+                    string textToDraw = isFirstWord ? text.TrimStart() : text;
+                    Brush textBrush = isLink ? new SolidBrush(linkColor) : new SolidBrush(ForeColor);
+                    SizeF textSize = graphics.MeasureString(textToDraw, font, new PointF(x, y), stringFormat);
+                    graphics.DrawString(textToDraw, font, textBrush, new PointF(x, y), stringFormat);
+
+                    x += textSize.Width;
+                    lineHeight = Math.Max(lineHeight, (int)textSize.Height);
+                    isFirstWord = false;
                 }
+
+                contentWidth = Math.Max(contentWidth, (int)x);
             }
 
-            contentWidth = (int)x;
-
-            y += lineHeight + 5;
-            x = 0;
-
+            y += lineHeight; x = 0;
             if (MDImage != null)
             {
-                g.DrawImage(MDImage, (int)x, (int)y, MDImage.Width, MDImage.Height);
+                graphics.DrawImage(MDImage, (int)x, (int)y, MDImage.Width, MDImage.Height);
                 contentWidth = Math.Max(contentWidth, MDImage.Width);
                 y += MDImage.Height;
             }
