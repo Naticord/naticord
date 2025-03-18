@@ -1,6 +1,6 @@
 # Naticord
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
-![Language](https://img.shields.io/badge/Language-C%23-%23239120.svg?logo=.net&logoColor=white)
+![Language](https://img.shields.io/badge/Language-C%23-%23239120.svg)
 
 Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was made with the intention of looking good on all Windows versions from 7 - 11 and reducing the RAM and CPU usage of Discord.
 
