@@ -150,14 +150,14 @@
             // 
             // mdLabel1
             // 
-            this.mdLabel1.AutoSize = true;
             this.mdLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mdLabel1.Location = new System.Drawing.Point(9, 8);
+            this.mdLabel1.MDImage = global::Naticord.Properties.Resources.discord_profile;
             this.mdLabel1.Name = "mdLabel1";
-            this.mdLabel1.Size = new System.Drawing.Size(539, 15);
+            this.mdLabel1.Size = new System.Drawing.Size(644, 245);
             this.mdLabel1.TabIndex = 0;
             this.mdLabel1.Text = "this is a preview of what **markdown** is like natively on winforms and heres *it" +
-    "alic* too cuz why not";
+    "alic* too cuz why not and **ALSO** heres an image";
             // 
             // Client
             // 
@@ -181,7 +181,6 @@
             this.friendsTab.ResumeLayout(false);
             this.serversTab.ResumeLayout(false);
             this.messagesPanel.ResumeLayout(false);
-            this.messagesPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
