@@ -5,7 +5,7 @@
 Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was made with the intention of looking good on all Windows versions from 7 - 11 and reducing the RAM and CPU usage of Discord.
 
 > [!WARNING]
-> Currently, the code is being rewritten, and some features are unstable or broken. We apologize for the inconvenience and appreciate your patience. We promise it'll be worth the wait. See the current functionality below
+> Currently, the code is being rewritten and some features are unstable or broken. We apologize for the inconvenience. We promise it'll be worth the wait. See the current functionality below.
 
 > **Note:** Discord may break the client at any time, if that happens, please report it here.
 
