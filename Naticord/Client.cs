@@ -169,7 +169,6 @@ namespace Naticord
             string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=20", HttpMethod.Get, null);
             JArray messages = JArray.Parse(messageStack);
             messages = new JArray(messages.Reverse());
-            Debug.WriteLine(messages);
 
             foreach (var message in messages)
             {
@@ -279,9 +278,16 @@ namespace Naticord
                 PFPPicAuthor = await GetCachedAvatar(userId, avatarHash)
             };
 
-            if (!string.IsNullOrEmpty(attachmentImage))
+            try
             {
-                messageControl.attachmentImageDisplay = await DownloadImage(attachmentImage, null);
+                if (!string.IsNullOrEmpty(attachmentImage))
+                {
+                    messageControl.attachmentImageDisplay = await DownloadImage(attachmentImage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading image: {ex.Message}");
             }
 
             messagesPanel.Controls.Add(messageControl);
