@@ -1,4 +1,7 @@
 # Naticord
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
+![Language](https://img.shields.io/badge/Language-C%23-%23239120.svg?logo=.net&logoColor=white)
+
 Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was made with the intention of looking good on all Windows versions from 7 - 11 and reducing the RAM and CPU usage of Discord.
 
 > **Note:** Discord may break the client at any time, if that happens, please report it here.
@@ -14,7 +17,9 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 - Client
   - Loading user information (Username, avater, etc.): ✔️
   - Loading friends and servers: Partially implemented (Friends only as of now)
-  - Websockets: A work-in-progress (Full rewrite [Properly])
+  - Websockets: A work-in-progress
+
+You may submit a feature request using the template in **[Issues](https://github.com/Naticord/naticord/issues)**
 # Credits
 - Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
 - Discord Messenger: Some design inspiration
