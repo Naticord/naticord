@@ -37,7 +37,7 @@
             // 
             this.nameLabel.AutoSize = true;
             this.nameLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nameLabel.Location = new System.Drawing.Point(25, 4);
+            this.nameLabel.Location = new System.Drawing.Point(22, 4);
             this.nameLabel.Name = "nameLabel";
             this.nameLabel.Size = new System.Drawing.Size(65, 15);
             this.nameLabel.TabIndex = 1;
@@ -46,7 +46,7 @@
             // profilePictureItem
             // 
             this.profilePictureItem.Image = global::Naticord.Properties.Resources.discord_profile;
-            this.profilePictureItem.Location = new System.Drawing.Point(4, 2);
+            this.profilePictureItem.Location = new System.Drawing.Point(3, 2);
             this.profilePictureItem.Name = "profilePictureItem";
             this.profilePictureItem.Size = new System.Drawing.Size(17, 17);
             this.profilePictureItem.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;

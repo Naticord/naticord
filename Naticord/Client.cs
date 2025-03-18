@@ -99,6 +99,7 @@ namespace Naticord
 
             string relationshipList = await API.SendAPI(token, "users/@me/relationships", HttpMethod.Get, null);
             JArray relationships = JArray.Parse(relationshipList);
+            Debug.WriteLine(relationshipList);
 
             foreach (var relationship in relationships)
             {
@@ -109,10 +110,13 @@ namespace Naticord
                 string username = relationship["user"]?["username"]?.ToString();
                 string avatarHash = relationship["user"]?["avatar"]?.ToString();
                 string userId = relationship["user"]?["id"]?.ToString();
+                string friendNick = relationship["nickname"].ToString();
 
                 FSControl friendControl = new FSControl
                 {
-                    LText = !string.IsNullOrWhiteSpace(globalName) ? globalName : username,
+                    LText = !string.IsNullOrWhiteSpace(friendNick) ? friendNick :
+                            !string.IsNullOrWhiteSpace(globalName) ? globalName :
+                            username,
                     PFPPic = await GetCachedAvatar(userId, avatarHash)
                 };
 
@@ -144,6 +148,8 @@ namespace Naticord
             }
 
             selectedFriend.ClickedDesignChange(true);
+
+            // TODO: Actual message loading
         }
 
         private async Task LoadServersList()
