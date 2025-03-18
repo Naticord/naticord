@@ -38,7 +38,7 @@ namespace Naticord
             using (SolidBrush brush = new SolidBrush(BackColor))
                 graphics.FillRectangle(brush, ClientRectangle);
 
-            if (string.IsNullOrEmpty(Text) && MDImage == null) return; // No text and no image, skip drawing
+            if (string.IsNullOrEmpty(Text) && MDImage == null) return;
 
             var parsedContent = await ParseMarkdownAsync(Text);
             RenderContent(graphics, parsedContent);

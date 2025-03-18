@@ -94,12 +94,6 @@ namespace Naticord
 
         private async Task LoadFriendsList()
         {
-            if (InvokeRequired)
-            {
-                Invoke(new MethodInvoker(async () => await LoadFriendsList()));
-                return;
-            }
-
             string relationshipList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
             JArray relationships = JArray.Parse(relationshipList);
             Debug.WriteLine(relationshipList);
