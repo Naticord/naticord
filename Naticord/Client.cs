@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Collections.Generic;
 
 namespace Naticord
 {
@@ -47,7 +49,7 @@ namespace Naticord
         {
             try
             {
-                string response = await API.SendAPI(token, "users/@me", HttpMethod.Get, null).ConfigureAwait(false);
+                string response = await API.SendAPI(token, "users/@me", HttpMethod.Get, null);
                 var jsonResponse = JsonConvert.DeserializeObject<dynamic>(response);
 
                 if (jsonResponse?.message != null && jsonResponse.message.ToString().Contains("401: Unauthorized"))
@@ -72,7 +74,7 @@ namespace Naticord
         {
             try
             {
-                string userInfoJson = await API.SendAPI(token, "users/@me", HttpMethod.Get, null).ConfigureAwait(false);
+                string userInfoJson = await API.SendAPI(token, "users/@me", HttpMethod.Get, null);
                 JObject parsedJson = JObject.Parse(userInfoJson);
 
                 string userId = parsedJson["id"]?.ToString() ?? "N/A";
@@ -80,7 +82,7 @@ namespace Naticord
                 string username = parsedJson["username"]?.ToString() ?? "N/A";
                 string avatarHash = parsedJson["avatar"]?.ToString();
 
-                usernameLabelAndImage.Image = await GetCachedAvatar(userId, avatarHash).ConfigureAwait(false);
+                usernameLabelAndImage.Image = await GetCachedAvatar(userId, avatarHash);
                 usernameLabelAndImage.Text = $"{globalName} ({username})";
             }
             catch (Exception ex)
@@ -97,30 +99,44 @@ namespace Naticord
                 return;
             }
 
-            string relationshipList = await API.SendAPI(token, "users/@me/relationships", HttpMethod.Get, null);
+            string relationshipList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
             JArray relationships = JArray.Parse(relationshipList);
             Debug.WriteLine(relationshipList);
 
+            friendsPanelList.Controls.Clear();
             foreach (var relationship in relationships)
             {
                 string type = relationship["type"]?.ToString();
-                if (type == "2") continue; // Blocked users are skipped
+                if (type != "1") continue; // Friends (Group chats are type 3, but we can ignore that *for now*)
 
-                string globalName = relationship["user"]?["global_name"]?.ToString();
-                string username = relationship["user"]?["username"]?.ToString();
-                string avatarHash = relationship["user"]?["avatar"]?.ToString();
-                string userId = relationship["user"]?["id"]?.ToString();
-                string friendNick = relationship["nickname"].ToString();
+                var recipient = relationship["recipients"]?.FirstOrDefault();
+
+                if (recipient == null) continue;
+
+                string globalName = recipient["global_name"]?.ToString();
+                string username = recipient["username"]?.ToString();
+                string avatarHash = recipient["avatar"]?.ToString();
+                string channelId = relationship["id"]?.ToString();
+                string userId = recipient["id"]?.ToString();
+
+                string displayName = !string.IsNullOrWhiteSpace(globalName) ? globalName :
+                                     !string.IsNullOrWhiteSpace(username) ? username : "Unknown";
 
                 FSControl friendControl = new FSControl
                 {
-                    LText = !string.IsNullOrWhiteSpace(friendNick) ? friendNick :
-                            !string.IsNullOrWhiteSpace(globalName) ? globalName :
-                            username,
-                    PFPPic = await GetCachedAvatar(userId, avatarHash)
+                    LText = displayName,
+                    PFPPic = await GetCachedAvatar(userId, avatarHash),
+                    Username = displayName
                 };
 
-                EventHandler clickHandler = (sender, e) => FriendClicked(friendControl);
+                EventHandler clickHandler = async (sender, e) =>
+                {
+                    if (sender is FSControl control)
+                    {
+                        await FriendClicked(control, displayName, channelId);
+                    }
+                };
+
                 friendControl.Click += clickHandler;
 
                 PictureBox profilePic = friendControl.Controls.Find("profilePictureItem", true).FirstOrDefault() as PictureBox;
@@ -140,7 +156,7 @@ namespace Naticord
             }
         }
 
-        private void FriendClicked(FSControl selectedFriend)
+        private async Task FriendClicked(FSControl selectedFriend, string username, string channelId)
         {
             foreach (FSControl friend in friendsPanelList.Controls)
             {
@@ -148,8 +164,6 @@ namespace Naticord
             }
 
             selectedFriend.ClickedDesignChange(true);
-
-            // TODO: Actual message loading
         }
 
         private async Task LoadServersList()
@@ -170,7 +184,7 @@ namespace Naticord
                 string avatarUrl = GetAvatarUrl(userId, avatarHash);
                 using (HttpClient client = new HttpClient())
                 {
-                    byte[] imageBytes = await client.GetByteArrayAsync(avatarUrl).ConfigureAwait(false);
+                    byte[] imageBytes = await client.GetByteArrayAsync(avatarUrl);
                     File.WriteAllBytes(avatarFile, imageBytes);
                 }
             }
@@ -183,6 +197,11 @@ namespace Naticord
             bool isGif = avatarHash.StartsWith("a_");
             string extension = isGif ? "gif" : "png";
             return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=128";
+        }
+
+        public async Task AddMessage()
+        {
+            // TODO
         }
 
         // Anti-aliasing
@@ -223,7 +242,7 @@ namespace Naticord
         // Loads everything needed for the client
         private async void Client_Load(object sender, EventArgs e)
         {
-            await CheckIfTokenIsValid().ConfigureAwait(false);
+            await CheckIfTokenIsValid();
 
             // I hate the Windows Forms designer.
             infoBar.BeginInvoke(new Action(() =>
@@ -236,7 +255,7 @@ namespace Naticord
                 });
             }));
 
-            await SetUserInfo().ConfigureAwait(false);
+            await SetUserInfo();
             await LoadFriendsList();
             await LoadServersList();
         }

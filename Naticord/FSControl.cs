@@ -9,6 +9,7 @@ namespace Naticord
     public partial class FSControl : UserControl
     {
         private Color HighlightColor;
+        public string Username { get; set; }
 
         public FSControl()
         {
