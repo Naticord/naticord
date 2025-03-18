@@ -21,6 +21,6 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 
 You may submit a feature request using the template in **[Issues](https://github.com/Naticord/naticord/issues)**
 # Credits
-- Discorduserdoccers ([discord.sex](https://discord.sex)): User documentation for Discord (Really useful!)
-- Discord Messenger: Some design inspiration
-- Tech Stuff: Helping out with some stuff (2FA)
+- Discorduserdoccers: Unofficial documentation for Discord
+- Discord Messenger: Some design inspiration (Login screen)
+- Tech Stuff: Helping out with some stuff (2FA backend)
