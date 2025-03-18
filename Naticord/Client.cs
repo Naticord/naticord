@@ -154,7 +154,8 @@ namespace Naticord
 
         private async Task LoadServersList()
         {
-            // TODO
+            string serversList = await API.SendAPI(token, "users/@me/guilds", HttpMethod.Get, null);
+            Debug.WriteLine(serversList);
         }
 
         // Helper functions
