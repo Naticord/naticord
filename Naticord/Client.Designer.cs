@@ -34,12 +34,12 @@
             this.naticordVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.FSTabControl = new System.Windows.Forms.TabControl();
             this.friendsTab = new System.Windows.Forms.TabPage();
+            this.friendsPanelList = new System.Windows.Forms.FlowLayoutPanel();
             this.serversTab = new System.Windows.Forms.TabPage();
+            this.serversPanelList = new System.Windows.Forms.FlowLayoutPanel();
             this.messagesPanel = new System.Windows.Forms.Panel();
             this.messageTextBox = new System.Windows.Forms.TextBox();
             this.uploadButton = new System.Windows.Forms.Button();
-            this.friendsPanelList = new System.Windows.Forms.FlowLayoutPanel();
-            this.serversPanelList = new System.Windows.Forms.FlowLayoutPanel();
             this.FSTabControl.SuspendLayout();
             this.friendsTab.SuspendLayout();
             this.serversTab.SuspendLayout();
@@ -92,6 +92,14 @@
             this.friendsTab.Text = "Friends";
             this.friendsTab.UseVisualStyleBackColor = true;
             // 
+            // friendsPanelList
+            // 
+            this.friendsPanelList.AutoScroll = true;
+            this.friendsPanelList.Location = new System.Drawing.Point(6, 6);
+            this.friendsPanelList.Name = "friendsPanelList";
+            this.friendsPanelList.Size = new System.Drawing.Size(180, 509);
+            this.friendsPanelList.TabIndex = 0;
+            // 
             // serversTab
             // 
             this.serversTab.Controls.Add(this.serversPanelList);
@@ -102,6 +110,13 @@
             this.serversTab.TabIndex = 1;
             this.serversTab.Text = "Servers";
             this.serversTab.UseVisualStyleBackColor = true;
+            // 
+            // serversPanelList
+            // 
+            this.serversPanelList.Location = new System.Drawing.Point(6, 6);
+            this.serversPanelList.Name = "serversPanelList";
+            this.serversPanelList.Size = new System.Drawing.Size(180, 509);
+            this.serversPanelList.TabIndex = 1;
             // 
             // messagesPanel
             // 
@@ -129,20 +144,6 @@
             this.uploadButton.Text = "Upload";
             this.uploadButton.UseVisualStyleBackColor = true;
             this.uploadButton.Click += new System.EventHandler(this.uploadButton_Click);
-            // 
-            // friendsPanelList
-            // 
-            this.friendsPanelList.Location = new System.Drawing.Point(6, 6);
-            this.friendsPanelList.Name = "friendsPanelList";
-            this.friendsPanelList.Size = new System.Drawing.Size(180, 509);
-            this.friendsPanelList.TabIndex = 0;
-            // 
-            // serversPanelList
-            // 
-            this.serversPanelList.Location = new System.Drawing.Point(6, 6);
-            this.serversPanelList.Name = "serversPanelList";
-            this.serversPanelList.Size = new System.Drawing.Size(180, 509);
-            this.serversPanelList.TabIndex = 1;
             // 
             // Client
             // 

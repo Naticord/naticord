@@ -61,7 +61,7 @@
             this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.profilePictureItem);
             this.Name = "FSControl";
-            this.Size = new System.Drawing.Size(150, 22);
+            this.Size = new System.Drawing.Size(135, 22);
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureItem)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -88,7 +88,7 @@ namespace Naticord
                 Debug.WriteLine($"Parse error: {ex.Message}");
             }
         }
-        
+
         private async Task LoadFriendsList()
         {
             if (InvokeRequired)
@@ -102,6 +102,9 @@ namespace Naticord
 
             foreach (var relationship in relationships)
             {
+                string type = relationship["type"]?.ToString();
+                if (type == "2") continue; // Blocked users are skipped
+
                 string globalName = relationship["user"]?["global_name"]?.ToString();
                 string username = relationship["user"]?["username"]?.ToString();
                 string avatarHash = relationship["user"]?["avatar"]?.ToString();
@@ -113,14 +116,34 @@ namespace Naticord
                     PFPPic = await GetCachedAvatar(userId, avatarHash)
                 };
 
+                EventHandler clickHandler = (sender, e) => FriendClicked(friendControl);
+                friendControl.Click += clickHandler;
+
                 PictureBox profilePic = friendControl.Controls.Find("profilePictureItem", true).FirstOrDefault() as PictureBox;
                 if (profilePic != null)
                 {
                     profilePic.Paint += Antialias_Paint;
+                    profilePic.Click += clickHandler;
+                }
+
+                Label nameLabel = friendControl.Controls.Find("nameLabel", true).FirstOrDefault() as Label;
+                if (nameLabel != null)
+                {
+                    nameLabel.Click += clickHandler;
                 }
 
                 friendsPanelList.Controls.Add(friendControl);
             }
+        }
+
+        private void FriendClicked(FSControl selectedFriend)
+        {
+            foreach (FSControl friend in friendsPanelList.Controls)
+            {
+                friend.ClickedDesignChange(false);
+            }
+
+            selectedFriend.ClickedDesignChange(true);
         }
 
         private async Task LoadServersList()
