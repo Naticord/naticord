@@ -34,5 +34,17 @@ namespace Naticord.Properties {
                 this["token"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool gifwarning {
+            get {
+                return ((bool)(this["gifwarning"]));
+            }
+            set {
+                this["gifwarning"] = value;
+            }
+        }
     }
 }

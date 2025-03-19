@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Naticord
@@ -33,7 +34,20 @@ namespace Naticord
         public Image attachmentImageDisplay
         {
             get => messageContent.MDImage;
-            set { messageContent.MDImage = value; CAutoSize(); }
+            set
+            {
+                messageContent.MDImage = value;
+                bool isGif = value != null && ImageFormat.Gif.Equals(value.RawFormat);
+
+                if (isGif)
+                {
+                    messageContent.Text = "*Naticord doesn't support GIFs right now.*";
+                    messageContent.ForeColor = Color.Gray;
+                    messageContent.MDImage = null;
+                }
+
+                CAutoSize();
+            }
         }
 
         protected override void OnLayout(LayoutEventArgs e)

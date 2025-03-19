@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Drawing.Imaging;
 
 namespace Naticord
 {
@@ -158,9 +159,20 @@ namespace Naticord
 
                 if (image != null)
                 {
-                    graphics.DrawImage(image, (int)x, (int)y, image.Width, image.Height);
-                    x += image.Width + 4;
-                    lineHeight = Math.Max(lineHeight, image.Height);
+                    int maxWidth = 500;
+                    int newWidth = image.Width;
+                    int newHeight = image.Height;
+
+                    if (newWidth > maxWidth)
+                    {
+                        float scaleFactor = (float)maxWidth / newWidth;
+                        newWidth = maxWidth;
+                        newHeight = (int)(image.Height * scaleFactor);
+                    }
+
+                    graphics.DrawImage(image, (int)x, (int)y, newWidth, newHeight);
+                    x += newWidth + 4;
+                    lineHeight = Math.Max(lineHeight, newHeight);
                 }
                 else if (!string.IsNullOrEmpty(text))
                 {
@@ -177,16 +189,48 @@ namespace Naticord
                 contentWidth = Math.Max(contentWidth, (int)x);
             }
 
-            y += lineHeight; x = 0;
+            y += lineHeight;
+            x = 0;
+
             if (MDImage != null)
             {
-                graphics.DrawImage(MDImage, (int)x, (int)y, MDImage.Width, MDImage.Height);
-                contentWidth = Math.Max(contentWidth, MDImage.Width);
-                y += MDImage.Height;
+                bool isGif = ImageFormat.Gif.Equals(MDImage.RawFormat);
+
+                if (isGif)
+                {
+                    if (!Properties.Settings.Default.gifwarning)
+                    {
+                        new CMessageBox("A heads up",
+                            "Naticord doesn't support GIFs right now. We are sorry for the inconvenience. " +
+                            "This will be added in a later release. This message won't show again.")
+                            .Show();
+
+                        Properties.Settings.Default.gifwarning = true;
+                        Properties.Settings.Default.Save();
+                    }
+                }
+                else
+                {
+                    int maxWidth = 500;
+                    int newWidth = MDImage.Width;
+                    int newHeight = MDImage.Height;
+
+                    if (newWidth > maxWidth)
+                    {
+                        float scaleFactor = (float)maxWidth / newWidth;
+                        newWidth = maxWidth;
+                        newHeight = (int)(MDImage.Height * scaleFactor);
+                    }
+
+                    graphics.DrawImage(MDImage, (int)x, (int)y, newWidth, newHeight);
+                    contentWidth = Math.Max(contentWidth, newWidth);
+                    y += newHeight;
+                }
             }
 
             Width = contentWidth;
             Height = (int)y;
+            GC.Collect();
         }
     }
 }

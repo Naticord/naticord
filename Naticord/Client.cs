@@ -13,6 +13,7 @@ namespace Naticord
 {
     public partial class Client : Form
     {
+        private static readonly HttpClient httpClient = new();
         private readonly string token;
 
         // AppData paths for Naticord (mostly used for caching)
@@ -188,8 +189,6 @@ namespace Naticord
         }
 
         // Helper functions
-        private static readonly HttpClient httpClient = new();
-
         private async Task<Image> DownloadImage(string url, string? savePath = null)
         {
             try
@@ -203,6 +202,7 @@ namespace Naticord
 
                 using var ms = new MemoryStream(imageBytes);
                 return Image.FromStream(ms);
+                GC.Collect();
             }
             catch (Exception ex)
             {
@@ -224,7 +224,7 @@ namespace Naticord
                 Height = messagesPanel.ClientSize.Height
             };
 
-            messagesPanel.Controls.Add(placeholderLabel);
+            messagesPanel.Controls.Add(placeholderLabel);  
         }
 
         private async Task<Image> GetCachedAvatar(string userId, string avatarHash)
@@ -357,6 +357,7 @@ namespace Naticord
             RenderPlaceholderMessageBox();
             await LoadFriendsList();
             await LoadServersList();
+            GC.Collect();
         }
 
         // Button handlers
