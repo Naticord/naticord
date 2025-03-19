@@ -20,11 +20,14 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 - Client
   - Loading user information (Username, avatar, etc.): ✔️
   - Loading friends, group chats and servers: Partially implemented (Friends only as of now)
-  - Loading messages: Planned
+  - Loading messages: ✔️
+  - Sending messages (incl. attachments): Not implemented (Planned)
   - Websockets: A work-in-progress
 - Misc
   - Client updating: Planned
-  - Markdown support: Partially implemented (**bold**, *italic* and images work, still a work-in-progress)
+  - Markdown support: ✔️ (A bit buggy, but a work-in-progress)
+  - Image viewing: ✔️ (GIFs aren't supported)
+  - Video viewing: Not implemented or planned (A link will be available to view the video)
   - Profile viewing: Planned
 
 You may submit a feature request using the template in **[Issues](https://github.com/Naticord/naticord/issues)**
