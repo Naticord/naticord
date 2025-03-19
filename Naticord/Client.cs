@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
+using static Naticord.Websocket;
+using WebSocketSharp;
 
 namespace Naticord
 {
     public partial class Client : Form
     {
         private static readonly HttpClient httpClient = new();
+        private string currentChannelId;
         private readonly string token;
 
         // AppData paths for Naticord (mostly used for caching)
@@ -35,13 +38,11 @@ namespace Naticord
 
             InitializeComponent();
 
-            Websocket websocketClient = new Websocket();
-            _ = websocketClient.InitWS();
-
             // A bunch of events (mostly Paint events)
             infoBar.Paint += InfoBar_Paint;
             usernameLabelAndImage.Paint += Antialias_Paint;
             naticordVersion.Paint += Antialias_Paint;
+            messageTextBox.KeyDown += MessageTextBox_KeyDown;
 
             this.FormClosing += (sender, e) => Application.Exit();
         }
@@ -118,9 +119,12 @@ namespace Naticord
                 string displayName = !string.IsNullOrWhiteSpace(globalName) ? globalName :
                                      !string.IsNullOrWhiteSpace(username) ? username : "Unknown";
 
+                var (status, customStatus) = UserStatusStore.GetStatus(userId);
+
                 FSControl friendControl = new FSControl
                 {
                     LText = displayName,
+                    SText = status,
                     PFPPic = await GetCachedAvatar(userId, avatarHash)
                 };
 
@@ -148,7 +152,6 @@ namespace Naticord
                 }
 
                 friendsPanelList.Controls.Add(friendControl);
-                GC.Collect();
             }
         }
 
@@ -184,12 +187,45 @@ namespace Naticord
                 string displayName = !string.IsNullOrWhiteSpace(authorDisplay) ? authorDisplay :
                                      !string.IsNullOrWhiteSpace(authorUser) ? authorUser : "Unknown";
 
-                await AddMessage(displayName, content, authorID, authorPFP, attachmentUrl);
+                Image attachment = null;
+                if (attachmentUrl != null)
+                {
+                    attachment = await DownloadImage(attachmentUrl);
+                }
+
+                await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
+            }
+        }
+
+        private async Task SendMessage()
+        {
+            string message = messageTextBox.Text.Trim();
+            if (!string.IsNullOrEmpty(message))
+            {
+                try
+                {
+                    var postData = new
+                    {
+                        content = message
+                    };
+
+                    string responseString = await API.SendAPI(token, $"channels/{currentChannelId}/messages", HttpMethod.Post, postData);
+                    Debug.WriteLine(responseString);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error! {ex.Message}");
+                    new CMessageBox("Something went wrong...", $"Naticord hit a bump and can't send your message. Report it on GitHub if your Wi-Fi is fine. {ex.Message}").Show();
+                }
+                finally
+                {
+                    messageTextBox.Clear();
+                }
             }
         }
 
         // Helper functions
-        private async Task<Image> DownloadImage(string url, string? savePath = null)
+        public async Task<Image> DownloadImage(string url, string savePath = null)
         {
             try
             {
@@ -202,8 +238,7 @@ namespace Naticord
 
                 using var ms = new MemoryStream(imageBytes);
                 return Image.FromStream(ms);
-                GC.Collect();
-            }
+             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to download or load image: {ex.Message}");
@@ -211,11 +246,17 @@ namespace Naticord
             }
         }
 
-        private void RenderPlaceholderMessageBox()
+        private void RenderPlaceholderMessageBox(string placeholder)
         {
+            var existingPlaceholder = messagesPanel.Controls.OfType<Label>().FirstOrDefault(lbl => lbl.ForeColor == Color.DarkGray);
+            if (existingPlaceholder != null)
+            {
+                messagesPanel.Controls.Remove(existingPlaceholder);
+            }
+
             Label placeholderLabel = new Label
             {
-                Text = "Open a DM / server to get started!",
+                Text = placeholder,
                 AutoSize = false,
                 Font = new Font("Segoe UI", 18, FontStyle.Regular | FontStyle.Italic),
                 ForeColor = Color.DarkGray,
@@ -224,7 +265,7 @@ namespace Naticord
                 Height = messagesPanel.ClientSize.Height
             };
 
-            messagesPanel.Controls.Add(placeholderLabel);  
+            messagesPanel.Controls.Add(placeholderLabel);
         }
 
         private async Task<Image> GetCachedAvatar(string userId, string avatarHash)
@@ -260,46 +301,74 @@ namespace Naticord
             }
 
             pickedUser.ClickedDesignChange(true);
+            currentChannelId = channelId;
             await LoadMessages(userId, channelId);
         }
 
-        public async Task AddMessage(string author, string content, string userId, string avatarHash, string? attachmentImage)
+        public async Task AddMessage(string displayName, string content, string authorID, string authorAvatar, Image attachment, string channelId)
         {
-            Message messageControl = new Message
+            if (channelId != currentChannelId)
             {
-                authorText = author,
-                messageContentText = content,
-                PFPPicAuthor = await GetCachedAvatar(userId, avatarHash)
-            };
+                return;
+            }
+            if (messagesPanel.InvokeRequired)
+            {
+                await Task.Run(() =>
+                {
+                    messagesPanel.Invoke(new Action(async () =>
+                    {
+                        await AddMessageInternal(displayName, content, authorID, authorAvatar, attachment);
+                    }));
+                });
+            }
+            else
+            {
+                await AddMessageInternal(displayName, content, authorID, authorAvatar, attachment);
+            }
+        }
 
+        public async Task AddMessageInternal(string author, string content, string userId, string avatarHash, Image attachment)
+        {
             try
             {
-                if (!string.IsNullOrEmpty(attachmentImage))
+                Message messageControl = new Message
                 {
-                    messageControl.attachmentImageDisplay = await DownloadImage(attachmentImage);
+                    authorText = author,
+                    messageContentText = content,
+                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash)
+                };
+
+                if (attachment != null)
+                {
+                    messageControl.attachmentImageDisplay = attachment;
                 }
+
+                messagesPanel.Controls.Add(messageControl);
+                ScrollToBottom();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error downloading image: {ex.Message}");
+                Console.WriteLine($"Error adding message: {ex.Message}");
             }
-
-            messagesPanel.Controls.Add(messageControl);
-            ScrollToBottom();
-            GC.Collect();
-        }
-
-        private bool IsImageUrl(string url)
-        {
-            string[] validExtensions = { ".jpg", ".jpeg", ".png", ".gif"};
-            string extension = Path.GetExtension(url).ToLower();
-            return validExtensions.Contains(extension);
+            finally
+            {
+                GC.Collect();
+            }
         }
 
         private void ScrollToBottom()
         {
             messagesPanel.AutoScroll = true;
             messagesPanel.AutoScrollPosition = new Point(0, messagesPanel.VerticalScroll.Maximum);
+        }
+
+        private async void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                await SendMessage();
+            }
         }
 
         // Anti-aliasing
@@ -353,10 +422,13 @@ namespace Naticord
                 });
             }));
 
+            RenderPlaceholderMessageBox("Loading the UI, give us a few seconds to load content...");
+            Websocket WSClient = new Websocket(this);
+            await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
+
             await SetUserInfo();
-            RenderPlaceholderMessageBox();
             await LoadFriendsList();
-            await LoadServersList();
+            RenderPlaceholderMessageBox("Open a DM to get started with Naticord!");
             GC.Collect();
         }
 

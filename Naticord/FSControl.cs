@@ -22,11 +22,13 @@ namespace Naticord
             if (clicked)
             {
                 nameLabel.ForeColor = Color.White;
+                statusLabel.ForeColor = Color.White;
                 this.BackColor = HighlightColor;
             }
             else
             {
                 nameLabel.ForeColor = Color.Black;
+                statusLabel.ForeColor = Color.Gray;
                 this.BackColor = Color.White;
             }
         }
@@ -36,10 +38,22 @@ namespace Naticord
             get => nameLabel.Text;
             set
             {
-                if (value.Length >= 17)
-                    nameLabel.Text = value.Substring(0, 14) + "...";
+                if (value.Length >= 20)
+                    nameLabel.Text = value.Substring(0, 17) + "...";
                 else
                     nameLabel.Text = value;
+            }
+        }
+
+        public string SText
+        {
+            get => statusLabel.Text;
+            set
+            {
+                if (value.Length >= 20)
+                    statusLabel.Text = value.Substring(0, 17) + "...";
+                else
+                    statusLabel.Text = value;
             }
         }
 

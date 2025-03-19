@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Drawing.Imaging;
 
 namespace Naticord
@@ -12,6 +11,7 @@ namespace Naticord
     public partial class MDLabel : Label
     {
         private Image _mdImage;
+
         public Image MDImage
         {
             get => _mdImage;
@@ -24,15 +24,13 @@ namespace Naticord
 
         public MDLabel()
         {
-            InitializeComponent();
             AutoSize = false;
         }
 
-        protected override async void OnPaint(PaintEventArgs e)
+        protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             Graphics graphics = e.Graphics;
-
             graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
@@ -41,145 +39,148 @@ namespace Naticord
 
             if (string.IsNullOrEmpty(Text) && MDImage == null) return;
 
-            var parsedContent = await ParseMarkdownAsync(Text);
-            RenderContent(graphics, parsedContent);
+            var parsedContent = ParseMarkdownContent(Text);
+            RenderMarkdownContent(graphics, parsedContent);
         }
 
-        private async Task<(string Text, Font FontType, Image Image, bool IsNewLine, bool IsLink)[]> ParseMarkdownAsync(string markdownText)
+        private List<MarkdownSegment> ParseMarkdownContent(string markdownText)
         {
+            var segments = new List<MarkdownSegment>();
             var lines = markdownText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-            var parsedContent = new List<(string Text, Font FontType, Image Image, bool IsNewLine, bool IsLink)>();
 
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
-                    parsedContent.Add((string.Empty, Font, null, true, false));
+                    segments.Add(new MarkdownSegment("", Font, true, false));
                     continue;
                 }
 
-                var segments = Regex.Split(line, @"(\#\#\#\s.*|\#\#\s.*|\#\s.*|\*\*\*.*?\*\*\*|\*\*.*?\*\*|\*.*?\*|__.*?__|\~\~.*?\~\~|\!\[.*?\]\(.*?\)|\[.*?\]\(https?://[^\s]+\)|https?://[^\s]+)");
-                foreach (var segment in segments)
+                var lineSegments = Regex.Split(line, @"(\*\*\*[^\*]+\*\*\*|\*\*[^\*]+\*\*|\*[^\*]+\*|__[^_]+__|~~[^~]+~~|!\[.*?\]\(.*?\)|\[.*?\]\(https?://[^\s]+\)|https?://[^\s]+)");
+
+                foreach (var segment in lineSegments)
                 {
                     if (string.IsNullOrWhiteSpace(segment)) continue;
 
-                    string textSegment = segment.Trim();
+                    string text = segment.Trim();
                     bool isLink = false;
                     Font font = Font;
                     Image image = null;
 
-                    if (textSegment.StartsWith("[") && textSegment.Contains("](") && textSegment.EndsWith(")"))
+                    if (text.StartsWith("[") && text.Contains("](") && text.EndsWith(")"))
                     {
                         isLink = true;
                         font = new Font(Font.FontFamily, Font.Size, FontStyle.Underline);
-                        textSegment = Regex.Replace(textSegment, @"\[([^\]]+)\]\([^\)]+\)", "$1");
+                        text = Regex.Replace(text, @"\[([^\]]+)\]\([^\)]+\)", "$1");
                     }
-                    else if (Uri.IsWellFormedUriString(textSegment, UriKind.Absolute))
+                    else if (Uri.IsWellFormedUriString(text, UriKind.Absolute))
                     {
                         isLink = true;
                         font = new Font(Font.FontFamily, Font.Size, FontStyle.Underline);
                     }
                     else
                     {
-                        textSegment = HandleMarkdownFormatting(ref font, textSegment);
+                        text = ApplyMarkdownFormatting(ref font, text);
                     }
 
-                    parsedContent.Add((textSegment, font, image, false, isLink));
+                    segments.Add(new MarkdownSegment(text, font, false, isLink, image));
                 }
 
-                parsedContent.Add((string.Empty, Font, null, true, false));
+                segments.Add(new MarkdownSegment("", Font, true, false));
             }
 
-            return parsedContent.ToArray();
+            return segments;
         }
 
-        private string HandleMarkdownFormatting(ref Font font, string textSegment)
+        private string ApplyMarkdownFormatting(ref Font font, string text)
         {
-            if (textSegment.StartsWith("### "))
+            if (text.StartsWith("### "))
             {
                 font = new Font(Font.FontFamily, Font.Size + 4, FontStyle.Bold);
-                return textSegment.Substring(4);
+                return text.Substring(4);
             }
-            if (textSegment.StartsWith("## "))
+            if (text.StartsWith("## "))
             {
                 font = new Font(Font.FontFamily, Font.Size + 6, FontStyle.Bold);
-                return textSegment.Substring(3);
+                return text.Substring(3);
             }
-            if (textSegment.StartsWith("# "))
+            if (text.StartsWith("# "))
             {
                 font = new Font(Font.FontFamily, Font.Size + 8, FontStyle.Bold);
-                return textSegment.Substring(2);
+                return text.Substring(2);
             }
-            if (textSegment.StartsWith("***") && textSegment.EndsWith("***"))
+            if (text.StartsWith("***") && text.EndsWith("***"))
             {
                 font = new Font(Font, FontStyle.Bold | FontStyle.Italic);
-                return textSegment.Substring(3, textSegment.Length - 6);
+                return text.Substring(3, text.Length - 6);
             }
-            if (textSegment.StartsWith("**") && textSegment.EndsWith("**"))
+            if (text.StartsWith("**") && text.EndsWith("**"))
             {
                 font = new Font(Font, FontStyle.Bold);
-                return textSegment.Substring(2, textSegment.Length - 4);
+                return text.Substring(2, text.Length - 4);
             }
-            if (textSegment.StartsWith("*") && textSegment.EndsWith("*"))
+            if (text.StartsWith("*") && text.EndsWith("*"))
             {
                 font = new Font(Font, FontStyle.Italic);
-                return textSegment.Substring(1, textSegment.Length - 2);
+                return text.Substring(1, text.Length - 2);
             }
-            if (textSegment.StartsWith("__") && textSegment.EndsWith("__"))
+            if (text.StartsWith("__") && text.EndsWith("__"))
             {
                 font = new Font(Font, FontStyle.Underline);
-                return textSegment.Substring(2, textSegment.Length - 4);
+                return text.Substring(2, text.Length - 4);
             }
-            if (textSegment.StartsWith("~~") && textSegment.EndsWith("~~"))
+            if (text.StartsWith("~~") && text.EndsWith("~~"))
             {
                 font = new Font(Font, FontStyle.Strikeout);
-                return textSegment.Substring(2, textSegment.Length - 4);
+                return text.Substring(2, text.Length - 4);
             }
 
-            return textSegment;
+            return text;
         }
 
-        private void RenderContent(Graphics graphics, (string Text, Font FontType, Image Image, bool IsNewLine, bool IsLink)[] parsedContent)
+        private void RenderMarkdownContent(Graphics graphics, List<MarkdownSegment> segments)
         {
-            StringFormat stringFormat = new StringFormat { FormatFlags = StringFormatFlags.NoWrap };
+            StringFormat format = new StringFormat { FormatFlags = StringFormatFlags.NoWrap };
             Color linkColor = Color.FromArgb(0, 102, 204);
+            float x = 0, y = 0;
             int lineHeight = 0, contentWidth = 0;
             bool isFirstWord = true;
-            float x = 0, y = 0;
 
-            foreach (var (text, font, image, isNewLine, isLink) in parsedContent)
+            foreach (var segment in segments)
             {
-                if (isNewLine)
+                if (segment.IsNewLine)
                 {
-                    y += lineHeight; x = 0;
-                    isFirstWord = true;
+                    y += lineHeight;
+                    x = 0;
                     lineHeight = 0;
+                    isFirstWord = true;
                     continue;
                 }
 
-                if (image != null)
+                if (segment.Image != null)
                 {
                     int maxWidth = 500;
-                    int newWidth = image.Width;
-                    int newHeight = image.Height;
+                    int newWidth = segment.Image.Width;
+                    int newHeight = segment.Image.Height;
 
                     if (newWidth > maxWidth)
                     {
                         float scaleFactor = (float)maxWidth / newWidth;
                         newWidth = maxWidth;
-                        newHeight = (int)(image.Height * scaleFactor);
+                        newHeight = (int)(segment.Image.Height * scaleFactor);
                     }
 
-                    graphics.DrawImage(image, (int)x, (int)y, newWidth, newHeight);
+                    graphics.DrawImage(segment.Image, (int)x, (int)y, newWidth, newHeight);
                     x += newWidth + 4;
                     lineHeight = Math.Max(lineHeight, newHeight);
                 }
-                else if (!string.IsNullOrEmpty(text))
+                else if (!string.IsNullOrEmpty(segment.Text))
                 {
-                    string textToDraw = isFirstWord ? text.TrimStart() : text;
-                    Brush textBrush = isLink ? new SolidBrush(linkColor) : new SolidBrush(ForeColor);
-                    SizeF textSize = graphics.MeasureString(textToDraw, font, new PointF(x, y), stringFormat);
-                    graphics.DrawString(textToDraw, font, textBrush, new PointF(x, y), stringFormat);
+                    string textToDraw = isFirstWord ? segment.Text.TrimStart() : segment.Text;
+                    Brush textBrush = segment.IsLink ? new SolidBrush(linkColor) : new SolidBrush(ForeColor);
+
+                    SizeF textSize = graphics.MeasureString(textToDraw, segment.Font, new PointF(x, y), format);
+                    graphics.DrawString(textToDraw, segment.Font, textBrush, new PointF(x, y), format);
 
                     x += textSize.Width;
                     lineHeight = Math.Max(lineHeight, (int)textSize.Height);
@@ -198,16 +199,7 @@ namespace Naticord
 
                 if (isGif)
                 {
-                    if (!Properties.Settings.Default.gifwarning)
-                    {
-                        new CMessageBox("A heads up",
-                            "Naticord doesn't support GIFs right now. We are sorry for the inconvenience. " +
-                            "This will be added in a later release. This message won't show again.")
-                            .Show();
-
-                        Properties.Settings.Default.gifwarning = true;
-                        Properties.Settings.Default.Save();
-                    }
+                    new CMessageBox("A heads up...", "GIFs are currently not supported. This will be added in a later release. This message won't show again.").Show();
                 }
                 else
                 {
@@ -231,6 +223,24 @@ namespace Naticord
             Width = contentWidth;
             Height = (int)y;
             GC.Collect();
+        }
+
+        private class MarkdownSegment
+        {
+            public string Text { get; }
+            public Font Font { get; }
+            public bool IsNewLine { get; }
+            public bool IsLink { get; }
+            public Image Image { get; }
+
+            public MarkdownSegment(string text, Font font, bool isNewLine, bool isLink, Image image = null)
+            {
+                Text = text;
+                Font = font;
+                IsNewLine = isNewLine;
+                IsLink = isLink;
+                Image = image;
+            }
         }
     }
 }
