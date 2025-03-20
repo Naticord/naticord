@@ -24,14 +24,10 @@ namespace Naticord
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Naticord"
         );
-        private static readonly string AvatarCachePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Naticord", "Avatars"
-        );
+        private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
 
         public Client()
         {
-            // Get the client ready for later
             token = Properties.Settings.Default.token;
             Directory.CreateDirectory(CachePath);
             Directory.CreateDirectory(AvatarCachePath);
@@ -39,7 +35,7 @@ namespace Naticord
             InitializeComponent();
             AddKeyUpHandler(messageTextBox);
 
-            // A bunch of events (mostly Paint events)
+            // Event handlers
             infoBar.Paint += InfoBar_Paint;
             usernameLabelAndImage.Paint += Antialias_Paint;
             naticordVersion.Paint += Antialias_Paint;
@@ -106,7 +102,6 @@ namespace Naticord
                 if (type != "1") continue; // Friends (Group chats are type 3, but we can ignore that *for now*)
 
                 var recipient = relationship["recipients"]?.FirstOrDefault();
-
                 if (recipient == null) continue;
 
                 string globalName = recipient["global_name"]?.ToString();
@@ -126,15 +121,19 @@ namespace Naticord
                     PFPPic = await GetCachedAvatar(userId, avatarHash)
                 };
 
-                EventHandler clickHandler = async (sender, e) =>
+                friendControl.Click += async (sender, e) =>
                 {
                     if (sender is FSControl control)
                     {
+                        // Save last DM before closing Naticord
+                        Properties.Settings.Default.lastdmid = channelId;
+                        Properties.Settings.Default.lastdm = displayName;
+                        Properties.Settings.Default.Save();
+
                         await FriendClicked(control, displayName, userId, channelId);
                     }
                 };
 
-                friendControl.Click += clickHandler;
                 friendsPanelList.Controls.Add(friendControl);
             }
         }
@@ -142,7 +141,24 @@ namespace Naticord
         private async Task LoadServersList()
         {
             string serversList = await API.SendAPI(token, "users/@me/guilds", HttpMethod.Get, null);
+            JArray servers = JArray.Parse(serversList);
             Debug.WriteLine(serversList);
+
+            serversPanelList.Controls.Clear();
+            foreach (var guild in servers)
+            {
+                string serverName = guild["name"]?.ToString();
+                Debug.WriteLine(serverName);
+                
+                FSControl serverControl = new FSControl
+                {
+                    LText = serverName,
+                    SText = "hi",
+                    PFPPic = null
+                };
+
+                serversPanelList.Controls.Add(serverControl);
+            }
         }
 
         private async Task LoadMessages(string userId, string channelId)
@@ -154,13 +170,8 @@ namespace Naticord
 
             foreach (var message in messages)
             {
-                string attachmentUrl = null;
-
                 var attachments = message["attachments"] as JArray;
-                if (attachments != null && attachments.Count > 0)
-                {
-                    attachmentUrl = attachments[0]["url"]?.ToString();
-                }
+                string attachmentUrl = attachments?.Count > 0 ? attachments[0]["url"]?.ToString() : null;
 
                 string authorDisplay = message["author"]?["global_name"]?.ToString();
                 string authorUser = message["author"]?["username"]?.ToString();
@@ -171,11 +182,7 @@ namespace Naticord
                 string displayName = !string.IsNullOrWhiteSpace(authorDisplay) ? authorDisplay :
                                      !string.IsNullOrWhiteSpace(authorUser) ? authorUser : "Unknown";
 
-                Image attachment = null;
-                if (attachmentUrl != null)
-                {
-                    attachment = await DownloadImage(attachmentUrl);
-                }
+                Image attachment = attachmentUrl != null ? await DownloadImage(attachmentUrl) : null;
 
                 await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
                 ScrollToBottom();
@@ -199,11 +206,7 @@ namespace Naticord
             {
                 try
                 {
-                    var postData = new
-                    {
-                        content = message
-                    };
-
+                    var postData = new { content = message };
                     string responseString = await API.SendAPI(token, $"channels/{currentChannelId}/messages", HttpMethod.Post, postData, fileData, fileName);
                     Debug.WriteLine(responseString);
                 }
@@ -228,7 +231,6 @@ namespace Naticord
             try
             {
                 byte[] imageBytes = await httpClient.GetByteArrayAsync(url);
-
                 using (var ms = new MemoryStream(imageBytes))
                 {
                     try
@@ -238,7 +240,6 @@ namespace Naticord
                         {
                             File.WriteAllBytes(savePath, imageBytes);
                         }
-
                         return img;
                     }
                     catch (Exception)
@@ -258,20 +259,22 @@ namespace Naticord
         private void RenderPlaceholderMessageBox(string placeholder)
         {
             var existingPlaceholder = messagesPanel.Controls.OfType<Label>().FirstOrDefault(lbl => lbl.ForeColor == Color.DarkGray);
+
             if (existingPlaceholder != null)
             {
                 messagesPanel.Controls.Remove(existingPlaceholder);
+                existingPlaceholder.Dispose();
             }
 
             Label placeholderLabel = new Label
             {
                 Text = placeholder,
                 AutoSize = false,
-                Font = new Font("Segoe UI", 18, FontStyle.Regular | FontStyle.Italic),
-                ForeColor = Color.DarkGray,
+                Font = new Font("Segoe UI", 9, FontStyle.Regular),
                 TextAlign = ContentAlignment.MiddleCenter,
                 Width = messagesPanel.ClientSize.Width,
-                Height = messagesPanel.ClientSize.Height
+                Height = messagesPanel.ClientSize.Height,
+                ForeColor = Color.Black
             };
 
             messagesPanel.Controls.Add(placeholderLabel);
@@ -316,19 +319,11 @@ namespace Naticord
 
         public async Task AddMessage(string displayName, string content, string authorID, string authorAvatar, Image attachment, string channelId)
         {
-            if (channelId != currentChannelId)
-            {
-                return;
-            }
+            if (channelId != currentChannelId) return;
+
             if (messagesPanel.InvokeRequired)
             {
-                await Task.Run(() =>
-                {
-                    messagesPanel.Invoke(new Action(async () =>
-                    {
-                        await AddMessageInternal(displayName, content, authorID, authorAvatar, attachment);
-                    }));
-                });
+                await Task.Run(() => messagesPanel.Invoke(new Action(async () => await AddMessageInternal(displayName, content, authorID, authorAvatar, attachment))));
             }
             else
             {
@@ -369,14 +364,10 @@ namespace Naticord
             messagesPanel.AutoScroll = true;
             if (messagesPanel.InvokeRequired)
             {
-                messagesPanel.Invoke(new Action(() =>
-                {
-                    ScrollToBottom();
-                }));
+                messagesPanel.Invoke(new Action(ScrollToBottom));
             }
             else
             {
-
                 messagesPanel.PerformLayout();
                 messagesPanel.VerticalScroll.Value = messagesPanel.VerticalScroll.Maximum;
                 messagesPanel.Invalidate();
@@ -413,10 +404,6 @@ namespace Naticord
             {
                 HandleImagePaste(Clipboard.GetImage());
             }
-            else
-            {
-                // Do nothing.
-            }
         }
 
         private void HandleFilePaste(string filePath)
@@ -441,6 +428,26 @@ namespace Naticord
             Debug.WriteLine($"Pasted file: {fileName}, Size: {fileSize} bytes");
             uploadFileName.Text = $"Selected: {fileName} ({fileSize / 1024} KB)";
             SetUplCanButtonVisibility(true);
+        }
+
+        private async void LoadLastDM()
+        {
+            string lastDM = Properties.Settings.Default.lastdm;
+            string lastChannelId = Properties.Settings.Default.lastdmid;
+
+            if (string.IsNullOrEmpty(lastDM) || string.IsNullOrEmpty(lastChannelId)) return;
+
+            messagesPanel.Controls.Clear();
+            Debug.WriteLine($"Last DM: {lastDM}\nChannel ID: {lastChannelId}");
+
+            foreach (FSControl friend in friendsPanelList.Controls)
+            {
+                if (friend.LText == lastDM)
+                {
+                    await FriendClicked(friend, lastDM, null, lastChannelId);
+                    break;
+                }
+            }
         }
 
         // Anti-aliasing
@@ -483,7 +490,6 @@ namespace Naticord
         {
             await CheckIfTokenIsValid();
 
-            // I hate the Windows Forms designer.
             infoBar.BeginInvoke(new Action(() =>
             {
                 infoBar.Items.AddRange(new ToolStripItem[]
@@ -502,41 +508,32 @@ namespace Naticord
             await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
 
             await LoadFriendsList();
-            RenderPlaceholderMessageBox("Open a DM to get started with Naticord!");
+            await LoadServersList();
+            LoadLastDM();
             GC.Collect();
         }
 
         // Button handlers
         private void uploadButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "All Files|*.*";
-            openFileDialog.Title = "Select a file to upload...";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "All Files|*.*",
+                Title = "Select a file to upload..."
+            };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string selectedFilePath = openFileDialog.FileName;
-
-                string fileName = Path.GetFileName(selectedFilePath);
-                long fileSize = new FileInfo(selectedFilePath).Length;
-
-                uploadFileName.Text = $"Selected: {fileName} ({fileSize / 1024} KB)";
-                SetUplCanButtonVisibility(true);
+                selectedFilePath = openFileDialog.FileName;
+                var fileInfo = new FileInfo(selectedFilePath);
+                DisplayFileInfo(fileInfo.Name, fileInfo.Length);
             }
         }
 
         private void SetUplCanButtonVisibility(bool enabled)
         {
-            if (enabled == true)
-            {
-                uploadButton.Visible = false;
-                cancelButton.Visible = true;
-            }
-            if (enabled == false)
-            {
-                uploadButton.Visible = true;
-                cancelButton.Visible = false;
-            }
+            uploadButton.Visible = !enabled;
+            cancelButton.Visible = enabled;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)

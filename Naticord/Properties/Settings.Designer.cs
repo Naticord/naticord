@@ -46,5 +46,29 @@ namespace Naticord.Properties {
                 this["gifwarning"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastdm {
+            get {
+                return ((string)(this["lastdm"]));
+            }
+            set {
+                this["lastdm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string lastdmid {
+            get {
+                return ((string)(this["lastdmid"]));
+            }
+            set {
+                this["lastdmid"] = value;
+            }
+        }
     }
 }
