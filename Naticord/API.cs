@@ -17,6 +17,9 @@ namespace Naticord
 
         public static async Task<string> SendAPI(string? token, string endpoint, HttpMethod method, object? data = null, byte[]? fileData = null, string? fileName = null)
         {
+            // This line fixes Windows 7 support
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
             if (method == HttpMethod.Get && data != null)
             {
                 throw new InvalidOperationException("GET requests should not have a body.");
