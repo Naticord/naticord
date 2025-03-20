@@ -43,7 +43,6 @@ namespace Naticord
             usernameLabelAndImage.Paint += Antialias_Paint;
             naticordVersion.Paint += Antialias_Paint;
             messageTextBox.KeyDown += MessageTextBox_KeyDown;
-
             this.FormClosing += (sender, e) => Application.Exit();
         }
 
@@ -137,20 +136,6 @@ namespace Naticord
                 };
 
                 friendControl.Click += clickHandler;
-
-                PictureBox profilePic = friendControl.Controls.Find("profilePictureItem", true).FirstOrDefault() as PictureBox;
-                if (profilePic != null)
-                {
-                    profilePic.Paint += Antialias_Paint;
-                    profilePic.Click += clickHandler;
-                }
-
-                Label nameLabel = friendControl.Controls.Find("nameLabel", true).FirstOrDefault() as Label;
-                if (nameLabel != null)
-                {
-                    nameLabel.Click += clickHandler;
-                }
-
                 friendsPanelList.Controls.Add(friendControl);
             }
         }

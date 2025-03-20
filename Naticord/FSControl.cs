@@ -13,8 +13,18 @@ namespace Naticord
 
         public FSControl()
         {
-            InitializeComponent();
             HighlightColor = GetHighlightColor();
+
+            InitializeComponent();
+            SetupClickPropagation();
+        }
+
+        private void SetupClickPropagation()
+        {
+            EventHandler propagateClick = (sender, e) => InvokeOnClick(this, e);
+            profilePictureItem.Click += propagateClick;
+            nameLabel.Click += propagateClick;
+            statusLabel.Click += propagateClick;
         }
 
         public void ClickedDesignChange(bool clicked)

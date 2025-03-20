@@ -57,7 +57,7 @@
             // messageContent
             // 
             this.messageContent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageContent.Location = new System.Drawing.Point(46, 21);
+            this.messageContent.Location = new System.Drawing.Point(45, 20);
             this.messageContent.MDImage = null;
             this.messageContent.Name = "messageContent";
             this.messageContent.Size = new System.Drawing.Size(95, 17);
