@@ -40,6 +40,8 @@
             this.messageTextBox = new System.Windows.Forms.TextBox();
             this.uploadButton = new System.Windows.Forms.Button();
             this.messagesPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.uploadFileName = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.FSTabControl.SuspendLayout();
             this.friendsTab.SuspendLayout();
             this.serversTab.SuspendLayout();
@@ -145,12 +147,31 @@
             this.messagesPanel.Size = new System.Drawing.Size(711, 520);
             this.messagesPanel.TabIndex = 11;
             // 
+            // uploadFileName
+            // 
+            this.uploadFileName.Name = "uploadFileName";
+            this.uploadFileName.Size = new System.Drawing.Size(153, 17);
+            this.uploadFileName.Text = "No file has been selected.";
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelButton.Location = new System.Drawing.Point(860, 540);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(70, 23);
+            this.cancelButton.TabIndex = 12;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Visible = false;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(944, 602);
+            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.messagesPanel);
             this.Controls.Add(this.uploadButton);
             this.Controls.Add(this.messageTextBox);
@@ -184,5 +205,7 @@
         private System.Windows.Forms.FlowLayoutPanel friendsPanelList;
         private System.Windows.Forms.FlowLayoutPanel serversPanelList;
         private System.Windows.Forms.FlowLayoutPanel messagesPanel;
+        private System.Windows.Forms.ToolStripStatusLabel uploadFileName;
+        private System.Windows.Forms.Button cancelButton;
     }
 }

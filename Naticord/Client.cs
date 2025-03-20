@@ -16,6 +16,7 @@ namespace Naticord
     public partial class Client : Form
     {
         private static readonly HttpClient httpClient = new();
+        private string selectedFilePath = null;
         private string currentChannelId;
         private readonly string token;
 
@@ -37,12 +38,12 @@ namespace Naticord
             Directory.CreateDirectory(AvatarCachePath);
 
             InitializeComponent();
+            AddKeyUpHandler(messageTextBox);
 
             // A bunch of events (mostly Paint events)
             infoBar.Paint += InfoBar_Paint;
             usernameLabelAndImage.Paint += Antialias_Paint;
             naticordVersion.Paint += Antialias_Paint;
-            messageTextBox.KeyDown += MessageTextBox_KeyDown;
             this.FormClosing += (sender, e) => Application.Exit();
         }
 
@@ -179,13 +180,24 @@ namespace Naticord
                 }
 
                 await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
+                ScrollToBottom();
             }
         }
 
         private async Task SendMessage()
         {
             string message = messageTextBox.Text.Trim();
-            if (!string.IsNullOrEmpty(message))
+            byte[] fileData = null;
+            string fileName = null;
+
+            if (!string.IsNullOrEmpty(selectedFilePath))
+            {
+                fileData = File.ReadAllBytes(selectedFilePath);
+                fileName = Path.GetFileName(selectedFilePath);
+                Debug.WriteLine($"Selected file: {selectedFilePath}");
+            }
+
+            if (!string.IsNullOrEmpty(message) || fileData != null)
             {
                 try
                 {
@@ -194,7 +206,7 @@ namespace Naticord
                         content = message
                     };
 
-                    string responseString = await API.SendAPI(token, $"channels/{currentChannelId}/messages", HttpMethod.Post, postData);
+                    string responseString = await API.SendAPI(token, $"channels/{currentChannelId}/messages", HttpMethod.Post, postData, fileData, fileName);
                     Debug.WriteLine(responseString);
                 }
                 catch (Exception ex)
@@ -205,6 +217,9 @@ namespace Naticord
                 finally
                 {
                     messageTextBox.Clear();
+                    selectedFilePath = null;
+                    uploadFileName.Text = "No file has been selected.";
+                    SetUplCanButtonVisibility(false);
                 }
             }
         }
@@ -329,7 +344,6 @@ namespace Naticord
                 }
 
                 messagesPanel.Controls.Add(messageControl);
-                ScrollToBottom();
             }
             catch (Exception ex)
             {
@@ -344,16 +358,80 @@ namespace Naticord
         private void ScrollToBottom()
         {
             messagesPanel.AutoScroll = true;
-            messagesPanel.AutoScrollPosition = new Point(0, messagesPanel.VerticalScroll.Maximum);
+            if (messagesPanel.InvokeRequired)
+            {
+                messagesPanel.Invoke(new Action(() =>
+                {
+                    ScrollToBottom();
+                }));
+            }
+            else
+            {
+
+                messagesPanel.PerformLayout();
+                messagesPanel.VerticalScroll.Value = messagesPanel.VerticalScroll.Maximum;
+                messagesPanel.Invalidate();
+            }
         }
 
-        private async void MessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void AddKeyUpHandler(TextBox textBox)
         {
-            if (e.KeyCode == Keys.Enter)
+            textBox.KeyUp += (sender, e) =>
             {
-                e.SuppressKeyPress = true;
-                await SendMessage();
+                if (e.KeyData == (Keys.V | Keys.Control))
+                {
+                    CheckPastedContent(sender as TextBox);
+                }
+            };
+
+            textBox.KeyDown += async (sender, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    await SendMessage();
+                }
+            };
+        }
+
+        private void CheckPastedContent(TextBox textBox)
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                HandleFilePaste(Clipboard.GetFileDropList()[0]);
             }
+            else if (Clipboard.ContainsImage())
+            {
+                HandleImagePaste(Clipboard.GetImage());
+            }
+            else
+            {
+                // Do nothing.
+            }
+        }
+
+        private void HandleFilePaste(string filePath)
+        {
+            selectedFilePath = filePath;
+            var fileInfo = new FileInfo(filePath);
+            DisplayFileInfo(fileInfo.Name, fileInfo.Length);
+        }
+
+        private void HandleImagePaste(Image image)
+        {
+            string tempFilePath = Path.Combine(Path.GetTempPath(), "image.png");
+            image.Save(tempFilePath, System.Drawing.Imaging.ImageFormat.Png);
+
+            selectedFilePath = tempFilePath;
+            var fileInfo = new FileInfo(tempFilePath);
+            DisplayFileInfo(fileInfo.Name, fileInfo.Length);
+        }
+
+        private void DisplayFileInfo(string fileName, long fileSize)
+        {
+            Debug.WriteLine($"Pasted file: {fileName}, Size: {fileSize} bytes");
+            uploadFileName.Text = $"Selected: {fileName} ({fileSize / 1024} KB)";
+            SetUplCanButtonVisibility(true);
         }
 
         // Anti-aliasing
@@ -403,15 +481,17 @@ namespace Naticord
                 {
                     usernameLabelAndImage,
                     new ToolStripSeparator(),
-                    naticordVersion
+                    naticordVersion,
+                    new ToolStripSeparator(),
+                    uploadFileName
                 });
             }));
 
             RenderPlaceholderMessageBox("Loading the UI, give us a few seconds to load content...");
+            await SetUserInfo();
             Websocket WSClient = new Websocket(this);
             await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
 
-            await SetUserInfo();
             await LoadFriendsList();
             RenderPlaceholderMessageBox("Open a DM to get started with Naticord!");
             GC.Collect();
@@ -426,9 +506,35 @@ namespace Naticord
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                string filePath = openFileDialog.FileName;
-                Debug.WriteLine($"Selected file: {filePath}");
+                string selectedFilePath = openFileDialog.FileName;
+
+                string fileName = Path.GetFileName(selectedFilePath);
+                long fileSize = new FileInfo(selectedFilePath).Length;
+
+                uploadFileName.Text = $"Selected: {fileName} ({fileSize / 1024} KB)";
+                SetUplCanButtonVisibility(true);
             }
+        }
+
+        private void SetUplCanButtonVisibility(bool enabled)
+        {
+            if (enabled == true)
+            {
+                uploadButton.Visible = false;
+                cancelButton.Visible = true;
+            }
+            if (enabled == false)
+            {
+                uploadButton.Visible = true;
+                cancelButton.Visible = false;
+            }
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            selectedFilePath = null;
+            uploadFileName.Text = "No file has been selected.";
+            SetUplCanButtonVisibility(false);
         }
     }
 }
