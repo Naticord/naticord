@@ -41,8 +41,7 @@ namespace Naticord
 
                 if (isGif)
                 {
-                    messageContent.Text = "*Naticord doesn't support GIFs right now.*";
-                    messageContent.ForeColor = Color.Gray;
+                    messageContent.Text = $"{messageContent.Text}\n***Naticord doesn't support GIFs right now.***";
                     messageContent.MDImage = null;
                 }
 

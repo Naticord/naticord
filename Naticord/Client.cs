@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Linq;
 using static Naticord.Websocket;
-using WebSocketSharp;
 
 namespace Naticord
 {
@@ -119,8 +118,7 @@ namespace Naticord
                 string displayName = !string.IsNullOrWhiteSpace(globalName) ? globalName :
                                      !string.IsNullOrWhiteSpace(username) ? username : "Unknown";
 
-                var (status, customStatus) = UserStatusStore.GetStatus(userId);
-
+                string status = UserStatusStore.GetStatus(userId);
                 FSControl friendControl = new FSControl
                 {
                     LText = displayName,
@@ -231,18 +229,29 @@ namespace Naticord
             {
                 byte[] imageBytes = await httpClient.GetByteArrayAsync(url);
 
-                if (!string.IsNullOrEmpty(savePath))
+                using (var ms = new MemoryStream(imageBytes))
                 {
-                    File.WriteAllBytes(savePath, imageBytes);
-                }
+                    try
+                    {
+                        Image img = Image.FromStream(ms);
+                        if (!string.IsNullOrEmpty(savePath))
+                        {
+                            File.WriteAllBytes(savePath, imageBytes);
+                        }
 
-                using var ms = new MemoryStream(imageBytes);
-                return Image.FromStream(ms);
-             }
+                        return img;
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("The downloaded data is not a valid image.");
+                        return null;
+                    }
+                }
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to download or load image: {ex.Message}");
-                return Properties.Resources.discord_profile;
+                return null;
             }
         }
 

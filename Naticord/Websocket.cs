@@ -36,17 +36,17 @@ namespace Naticord
 
         public static class UserStatusStore
         {
-            private static readonly ConcurrentDictionary<string, (string Status, string CustomStatus)> _userStatuses =
-                new ConcurrentDictionary<string, (string, string)>();
+            private static readonly ConcurrentDictionary<string, string> _userStatuses =
+                new ConcurrentDictionary<string, string>();
 
-            public static void UpdateStatus(string userId, string status, string customStatus)
+            public static void UpdateStatus(string userId, string status)
             {
-                _userStatuses.AddOrUpdate(userId, (status, customStatus), (key, oldValue) => (status, customStatus));
+                _userStatuses.AddOrUpdate(userId, status, (key, oldValue) => status);
             }
 
-            public static (string Status, string CustomStatus) GetStatus(string userId)
+            public static string GetStatus(string userId)
             {
-                return _userStatuses.TryGetValue(userId, out var status) ? status : ("Offline", "None");
+                return _userStatuses.TryGetValue(userId, out var status) ? status : "Offline";
             }
 
             public static void Clear()
@@ -164,10 +164,8 @@ namespace Naticord
                     string userId = presence?["user"]?["id"]?.Value<string>() ?? "Unknown";
                     string rawStatus = presence?["status"]?.Value<string>() ?? "offline";
                     string userStatus = MapStatus(rawStatus);
-                    string userStatusCustom = (presence?["activities"] as JArray)
-                        ?.FirstOrDefault(a => a["state"] != null)?["state"]?.Value<string>() ?? string.Empty;
 
-                    UserStatusStore.UpdateStatus(userId, userStatus, userStatusCustom);
+                    UserStatusStore.UpdateStatus(userId, userStatus);
                 }
             }
             else
@@ -184,7 +182,7 @@ namespace Naticord
                 "dnd" => "Do Not Disturb",
                 "idle" => "Idle",
                 "offline" => "Offline",
-                _ => "Offline"
+                _ => "No status"
             };
         }
 
