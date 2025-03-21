@@ -32,6 +32,13 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
   - Image viewing: ✔️ (GIFs aren't supported)
   - Video viewing: Not implemented or planned
   - File viewing: Not implemented (Planned)
+- OS support
+  - Windows 10 / 11: ✔️
+  - Windows 8.1 / 8: ✔️
+  - Windows 7: ✔️
+  - Windows Vista / XP: May work under extended kernels (Untested)
+  - Linux: ✔️ (Under WINE)
+  - macOS: Should work with WINE (Untested)
 
 You may submit a feature request using the template in **[Issues](https://github.com/Naticord/naticord/issues)**
 # Credits
