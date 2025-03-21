@@ -1,4 +1,8 @@
-# Naticord
+<h1 style="display: flex; align-items: center;">
+  <img src="https://github.com/user-attachments/assets/b88cfb0f-5459-4256-aeba-82782c79c2db" alt="Frame 115">
+  Naticord
+</h1>
+
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Language](https://img.shields.io/badge/language-C%23-%23239120.svg)
 
@@ -10,6 +14,17 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 > **Note:** Discord may break the client at any time, if that happens, please report it here.
 
 > **Motto:** *A native Discord experience.*
+
+<p align="center">
+  <a href="https://www.star-history.com/#Naticord/naticord&Date">
+   <picture>
+     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date&theme=dark" />
+     <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date" />
+     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Naticord/naticord&type=Date" />
+   </picture>
+  </a>
+</p>
+
 # Screenshots
 ![login](https://github.com/user-attachments/assets/6fe3fe8d-adcb-4979-b574-110ea36b3742)
 
