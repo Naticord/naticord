@@ -49,24 +49,20 @@ namespace Naticord
             try
             {
                 string response = await API.SendAPI(token, "users/@me", HttpMethod.Get, null);
-                var jsonResponse = JsonConvert.DeserializeObject<dynamic>(response);
-
-                if (jsonResponse?.message != null && jsonResponse.message.ToString().Contains("401: Unauthorized"))
-                {
-                    new CMessageBox("Your token is invalid.", "Don't worry, this shouldn't mean anything harmful. Naticord will sign you out for you to re-sign in and get a new token. You will have to reopen Naticord.").Show();
-                    Properties.Settings.Default.token = null;
-                    Properties.Settings.Default.Save();
-                    Application.Restart();
-                }
-                else
-                {
-                    Debug.WriteLine("Token is valid.");
-                }
             }
-            catch (JsonException ex)
+            catch (InvalidOperationException) // Request failed, thrown at API.cs:74
+            {
+                new CMessageBox("Your token is invalid.", "Don't worry, this shouldn't mean anything harmful. Naticord will sign you out for you to re-sign in and get a new token. You will have to reopen Naticord.").ShowDialog();
+                Properties.Settings.Default.token = null;
+                Properties.Settings.Default.Save();
+                Application.Restart();
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine($"Invalid response or error occurred: {ex.Message}");
+                Application.Exit();
             }
+            Debug.WriteLine("Token is valid.");
         }
 
         private async Task SetUserInfo()

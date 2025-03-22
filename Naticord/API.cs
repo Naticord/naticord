@@ -6,6 +6,7 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -13,6 +14,7 @@ namespace Naticord
 {
     internal class API
     {
+        // Why do you need this? XD
         private static readonly HttpClient client = new HttpClient();
 
         public static async Task<string> SendAPI(string? token, string endpoint, HttpMethod method, object? data = null, byte[]? fileData = null, string? fileName = null)

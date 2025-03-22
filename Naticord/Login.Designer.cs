@@ -39,6 +39,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.welcomeBanner = new System.Windows.Forms.PictureBox();
+            this.orLabel = new System.Windows.Forms.Label();
+            this.tokenLabel = new System.Windows.Forms.Label();
+            this.tokenBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.welcomeBanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -103,7 +106,7 @@
             // loginButton
             // 
             this.loginButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loginButton.Location = new System.Drawing.Point(416, 290);
+            this.loginButton.Location = new System.Drawing.Point(416, 326);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(72, 23);
             this.loginButton.TabIndex = 7;
@@ -127,7 +130,7 @@
             this.linkLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.linkLabel1.LinkColor = System.Drawing.Color.RoyalBlue;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 294);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 330);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(82, 15);
             this.linkLabel1.TabIndex = 10;
@@ -145,20 +148,52 @@
             this.welcomeBanner.TabIndex = 0;
             this.welcomeBanner.TabStop = false;
             // 
+            // orLabel
+            // 
+            this.orLabel.AutoSize = true;
+            this.orLabel.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.orLabel.Location = new System.Drawing.Point(250, 274);
+            this.orLabel.Name = "orLabel";
+            this.orLabel.Size = new System.Drawing.Size(30, 20);
+            this.orLabel.TabIndex = 1;
+            this.orLabel.Text = "OR";
+            // 
+            // tokenLabel
+            // 
+            this.tokenLabel.AutoSize = true;
+            this.tokenLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tokenLabel.Location = new System.Drawing.Point(43, 300);
+            this.tokenLabel.Name = "tokenLabel";
+            this.tokenLabel.Size = new System.Drawing.Size(38, 15);
+            this.tokenLabel.TabIndex = 4;
+            this.tokenLabel.Text = "Token";
+            // 
+            // tokenBox
+            // 
+            this.tokenBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tokenBox.Location = new System.Drawing.Point(90, 297);
+            this.tokenBox.Name = "tokenBox";
+            this.tokenBox.Size = new System.Drawing.Size(377, 23);
+            this.tokenBox.TabIndex = 6;
+            this.tokenBox.UseSystemPasswordChar = true;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(500, 323);
+            this.ClientSize = new System.Drawing.Size(500, 359);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.loginButton);
+            this.Controls.Add(this.tokenBox);
             this.Controls.Add(this.passwordBox);
+            this.Controls.Add(this.tokenLabel);
             this.Controls.Add(this.emailBox);
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.welcomeHeader);
+            this.Controls.Add(this.orLabel);
             this.Controls.Add(this.welcomeLabel);
             this.Controls.Add(this.welcomeBanner);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -185,6 +220,9 @@
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label orLabel;
+        private System.Windows.Forms.Label tokenLabel;
+        private System.Windows.Forms.TextBox tokenBox;
     }
 }
 
