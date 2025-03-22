@@ -1,4 +1,4 @@
-<h1 style="display: flex; align-items: center;">
+<h1>
   <img src="https://github.com/user-attachments/assets/b88cfb0f-5459-4256-aeba-82782c79c2db" alt="Frame 115">
   Naticord
 </h1>
