@@ -486,10 +486,12 @@ namespace Naticord
             {
                 trayIcon.BalloonTipTitle = title ?? "Naticord";
                 trayIcon.BalloonTipText = content ?? "Message content";
+
                 if (IsLegacySystem())
                 {
                     trayIcon.BalloonTipIcon = ToolTipIcon.Info;
                 }
+
                 trayIcon.ShowBalloonTip(5000);
             }
         }
@@ -566,6 +568,8 @@ namespace Naticord
             RenderPlaceholderMessageBox(string.Empty);
 
             GC.Collect();
+
+            LoadTrayIcon("Notification title", "Notification message");
         }
 
         // Button related functions

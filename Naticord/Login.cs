@@ -54,7 +54,7 @@ namespace Naticord
                     clientForm.Show();
                     this.Hide();
                 }
-                if (response.Contains("\"ticket\"")) // With 2FA
+                else if (response.Contains("\"ticket\"")) // With 2FA
                 {
                     var json = JObject.Parse(response);
                     string ticket = json["ticket"]?.ToString();
@@ -69,7 +69,7 @@ namespace Naticord
             }
             catch (Exception ex)
             {
-                new CMessageBox("An error has occured", $"An error trying to send data to the Discord API has occured. Please report this to the GitHub. {ex.Message}");
+                new CMessageBox("An error has occurred", $"An error trying to send data to the Discord API has occurred. Please report this to the GitHub.").Show();
             }
         }
 
@@ -111,10 +111,17 @@ namespace Naticord
                 // Continue execution (Nothing to be done)
             }
         }
-
         private void Login_Load(object sender, EventArgs e)
         {
-            CheckTokenAutoLogin();
+            try
+            {
+                CheckIfInternetConnectionExists();
+                CheckTokenAutoLogin();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred during login initialization: {ex.Message}");
+            }
         }
     }
 }
