@@ -80,7 +80,7 @@ namespace Naticord
                 string username = parsedJson["username"]?.ToString() ?? "N/A";
                 string avatarHash = parsedJson["avatar"]?.ToString();
 
-                usernameLabelAndImage.Image = await GetCachedAvatar(userId, avatarHash);
+                usernameLabelAndImage.Image = await GetCachedAvatar(userId, avatarHash, false);
                 usernameLabelAndImage.Text = $"{globalName} ({username})";
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace Naticord
                 {
                     LText = displayName,
                     SText = status,
-                    PFPPic = await GetCachedAvatar(userId, avatarHash)
+                    PFPPic = await GetCachedAvatar(userId, avatarHash, false)
                 };
 
                 friendControl.Click += async (sender, e) =>
@@ -148,13 +148,22 @@ namespace Naticord
             foreach (var guild in servers)
             {
                 string serverName = guild["name"]?.ToString();
-                Debug.WriteLine(serverName);
+                string serverId = guild["id"]?.ToString();
+                string serverHash = guild["icon"]?.ToString();
                 
                 FSControl serverControl = new FSControl
                 {
                     LText = serverName,
-                    SText = "hi",
-                    PFPPic = null
+                    SText = "A Discord server...",
+                    PFPPic = await GetCachedAvatar(serverId, serverHash, true)
+                };
+
+                serverControl.Click += async (sender, e) =>
+                {
+                    if (sender is FSControl control)
+                    {
+                        await ServerClicked(control, serverName, serverId);
+                    }
                 };
 
                 serversPanelList.Controls.Add(serverControl);
@@ -164,7 +173,7 @@ namespace Naticord
         private async Task LoadMessages(string userId, string channelId)
         {
             messagesPanel.Controls.Clear();
-            string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=20", HttpMethod.Get, null);
+            string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=50", HttpMethod.Get, null);
             JArray messages = JArray.Parse(messageStack);
             messages = new JArray(messages.Reverse());
 
@@ -185,7 +194,6 @@ namespace Naticord
                 Image attachment = attachmentUrl != null ? await DownloadImage(attachmentUrl) : null;
 
                 await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
-                ScrollToBottom();
             }
         }
 
@@ -251,41 +259,36 @@ namespace Naticord
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to download or load image: {ex.Message}");
+                Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
                 return null;
             }
         }
 
         private void RenderPlaceholderMessageBox(string placeholder)
         {
-            var existingPlaceholder = messagesPanel.Controls.OfType<Label>().FirstOrDefault(lbl => lbl.ForeColor == Color.DarkGray);
-
-            if (existingPlaceholder != null)
-            {
-                messagesPanel.Controls.Remove(existingPlaceholder);
-                existingPlaceholder.Dispose();
-            }
-
+            messagesPanel.Controls.Clear();
             Label placeholderLabel = new Label
             {
                 Text = placeholder,
                 AutoSize = false,
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                Font = new Font("Segoe UI", 9, FontStyle.Regular | FontStyle.Italic),
                 TextAlign = ContentAlignment.MiddleCenter,
                 Width = messagesPanel.ClientSize.Width,
                 Height = messagesPanel.ClientSize.Height,
-                ForeColor = Color.Black
+                ForeColor = Color.DarkGray,
+                Tag = "Placeholder"
             };
 
             messagesPanel.Controls.Add(placeholderLabel);
         }
 
-        private async Task<Image> GetCachedAvatar(string userId, string avatarHash)
+
+        private async Task<Image> GetCachedAvatar(string Id, string avatarHash, bool isServer)
         {
             if (string.IsNullOrEmpty(avatarHash))
                 return Properties.Resources.discord_profile;
 
-            string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
+            string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{Id}.png");
 
             if (File.Exists(avatarFile))
             {
@@ -293,16 +296,24 @@ namespace Naticord
             }
             else
             {
-                string avatarUrl = GetAvatarUrl(userId, avatarHash);
+                string avatarUrl = GetAvatarUrl(Id, avatarHash, isServer);
                 return await DownloadImage(avatarUrl, avatarFile);
             }
         }
 
-        private string GetAvatarUrl(string userId, string avatarHash)
+        private string GetAvatarUrl(string userId, string avatarHash, bool isServer)
         {
             bool isGif = avatarHash.StartsWith("a_");
             string extension = isGif ? "gif" : "png";
-            return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=128";
+
+            if (isServer)
+            {
+                return $"https://cdn.discordapp.com/icons/{userId}/{avatarHash}.{extension}?size=128";
+            }
+            else
+            {
+                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=128";
+            }
         }
 
         private async Task FriendClicked(FSControl pickedUser, string username, string userId, string channelId)
@@ -315,6 +326,18 @@ namespace Naticord
             pickedUser.ClickedDesignChange(true);
             currentChannelId = channelId;
             await LoadMessages(userId, channelId);
+        }
+
+        private async Task ServerClicked(FSControl pickedServer, string username, string serverId)
+        {
+            foreach (FSControl server in serversPanelList.Controls)
+            {
+                server.ClickedDesignChange(false);
+            }
+
+            pickedServer.ClickedDesignChange(true);
+            // currentChannelId = channelId;
+            // await LoadMessages(userId, channelId);
         }
 
         public async Task AddMessage(string displayName, string content, string authorID, string authorAvatar, Image attachment, string channelId)
@@ -339,7 +362,7 @@ namespace Naticord
                 {
                     authorText = author,
                     messageContentText = content,
-                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash)
+                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash, false)
                 };
 
                 if (attachment != null)
@@ -356,6 +379,7 @@ namespace Naticord
             finally
             {
                 GC.Collect();
+                ScrollToBottom();
             }
         }
 
@@ -438,8 +462,6 @@ namespace Naticord
             if (string.IsNullOrEmpty(lastDM) || string.IsNullOrEmpty(lastChannelId)) return;
 
             messagesPanel.Controls.Clear();
-            Debug.WriteLine($"Last DM: {lastDM}\nChannel ID: {lastChannelId}");
-
             foreach (FSControl friend in friendsPanelList.Controls)
             {
                 if (friend.LText == lastDM)
@@ -503,17 +525,21 @@ namespace Naticord
             }));
 
             RenderPlaceholderMessageBox("Loading the UI, give us a few seconds to load content...");
+            
             await SetUserInfo();
+
             Websocket WSClient = new Websocket(this);
             await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
 
             await LoadFriendsList();
             await LoadServersList();
-            LoadLastDM();
+
+            RenderPlaceholderMessageBox(string.Empty);
+
             GC.Collect();
         }
 
-        // Button handlers
+        // Button related functions
         private void uploadButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog

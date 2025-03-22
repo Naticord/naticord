@@ -48,7 +48,7 @@
             this.welcomeLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.welcomeLabel.Location = new System.Drawing.Point(27, 187);
             this.welcomeLabel.Name = "welcomeLabel";
-            this.welcomeLabel.Size = new System.Drawing.Size(301, 15);
+            this.welcomeLabel.Size = new System.Drawing.Size(299, 15);
             this.welcomeLabel.TabIndex = 1;
             this.welcomeLabel.Text = "To get started, sign in with your Discord account below.";
             // 
@@ -59,7 +59,7 @@
             this.welcomeHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
             this.welcomeHeader.Location = new System.Drawing.Point(26, 164);
             this.welcomeHeader.Name = "welcomeHeader";
-            this.welcomeHeader.Size = new System.Drawing.Size(162, 21);
+            this.welcomeHeader.Size = new System.Drawing.Size(161, 21);
             this.welcomeHeader.TabIndex = 2;
             this.welcomeHeader.Text = "Welcome to Naticord!";
             // 
@@ -129,7 +129,7 @@
             this.linkLabel1.LinkColor = System.Drawing.Color.RoyalBlue;
             this.linkLabel1.Location = new System.Drawing.Point(12, 294);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(81, 15);
+            this.linkLabel1.Size = new System.Drawing.Size(82, 15);
             this.linkLabel1.TabIndex = 10;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Proxy Settings";

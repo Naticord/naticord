@@ -72,12 +72,6 @@
     <Compile Include="CMessageBox.Designer.cs">
       <DependentUpon>CMessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandLink.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CommandLink.Designer.cs">
-      <DependentUpon>CommandLink.cs</DependentUpon>
-    </Compile>
     <Compile Include="FSControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -154,10 +148,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="naticord.ico" />
     <None Include="Resources\discord-profile.png" />
     <None Include="Resources\banner.png" />
     <None Include="Resources\naticord-logo-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="naticord.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

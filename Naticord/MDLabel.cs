@@ -22,11 +22,6 @@ namespace Naticord
             }
         }
 
-        public MDLabel()
-        {
-            AutoSize = false;
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -37,7 +32,7 @@ namespace Naticord
             using (SolidBrush brush = new SolidBrush(BackColor))
                 graphics.FillRectangle(brush, ClientRectangle);
 
-            if (string.IsNullOrEmpty(Text) && MDImage == null) return;
+            if (string.IsNullOrEmpty(Text)) return;
 
             var parsedContent = ParseMarkdownContent(Text);
             RenderMarkdownContent(graphics, parsedContent);
@@ -65,7 +60,6 @@ namespace Naticord
                     string text = segment.Trim();
                     bool isLink = false;
                     Font font = Font;
-                    Image image = null;
 
                     if (text.StartsWith("[") && text.Contains("](") && text.EndsWith(")"))
                     {
@@ -83,7 +77,7 @@ namespace Naticord
                         text = ApplyMarkdownFormatting(ref font, text);
                     }
 
-                    segments.Add(new MarkdownSegment(text, font, false, isLink, image));
+                    segments.Add(new MarkdownSegment(text, font, false, isLink));
                 }
 
                 segments.Add(new MarkdownSegment("", Font, true, false));
@@ -140,11 +134,17 @@ namespace Naticord
 
         private void RenderMarkdownContent(Graphics graphics, List<MarkdownSegment> segments)
         {
-            StringFormat format = new StringFormat { FormatFlags = StringFormatFlags.NoWrap };
+            StringFormat format = new StringFormat
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Near,
+                Trimming = StringTrimming.Word
+            };
+
             Color linkColor = Color.FromArgb(0, 102, 204);
             float x = 0, y = 0;
-            int lineHeight = 0, contentWidth = 0;
-            bool isFirstWord = true;
+            int lineHeight = 0;
+            int maxWidth = Width;
 
             foreach (var segment in segments)
             {
@@ -153,76 +153,49 @@ namespace Naticord
                     y += lineHeight;
                     x = 0;
                     lineHeight = 0;
-                    isFirstWord = true;
                     continue;
                 }
 
-                if (segment.Image != null)
+                if (!string.IsNullOrEmpty(segment.Text))
                 {
-                    int maxWidth = 500;
-                    int newWidth = segment.Image.Width;
-                    int newHeight = segment.Image.Height;
+                    SizeF textSize = graphics.MeasureString(segment.Text, segment.Font, (int)(maxWidth - x), format);
+                    Brush textBrush = segment.IsLink ? new SolidBrush(linkColor) : new SolidBrush(ForeColor);
+                    var layoutRect = new RectangleF(x, y, maxWidth - x, Height);
 
-                    if (newWidth > maxWidth)
+                    if (x + textSize.Width > maxWidth)
                     {
-                        float scaleFactor = (float)maxWidth / newWidth;
-                        newWidth = maxWidth;
-                        newHeight = (int)(segment.Image.Height * scaleFactor);
+                        y += lineHeight;
+                        x = 0;
+                        lineHeight = 0;
+                        layoutRect = new RectangleF(x, y, maxWidth, Height);
                     }
 
-                    graphics.DrawImage(segment.Image, (int)x, (int)y, newWidth, newHeight);
-                    x += newWidth + 4;
-                    lineHeight = Math.Max(lineHeight, newHeight);
-                }
-                else if (!string.IsNullOrEmpty(segment.Text))
-                {
-                    string textToDraw = isFirstWord ? segment.Text.TrimStart() : segment.Text;
-                    Brush textBrush = segment.IsLink ? new SolidBrush(linkColor) : new SolidBrush(ForeColor);
-
-                    SizeF textSize = graphics.MeasureString(textToDraw, segment.Font, new PointF(x, y), format);
-                    graphics.DrawString(textToDraw, segment.Font, textBrush, new PointF(x, y), format);
-
+                    graphics.DrawString(segment.Text, segment.Font, textBrush, layoutRect, format);
                     x += textSize.Width;
                     lineHeight = Math.Max(lineHeight, (int)textSize.Height);
-                    isFirstWord = false;
                 }
-
-                contentWidth = Math.Max(contentWidth, (int)x);
             }
 
             y += lineHeight;
-            x = 0;
 
-            if (MDImage != null)
+            if (MDImage != null && !ImageFormat.Gif.Equals(MDImage.RawFormat))
             {
-                bool isGif = ImageFormat.Gif.Equals(MDImage.RawFormat);
+                int imgMaxWidth = 500;
+                int newWidth = MDImage.Width;
+                int newHeight = MDImage.Height;
 
-                if (isGif)
+                if (newWidth > imgMaxWidth)
                 {
-                    new CMessageBox("A heads up...", "GIFs are currently not supported. This will be added in a later release. This message won't show again.").Show();
+                    float scaleFactor = (float)imgMaxWidth / newWidth;
+                    newWidth = imgMaxWidth;
+                    newHeight = (int)(MDImage.Height * scaleFactor);
                 }
-                else
-                {
-                    int maxWidth = 500;
-                    int newWidth = MDImage.Width;
-                    int newHeight = MDImage.Height;
 
-                    if (newWidth > maxWidth)
-                    {
-                        float scaleFactor = (float)maxWidth / newWidth;
-                        newWidth = maxWidth;
-                        newHeight = (int)(MDImage.Height * scaleFactor);
-                    }
-
-                    graphics.DrawImage(MDImage, (int)x, (int)y, newWidth, newHeight);
-                    contentWidth = Math.Max(contentWidth, newWidth);
-                    y += newHeight;
-                }
+                graphics.DrawImage(MDImage, (int)x, (int)y, newWidth, newHeight);
+                y += newHeight;
             }
 
-            Width = contentWidth;
             Height = (int)y;
-            GC.Collect();
         }
 
         private class MarkdownSegment
@@ -231,15 +204,13 @@ namespace Naticord
             public Font Font { get; }
             public bool IsNewLine { get; }
             public bool IsLink { get; }
-            public Image Image { get; }
 
-            public MarkdownSegment(string text, Font font, bool isNewLine, bool isLink, Image image = null)
+            public MarkdownSegment(string text, Font font, bool isNewLine, bool isLink)
             {
                 Text = text;
                 Font = font;
                 IsNewLine = isNewLine;
                 IsLink = isLink;
-                Image = image;
             }
         }
     }

@@ -59,7 +59,7 @@ namespace Naticord
                     var json = JObject.Parse(response);
                     string ticket = json["ticket"]?.ToString();
 
-                    TwoFA twoFAForm = new TwoFA(ticket);
+                    TwoFA twoFAForm = new TwoFA(ticket, this);
                     twoFAForm.Show();
                 }
                 else // Wrong credentials or Discord is down

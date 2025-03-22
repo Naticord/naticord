@@ -60,7 +60,7 @@
             this.messageContent.Location = new System.Drawing.Point(45, 20);
             this.messageContent.MDImage = null;
             this.messageContent.Name = "messageContent";
-            this.messageContent.Size = new System.Drawing.Size(95, 17);
+            this.messageContent.Size = new System.Drawing.Size(637, 17);
             this.messageContent.TabIndex = 0;
             this.messageContent.Text = "messageContent";
             // 

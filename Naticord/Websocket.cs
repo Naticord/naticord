@@ -100,9 +100,8 @@ namespace Naticord
                             case "MESSAGE_CREATE":
                                 HandleMessageCreate(json["d"]);
                                 break;
-
                             default:
-                                Debug.WriteLine($"Unhandled event type: {eventType}");
+                                // Debug.WriteLine($"Unhandled event type: {eventType}");
                                 break;
                         }
                         break;
@@ -116,7 +115,6 @@ namespace Naticord
                     case 11: // Heartbeat ACK
                         Debug.WriteLine("Heartbeat confirmed!");
                         break;
-
                     default:
                         Debug.WriteLine($"Unhandled opcode: {opCode}");
                         break;

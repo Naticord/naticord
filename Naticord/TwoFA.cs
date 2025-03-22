@@ -9,11 +9,13 @@ namespace Naticord
     public partial class TwoFA : Form
     {
         private readonly string ticket;
+        private readonly Login loginForm;
 
-        public TwoFA(string ticket)
+        public TwoFA(string ticket, Login loginForm)
         {
             InitializeComponent();
             this.ticket = ticket;
+            this.loginForm = loginForm;
             Debug.WriteLine(ticket);
         }
 
@@ -52,11 +54,6 @@ namespace Naticord
             string error = process.StandardError.ReadToEnd();
             process.WaitForExit();
 
-            if (!string.IsNullOrWhiteSpace(error))
-            {
-                Debug.WriteLine("cURL Error: " + error);
-            }
-
             dynamic? jsonResponse = JsonConvert.DeserializeObject(output);
             if (jsonResponse?.token != null)
             {
@@ -66,6 +63,7 @@ namespace Naticord
                 // Continues to the client
                 Client clientForm = new Client();
                 clientForm.Show();
+                loginForm.Hide();
                 this.Close();
             }
             else

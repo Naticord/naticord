@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Client));
             this.usernameLabelAndImage = new System.Windows.Forms.ToolStripStatusLabel();
             this.infoBar = new System.Windows.Forms.StatusStrip();
-            this.naticordVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.FSTabControl = new System.Windows.Forms.TabControl();
             this.friendsTab = new System.Windows.Forms.TabPage();
             this.friendsPanelList = new System.Windows.Forms.FlowLayoutPanel();
@@ -42,6 +41,7 @@
             this.messagesPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.uploadFileName = new System.Windows.Forms.ToolStripStatusLabel();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.naticordVersion = new System.Windows.Forms.ToolStripStatusLabel();
             this.FSTabControl.SuspendLayout();
             this.friendsTab.SuspendLayout();
             this.serversTab.SuspendLayout();
@@ -64,13 +64,6 @@
             this.infoBar.SizingGrip = false;
             this.infoBar.TabIndex = 6;
             this.infoBar.Text = "infoBar";
-            // 
-            // naticordVersion
-            // 
-            this.naticordVersion.Image = global::Naticord.Properties.Resources.naticord_logo_64;
-            this.naticordVersion.Name = "naticordVersion";
-            this.naticordVersion.Size = new System.Drawing.Size(197, 18);
-            this.naticordVersion.Text = "Naticord v1.0.0";
             // 
             // FSTabControl
             // 
@@ -115,6 +108,7 @@
             // 
             // serversPanelList
             // 
+            this.serversPanelList.AutoScroll = true;
             this.serversPanelList.Location = new System.Drawing.Point(6, 6);
             this.serversPanelList.Name = "serversPanelList";
             this.serversPanelList.Size = new System.Drawing.Size(180, 509);
@@ -164,6 +158,13 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Visible = false;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
+            // naticordVersion
+            // 
+            this.naticordVersion.Image = global::Naticord.Properties.Resources.naticord_logo_64;
+            this.naticordVersion.Name = "naticordVersion";
+            this.naticordVersion.Size = new System.Drawing.Size(197, 18);
+            this.naticordVersion.Text = "Naticord v1.0.0";
             // 
             // Client
             // 
