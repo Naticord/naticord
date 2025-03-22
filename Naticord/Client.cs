@@ -18,6 +18,7 @@ namespace Naticord
         private string selectedFilePath = null;
         private string currentChannelId;
         private readonly string token;
+        private NotifyIcon trayIcon;
 
         // AppData paths for Naticord (mostly used for caching)
         private static readonly string CachePath = Path.Combine(
@@ -275,8 +276,7 @@ namespace Naticord
                 TextAlign = ContentAlignment.MiddleCenter,
                 Width = messagesPanel.ClientSize.Width,
                 Height = messagesPanel.ClientSize.Height,
-                ForeColor = Color.DarkGray,
-                Tag = "Placeholder"
+                ForeColor = Color.DarkGray
             };
 
             messagesPanel.Controls.Add(placeholderLabel);
@@ -303,16 +303,13 @@ namespace Naticord
 
         private string GetAvatarUrl(string userId, string avatarHash, bool isServer)
         {
-            bool isGif = avatarHash.StartsWith("a_");
-            string extension = isGif ? "gif" : "png";
-
             if (isServer)
             {
-                return $"https://cdn.discordapp.com/icons/{userId}/{avatarHash}.{extension}?size=128";
+                return $"https://cdn.discordapp.com/icons/{userId}/{avatarHash}.png?size=128";
             }
             else
             {
-                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.{extension}?size=128";
+                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png?size=128";
             }
         }
 
@@ -472,6 +469,37 @@ namespace Naticord
             }
         }
 
+        private void LoadTrayIcon(string title = null, string content = null)
+        {
+            trayIcon = new NotifyIcon
+            {
+                Icon = this.Icon,
+                Text = "Naticord",
+                Visible = true
+            };
+
+            ContextMenu trayMenu = new ContextMenu();
+            trayMenu.MenuItems.Add("Exit", (s, e) => Application.Exit());
+            trayIcon.ContextMenu = trayMenu;
+
+            if (!string.IsNullOrEmpty(title) || !string.IsNullOrEmpty(content))
+            {
+                trayIcon.BalloonTipTitle = title ?? "Naticord";
+                trayIcon.BalloonTipText = content ?? "Message content";
+                if (IsLegacySystem())
+                {
+                    trayIcon.BalloonTipIcon = ToolTipIcon.Info;
+                }
+                trayIcon.ShowBalloonTip(5000);
+            }
+        }
+
+        private bool IsLegacySystem()
+        {
+            var osVersion = Environment.OSVersion.Version;
+            return Environment.OSVersion.Platform == PlatformID.Win32NT && osVersion.Major == 6 && osVersion.Minor <= 3;
+        }
+
         // Anti-aliasing
         private void Antialias_Paint(object sender, PaintEventArgs e)
         {
@@ -510,6 +538,7 @@ namespace Naticord
         // Loads everything needed for the client
         private async void Client_Load(object sender, EventArgs e)
         {
+            LoadTrayIcon(null, null);
             await CheckIfTokenIsValid();
 
             infoBar.BeginInvoke(new Action(() =>
