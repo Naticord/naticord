@@ -375,7 +375,6 @@ namespace Naticord
             }
             finally
             {
-                GC.Collect();
                 ScrollToBottom();
             }
         }
@@ -566,9 +565,6 @@ namespace Naticord
             await LoadServersList();
 
             RenderPlaceholderMessageBox(string.Empty);
-
-            GC.Collect();
-
             LoadTrayIcon("Notification title", "Notification message");
         }
 
