@@ -37,7 +37,7 @@
             this.passwordBox = new System.Windows.Forms.TextBox();
             this.loginButton = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.proxyLabel = new System.Windows.Forms.LinkLabel();
             this.welcomeBanner = new System.Windows.Forms.PictureBox();
             this.orLabel = new System.Windows.Forms.Label();
             this.tokenLabel = new System.Windows.Forms.Label();
@@ -51,7 +51,7 @@
             this.welcomeLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.welcomeLabel.Location = new System.Drawing.Point(27, 187);
             this.welcomeLabel.Name = "welcomeLabel";
-            this.welcomeLabel.Size = new System.Drawing.Size(299, 15);
+            this.welcomeLabel.Size = new System.Drawing.Size(301, 15);
             this.welcomeLabel.TabIndex = 1;
             this.welcomeLabel.Text = "To get started, sign in with your Discord account below.";
             // 
@@ -62,7 +62,7 @@
             this.welcomeHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
             this.welcomeHeader.Location = new System.Drawing.Point(26, 164);
             this.welcomeHeader.Name = "welcomeHeader";
-            this.welcomeHeader.Size = new System.Drawing.Size(161, 21);
+            this.welcomeHeader.Size = new System.Drawing.Size(162, 21);
             this.welcomeHeader.TabIndex = 2;
             this.welcomeHeader.Text = "Welcome to Naticord!";
             // 
@@ -123,20 +123,20 @@
             this.label5.Size = new System.Drawing.Size(0, 15);
             this.label5.TabIndex = 9;
             // 
-            // linkLabel1
+            // proxyLabel
             // 
-            this.linkLabel1.ActiveLinkColor = System.Drawing.Color.RoyalBlue;
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.linkLabel1.LinkColor = System.Drawing.Color.RoyalBlue;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 330);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(82, 15);
-            this.linkLabel1.TabIndex = 10;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Proxy Settings";
-            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.RoyalBlue;
+            this.proxyLabel.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.proxyLabel.AutoSize = true;
+            this.proxyLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.proxyLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.proxyLabel.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.proxyLabel.Location = new System.Drawing.Point(12, 330);
+            this.proxyLabel.Name = "proxyLabel";
+            this.proxyLabel.Size = new System.Drawing.Size(81, 15);
+            this.proxyLabel.TabIndex = 10;
+            this.proxyLabel.TabStop = true;
+            this.proxyLabel.Text = "Proxy Settings";
+            this.proxyLabel.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             // 
             // welcomeBanner
             // 
@@ -151,27 +151,27 @@
             // orLabel
             // 
             this.orLabel.AutoSize = true;
-            this.orLabel.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.orLabel.Location = new System.Drawing.Point(250, 274);
+            this.orLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.orLabel.Location = new System.Drawing.Point(87, 274);
             this.orLabel.Name = "orLabel";
-            this.orLabel.Size = new System.Drawing.Size(30, 20);
+            this.orLabel.Size = new System.Drawing.Size(81, 15);
             this.orLabel.TabIndex = 1;
-            this.orLabel.Text = "OR";
+            this.orLabel.Text = "or login with...";
             // 
             // tokenLabel
             // 
             this.tokenLabel.AutoSize = true;
             this.tokenLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tokenLabel.Location = new System.Drawing.Point(43, 300);
+            this.tokenLabel.Location = new System.Drawing.Point(43, 296);
             this.tokenLabel.Name = "tokenLabel";
-            this.tokenLabel.Size = new System.Drawing.Size(38, 15);
+            this.tokenLabel.Size = new System.Drawing.Size(40, 15);
             this.tokenLabel.TabIndex = 4;
             this.tokenLabel.Text = "Token";
             // 
             // tokenBox
             // 
             this.tokenBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tokenBox.Location = new System.Drawing.Point(90, 297);
+            this.tokenBox.Location = new System.Drawing.Point(90, 293);
             this.tokenBox.Name = "tokenBox";
             this.tokenBox.Size = new System.Drawing.Size(377, 23);
             this.tokenBox.TabIndex = 6;
@@ -183,7 +183,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(500, 359);
-            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.proxyLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.tokenBox);
@@ -219,7 +219,7 @@
         private System.Windows.Forms.TextBox passwordBox;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel proxyLabel;
         private System.Windows.Forms.Label orLabel;
         private System.Windows.Forms.Label tokenLabel;
         private System.Windows.Forms.TextBox tokenBox;

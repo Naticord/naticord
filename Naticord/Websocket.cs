@@ -18,12 +18,13 @@ namespace Naticord
 {
     class Websocket
     {
-        private string token;
-        private string gatewayUrl;
-        private Client mainClient;
         private const SslProtocols Tls12 = SslProtocols.Tls12;
-        public WebSocketSharp.WebSocket WSClient { get; private set; }
+        private string gatewayUrl;
+        private string token;
+        private bool EligibleForNotifs;
         private int heartbeatInterval;
+        private Client mainClient;
+        public WebSocketSharp.WebSocket WSClient { get; private set; }
 
         public Websocket(Client clientForm)
         {
@@ -36,39 +37,24 @@ namespace Naticord
 
         public static class UserStatusStore
         {
-            private static readonly ConcurrentDictionary<string, string> _userStatuses =
-                new ConcurrentDictionary<string, string>();
-
-            public static void UpdateStatus(string userId, string status)
-            {
-                _userStatuses.AddOrUpdate(userId, status, (key, oldValue) => status);
-            }
-
-            public static string GetStatus(string userId)
-            {
-                return _userStatuses.TryGetValue(userId, out var status) ? status : "Offline";
-            }
-
-            public static void Clear()
-            {
-                _userStatuses.Clear();
-            }
+            private static readonly ConcurrentDictionary<string, string> _statuses = new();
+            public static void UpdateStatus(string userId, string status) => _statuses[userId] = status;
+            public static string GetStatus(string userId) => _statuses.TryGetValue(userId, out var status) ? status : "Offline";
+            public static bool ContainsUser(string userId) => _statuses.ContainsKey(userId);
+            public static void Clear() => _statuses.Clear();
         }
 
         public void InitWS()
         {
             WSClient = new WebSocketSharp.WebSocket(gatewayUrl);
             WSClient.SslConfiguration.EnabledSslProtocols = Tls12;
-
             WSClient.OnOpen += (sender, e) => Debug.WriteLine("Connected to the gateway.");
             WSClient.OnMessage += (sender, e) => HandleMessage(e.Data);
             WSClient.OnClose += (sender, e) =>
             {
                 Debug.WriteLine($"Disconnected from the gateway. Reason: {e.Reason}, Code: {e.Code}");
-
                 if (e.Code != 1000 && e.Code != 4004)
                 {
-                    Debug.WriteLine("Reconnecting...");
                     InitWS();
                 }
             };
@@ -80,8 +66,6 @@ namespace Naticord
 
         private void HandleMessage(string data)
         {
-            // Debug.WriteLine($"Received: {data}");
-
             try
             {
                 var json = JObject.Parse(data);
@@ -108,12 +92,7 @@ namespace Naticord
 
                     case 10: // Hello from the gateway (Op 10)
                         heartbeatInterval = json["d"]?["heartbeat_interval"]?.Value<int>() ?? 0;
-                        Debug.WriteLine($"Received Op 10 (Hello), sending Op 1 (Heartbeat) every {heartbeatInterval}ms");
                         SendHeartbeat();
-                        break;
-
-                    case 11: // Heartbeat ACK
-                        Debug.WriteLine("Heartbeat confirmed!");
                         break;
                     default:
                         Debug.WriteLine($"Unhandled opcode: {opCode}");
@@ -150,11 +129,32 @@ namespace Naticord
             {
                 attachment = await mainClient.DownloadImage(attachmentUrl);
             }
+
+            if (EligibleForNotifs == true)
+            {
+                NotifHelper(displayName, content, authorID);
+            }
+            else
+            {
+                // Do nothing
+            }
+
             await mainClient.AddMessage(displayName, content, authorID, authorAvatar, attachment, wsChannelId);
         }
 
         private void HandleUserStatus(JToken messageData)
         {
+            if (messageData["user_settings"] is JObject userSettings)
+            {
+                foreach (var setting in userSettings)
+                {
+                    string mainId = "0";
+                    string rawStatusMain = userSettings["status"]?.Value<string>() ?? "Unknown";
+                    string userStatusMain = MapStatus(rawStatusMain);
+                    UserStatusStore.UpdateStatus(mainId, userStatusMain);
+                    NotifHandler();
+                }
+            }
             if (messageData["presences"] is JArray presencesArray)
             {
                 foreach (var presence in presencesArray)
@@ -162,13 +162,33 @@ namespace Naticord
                     string userId = presence?["user"]?["id"]?.Value<string>() ?? "Unknown";
                     string rawStatus = presence?["status"]?.Value<string>() ?? "offline";
                     string userStatus = MapStatus(rawStatus);
-
                     UserStatusStore.UpdateStatus(userId, userStatus);
                 }
             }
             else
             {
                 Debug.WriteLine("No presences found in the message data.");
+            }
+        }
+
+        private void NotifHandler()
+        {
+            string statusCheck = UserStatusStore.GetStatus("0");
+            if (statusCheck == "Online")
+            {
+                EligibleForNotifs = true;
+            }
+            else
+            {
+                EligibleForNotifs = false;
+            }
+        }
+
+        private void NotifHelper(string title = null, string content = null, string Id = null)
+        {
+            if (UserStatusStore.ContainsUser(Id))
+            {
+                mainClient.InitTrayIcon(title, content);
             }
         }
 
@@ -229,13 +249,11 @@ namespace Naticord
                 {
                     string payloadJson = JsonConvert.SerializeObject(heartbeatPayload);
                     WSClient.Send(payloadJson);
-                    Debug.WriteLine("Sent Op 1 (Heartbeat).");
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Error sending heartbeat: {ex.Message}");
                 }   
-
                 await Task.Delay(heartbeatInterval);
             }
         }

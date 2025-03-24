@@ -1,13 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using static Naticord.Websocket;
 
 namespace Naticord
@@ -15,9 +14,9 @@ namespace Naticord
     public partial class Client : Form
     {
         private static readonly HttpClient httpClient = new();
+        private readonly string token;
         private string selectedFilePath = null;
         private string currentChannelId;
-        private readonly string token;
         private NotifyIcon trayIcon;
 
         // AppData paths for Naticord (mostly used for caching)
@@ -50,7 +49,7 @@ namespace Naticord
             {
                 string response = await API.SendAPI(token, "users/@me", HttpMethod.Get, null);
             }
-            catch (InvalidOperationException) // Request failed, thrown at API.cs:74
+            catch (InvalidOperationException)
             {
                 new CMessageBox("Your token is invalid.", "Don't worry, this shouldn't mean anything harmful. Naticord will sign you out for you to re-sign in and get a new token. You will have to reopen Naticord.").ShowDialog();
                 Properties.Settings.Default.token = null;
@@ -458,8 +457,22 @@ namespace Naticord
             }
         }
 
-        private void LoadTrayIcon(string title = null, string content = null)
+        public void InitTrayIcon(string title = null, string content = null)
         {
+            if (trayIcon != null)
+            {
+                trayIcon.BalloonTipTitle = title ?? "Naticord";
+                trayIcon.BalloonTipText = content ?? "Message content";
+
+                if (IsLegacySystem())
+                {
+                    trayIcon.BalloonTipIcon = ToolTipIcon.Info;
+                }
+
+                trayIcon.ShowBalloonTip(5000);
+                return;
+            }
+
             trayIcon = new NotifyIcon
             {
                 Icon = this.Icon,
@@ -529,7 +542,7 @@ namespace Naticord
         // Loads everything needed for the client
         private async void Client_Load(object sender, EventArgs e)
         {
-            LoadTrayIcon(null, null);
+            InitTrayIcon(null, null);
             await CheckIfTokenIsValid();
 
             infoBar.BeginInvoke(new Action(() =>
@@ -555,7 +568,6 @@ namespace Naticord
             await LoadServersList();
 
             RenderPlaceholderMessageBox(string.Empty);
-            LoadTrayIcon("Notification title", "Notification message");
         }
 
         // Button related functions

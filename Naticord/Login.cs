@@ -21,7 +21,6 @@ namespace Naticord
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            // The token box is prioritized
             if (!string.IsNullOrEmpty(tokenBox.Text))
             {
                 token = tokenBox.Text;
@@ -35,11 +34,11 @@ namespace Naticord
             }
         }
 
-        // Could actually use overrides here I guess
-        public async void LoginToDiscordWithToken(string token)
+        public void LoginToDiscordWithToken(string token)
         {
             Properties.Settings.Default.token = token;
             Properties.Settings.Default.Save();
+
             // Continues to the client
             Client clientForm = new Client();
             clientForm.Show();
@@ -88,7 +87,7 @@ namespace Naticord
                     new CMessageBox("Couldn't login", "You may have entered the wrong credentials or Discord's API is down. Please check Discord's status and your details.").Show();
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 new CMessageBox("An error has occurred", $"An error trying to send data to the Discord API has occurred. Please report this to the GitHub.").Show();
             }
