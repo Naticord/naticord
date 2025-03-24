@@ -6,8 +6,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Printing;
-using System.Linq;
 using System.Net;
 using System.Security.Authentication;
 using System.Threading.Tasks;
@@ -132,7 +130,7 @@ namespace Naticord
 
             if (EligibleForNotifs == true)
             {
-                NotifHelper(displayName, content, authorID);
+                NotifHelper(displayName, content, authorID, wsChannelId, attachment);
             }
             else
             {
@@ -184,9 +182,17 @@ namespace Naticord
             }
         }
 
-        private void NotifHelper(string title = null, string content = null, string Id = null)
+        private void NotifHelper(string title = null, string content = null, string userId = null, string channelId = null, Image attachment = null)
         {
-            if (UserStatusStore.ContainsUser(Id))
+            if (attachment != null)
+            {
+                if (!string.IsNullOrEmpty(content))
+                    content += " (Attachment included)";
+                else
+                    content = "(Contains attachment)";
+            }
+
+            if (Client.ChannelStore.Contains(channelId) && UserStatusStore.ContainsUser(userId))
             {
                 mainClient.InitTrayIcon(title, content);
             }

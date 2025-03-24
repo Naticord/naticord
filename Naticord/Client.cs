@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 using static Naticord.Websocket;
 
@@ -40,6 +41,18 @@ namespace Naticord
             usernameLabelAndImage.Paint += Antialias_Paint;
             naticordVersion.Paint += Antialias_Paint;
             this.FormClosing += (sender, e) => Application.Exit();
+        }
+
+        // Stores
+        public static class ChannelStore
+        {
+            private static readonly ConcurrentBag<string> _channelIds = new();
+            public static void Add(string channelId)
+            {
+                if (!_channelIds.Contains(channelId))
+                    _channelIds.Add(channelId);
+            }
+            public static bool Contains(string channelId) => _channelIds.Contains(channelId);
         }
 
         // Discord API events
@@ -108,6 +121,8 @@ namespace Naticord
 
                 string displayName = !string.IsNullOrWhiteSpace(globalName) ? globalName :
                                      !string.IsNullOrWhiteSpace(username) ? username : "Unknown";
+
+                ChannelStore.Add(channelId);
 
                 string status = UserStatusStore.GetStatus(userId);
                 FSControl friendControl = new FSControl
