@@ -28,7 +28,7 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 # Functionality
 - Login
   - Email (with 2FA): ✔️
-  - Token: Not implemented (Planned)
+  - Token: ✔️
 - Client
   - Loading user information (Username, avatar, etc.): ✔️
   - Loading friends, group chats and servers: Partially implemented (Friends only)
