@@ -136,6 +136,7 @@ namespace Naticord
                 };
 
                 friendsPanelList.Controls.Add(friendControl);
+                GC.Collect();
             }
         }
 
@@ -168,11 +169,13 @@ namespace Naticord
                 };
 
                 serversPanelList.Controls.Add(serverControl);
+                GC.Collect();
             }
         }
 
         private async Task LoadMessages(string userId, string channelId)
         {
+            GC.Collect();
             messagesPanel.Controls.Clear();
             string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=50", HttpMethod.Get, null);
             JArray messages = JArray.Parse(messageStack);
@@ -201,6 +204,7 @@ namespace Naticord
         private async Task SendMessage()
         {
             string message = messageTextBox.Text.Trim();
+            messageTextBox.Clear();
             byte[] fileData = null;
             string fileName = null;
 
@@ -235,36 +239,6 @@ namespace Naticord
         }
 
         // Helper functions
-        public async Task<Image> DownloadImage(string url, string savePath = null)
-        {
-            try
-            {
-                byte[] imageBytes = await httpClient.GetByteArrayAsync(url);
-                using (var ms = new MemoryStream(imageBytes))
-                {
-                    try
-                    {
-                        Image img = Image.FromStream(ms);
-                        if (!string.IsNullOrEmpty(savePath))
-                        {
-                            File.WriteAllBytes(savePath, imageBytes);
-                        }
-                        return img;
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("The downloaded data is not a valid image.");
-                        return null;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
-                return null;
-            }
-        }
-
         private void RenderPlaceholderMessageBox(string placeholder)
         {
             messagesPanel.Controls.Clear();
@@ -283,21 +257,40 @@ namespace Naticord
         }
 
 
-        private async Task<Image> GetCachedAvatar(string Id, string avatarHash, bool isServer)
+        public async Task<Image> DownloadImage(string url, string savePath = null)
+        {
+            try
+            {
+                byte[] imageBytes = await httpClient.GetByteArrayAsync(url);
+                savePath ??= Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
+                File.WriteAllBytes(savePath, imageBytes);
+                using (var ms = new MemoryStream(imageBytes))
+                {
+                    return Image.FromStream(ms);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
+                return null;
+            }
+        }
+
+        public async Task<Image> GetCachedAvatar(string userId, string avatarHash, bool isServer)
         {
             if (string.IsNullOrEmpty(avatarHash))
                 return Properties.Resources.discord_profile;
 
-            string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{Id}.png");
-
+            string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
             if (File.Exists(avatarFile))
             {
                 return Image.FromFile(avatarFile);
             }
             else
             {
-                string avatarUrl = GetAvatarUrl(Id, avatarHash, isServer);
-                return await DownloadImage(avatarUrl, avatarFile);
+                string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer);
+                var downloadedImage = await DownloadImage(avatarUrl, avatarFile);
+                return downloadedImage;
             }
         }
 
@@ -305,11 +298,11 @@ namespace Naticord
         {
             if (isServer)
             {
-                return $"https://cdn.discordapp.com/icons/{userId}/{avatarHash}.png?size=128";
+                return $"https://cdn.discordapp.com/icons/{userId}/{avatarHash}.png?size=64";
             }
             else
             {
-                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png?size=128";
+                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png?size=64";
             }
         }
 
@@ -376,6 +369,7 @@ namespace Naticord
             finally
             {
                 ScrollToBottom();
+                GC.Collect();
             }
         }
 
