@@ -38,6 +38,7 @@ Naticord is a 3rd-party Discord client made using C# and Windows Forms. This was
 - Misc
   - Client updating: Not implemented (Planned)
   - Markdown support: ✔️ (A bit buggy, but a work-in-progress)
+  - Notification support: ✔️
   - Profile viewing: Not implemented (Planned)
   - Viewing statuses (non-custom): ✔️
   - Pasting files from clipboard: ✔️
