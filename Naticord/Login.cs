@@ -10,6 +10,7 @@ namespace Naticord
     {
         private string email;
         private string password;
+        private string token;
 
         public Login()
         {
@@ -20,9 +21,29 @@ namespace Naticord
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            email = emailBox.Text;
-            password = passwordBox.Text;
-            LoginToDiscord(email, password);
+            // The token box is prioritized
+            if (!string.IsNullOrEmpty(tokenBox.Text))
+            {
+                token = tokenBox.Text;
+                LoginToDiscordWithToken(token);
+            }
+            else
+            {
+                email = emailBox.Text;
+                password = passwordBox.Text;
+                LoginToDiscord(email, password);
+            }
+        }
+
+        // Could actually use overrides here I guess
+        public async void LoginToDiscordWithToken(string token)
+        {
+            Properties.Settings.Default.token = token;
+            Properties.Settings.Default.Save();
+            // Continues to the client
+            Client clientForm = new Client();
+            clientForm.Show();
+            this.Hide();
         }
 
         public async void LoginToDiscord(string email, string password)
