@@ -89,7 +89,7 @@ namespace Naticord
                 string username = parsedJson["username"]?.ToString() ?? "N/A";
                 string avatarHash = parsedJson["avatar"]?.ToString();
 
-                usernameLabelAndImage.Image = await GetCachedAvatar(userId, avatarHash, false);
+                usernameLabelAndImage.Image = await GetCachedAvatar(userId, avatarHash, false, false);
                 usernameLabelAndImage.Text = $"{globalName} ({username})";
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace Naticord
                 {
                     LText = displayName,
                     SText = status,
-                    PFPPic = await GetCachedAvatar(userId, avatarHash, false)
+                    PFPPic = await GetCachedAvatar(userId, avatarHash, false, false)
                 };
 
                 friendControl.Click += async (sender, e) =>
@@ -146,6 +146,56 @@ namespace Naticord
                 };
 
                 friendsPanelList.Controls.Add(friendControl);
+                GC.Collect();
+            }
+        }
+
+        private async Task LoadGroupsList()
+        {
+            string groupsList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
+            JArray groups = JArray.Parse(groupsList);
+            Debug.WriteLine(groups);
+
+            foreach (var group in groups)
+            {
+                string type = group["type"]?.ToString();
+                if (type != "3") continue; // Group chats
+
+                int memberCount = group["recipients"]?.Count() ?? 0;
+                string gcHash = group["icon"]?.ToString();
+                string gcId = group["id"]?.ToString();
+
+                string gcName = group["name"]?.ToString();
+                if (string.IsNullOrEmpty(gcName))
+                {
+                    var recipientNames = group["recipients"]?
+                        .Select(r => r["global_name"]?.ToString() ?? r["username"]?.ToString())
+                        .Where(name => !string.IsNullOrEmpty(name));
+
+                    gcName = string.Join(", ", recipientNames);
+                }
+
+                if (!string.IsNullOrEmpty(gcId))
+                {
+                    ChannelStore.Add(gcId);
+                }
+
+                FSControl groupControl = new FSControl
+                {
+                    LText = gcName,
+                    SText = $"{memberCount} members",
+                    PFPPic = await GetCachedAvatar(gcId, gcHash, false, true)
+                };
+
+                groupControl.Click += async (sender, e) =>
+                {
+                    if (sender is FSControl control)
+                    {
+                        await FriendClicked(control, gcName, null, gcId);
+                    }
+                };
+
+                friendsPanelList.Controls.Add(groupControl);
                 GC.Collect();
             }
         }
@@ -167,7 +217,7 @@ namespace Naticord
                 {
                     LText = serverName,
                     SText = "A Discord server...",
-                    PFPPic = await GetCachedAvatar(serverId, serverHash, true)
+                    PFPPic = await GetCachedAvatar(serverId, serverHash, true, false)
                 };
 
                 serverControl.Click += async (sender, e) =>
@@ -286,7 +336,7 @@ namespace Naticord
             }
         }
 
-        public async Task<Image> GetCachedAvatar(string userId, string avatarHash, bool isServer)
+        public async Task<Image> GetCachedAvatar(string userId, string avatarHash, bool isServer, bool isGC)
         {
             if (string.IsNullOrEmpty(avatarHash))
                 return Properties.Resources.discord_profile;
@@ -298,25 +348,29 @@ namespace Naticord
             }
             else
             {
-                string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer);
+                string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer, isGC);
                 var downloadedImage = await DownloadImage(avatarUrl, avatarFile);
                 return downloadedImage;
             }
         }
 
-        private string GetAvatarUrl(string userId, string avatarHash, bool isServer)
+        private string GetAvatarUrl(string Id, string Hash, bool isServer, bool isGC)
         {
             if (isServer)
             {
-                return $"https://cdn.discordapp.com/icons/{userId}/{avatarHash}.png?size=64";
+                return $"https://cdn.discordapp.com/icons/{Id}/{Hash}.png?size=64";
+            }
+            else if (isGC)
+            {
+                return $"https://cdn.discordapp.com/channel-icons/{Id}/{Hash}.png?size=64";
             }
             else
             {
-                return $"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png?size=64";
+                return $"https://cdn.discordapp.com/avatars/{Id}/{Hash}.png?size=64";
             }
         }
 
-        private async Task FriendClicked(FSControl pickedUser, string username, string userId, string channelId)
+        private async Task FriendClicked(FSControl pickedUser, string username, string userID = null, string channelId = null)
         {
             foreach (FSControl friend in friendsPanelList.Controls)
             {
@@ -325,7 +379,7 @@ namespace Naticord
 
             pickedUser.ClickedDesignChange(true);
             currentChannelId = channelId;
-            await LoadMessages(userId, channelId);
+            await LoadMessages(userID, channelId);
         }
 
         private async Task ServerClicked(FSControl pickedServer, string username, string serverId)
@@ -362,7 +416,7 @@ namespace Naticord
                 {
                     authorText = author,
                     messageContentText = content,
-                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash, false)
+                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash, false, false)
                 };
 
                 if (attachment != null)
@@ -580,6 +634,7 @@ namespace Naticord
             await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
 
             await LoadFriendsList();
+            await LoadGroupsList();
             await LoadServersList();
 
             RenderPlaceholderMessageBox(string.Empty);
