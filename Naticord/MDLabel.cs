@@ -11,6 +11,7 @@ namespace Naticord
     public partial class MDLabel : Label
     {
         private Image _mdImage;
+        private ContextMenuStrip contextMenu;
 
         public Image MDImage
         {
@@ -36,6 +37,32 @@ namespace Naticord
 
             var parsedContent = ParseMarkdownContent(Text);
             RenderMarkdownContent(graphics, parsedContent);
+            InitializeContextMenu();
+        }
+
+        private void InitializeContextMenu()
+        {
+            contextMenu = new ContextMenuStrip();
+            ToolStripMenuItem copyItem = new ToolStripMenuItem("Copy");
+
+            copyItem.Click += (sender, e) =>
+            {
+                if (!string.IsNullOrEmpty(Text))
+                {
+                    Clipboard.SetText(Text);
+                }
+            };
+
+            contextMenu.Items.Add(copyItem);
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+            if (e.Button == MouseButtons.Right)
+            {
+                contextMenu.Show(this, e.Location);
+            }
         }
 
         private List<MarkdownSegment> ParseMarkdownContent(string markdownText)
