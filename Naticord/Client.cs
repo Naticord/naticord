@@ -246,16 +246,17 @@ namespace Naticord
 
         private async Task LoadMessages(string userId, string channelId)
         {
+            List<Message> processedmessages = new();
             Stopwatch sw = Stopwatch.StartNew();
             messagesPanel.Controls.Clear();
             string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=50", HttpMethod.Get, null);
             Console.WriteLine($"Api call took {sw.ElapsedMilliseconds} ms");
             sw.Restart();
             JArray messages = JArray.Parse(messageStack);
-            messages = new JArray(messages.Reverse());
 
-            foreach (var message in messages)
+            for (int i = messages.Count - 1; i >= 0; i--)
             {
+                JToken message = messages[i];
                 var attachments = message["attachments"] as JArray;
                 string attachmentUrl = attachments?.Count > 0 ? attachments[0]["url"]?.ToString() : null;
 
@@ -269,9 +270,11 @@ namespace Naticord
                                      !string.IsNullOrWhiteSpace(authorUser) ? authorUser : "Unknown";
 
                 Image attachment = attachmentUrl != null ? await DownloadImage(attachmentUrl) : null;
-                Console.WriteLine(content);
-                await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
+                //Console.WriteLine(content);
+                processedmessages.Add(await CreateMessage(displayName, content, authorID, authorPFP, attachment));
             }
+            await AddMessagesRange(processedmessages);
+            ScrollToBottom();
             Console.WriteLine($"Processing messages took {sw.ElapsedMilliseconds} ms");
             sw.Stop();
         }
@@ -443,6 +446,10 @@ namespace Naticord
                 await AddMessageInternal(displayName, content, authorID, authorAvatar, attachment);
             }
         }
+        public async Task AddMessagesRange(List<Message> messages)
+        {
+            AddMessagesRangeInternal(messages);
+        }
 
         public async Task AddMessageInternal(string author, string content, string userId, string avatarHash, Image attachment)
         {
@@ -469,8 +476,37 @@ namespace Naticord
             finally
             {
                 ScrollToBottom();
-                GC.Collect();
             }
+        }
+
+        public async Task<Message> CreateMessage(string author, string content, string userId, string avatarHash, Image attachment)
+        {
+            try
+            {
+                Message messageControl = new Message
+                {
+                    authorText = author,
+                    messageContentText = content,
+                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash, false, false)
+                };
+
+                if (attachment != null)
+                {
+                    messageControl.attachmentImageDisplay = attachment;
+                }
+
+                return messageControl;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding message: {ex.Message}");
+                return new Message();
+            }
+        }
+
+        public void AddMessagesRangeInternal(List<Message> messages)
+        {
+            messagesPanel.Controls.AddRange(messages.ToArray());
         }
 
         private void ScrollToBottom()
