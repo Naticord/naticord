@@ -100,18 +100,21 @@ namespace Naticord
 
         private async Task LoadFriendsList()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             string relationshipList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
+            Console.WriteLine($"LoadFriendsList - API request took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Restart();
             JArray relationships = JArray.Parse(relationshipList);
             Debug.WriteLine(relationshipList);
 
             friendsPanelList.Controls.Clear();
-            foreach (var relationship in relationships)
+            var friendTasks = relationships.Select(async relationship =>
             {
                 string type = relationship["type"]?.ToString();
-                if (type != "1") continue; // Friends (Group chats are type 3, but we can ignore that *for now*)
+                if (type != "1") return null; // Not a friend, skip it.
 
                 var recipient = relationship["recipients"]?.FirstOrDefault();
-                if (recipient == null) continue;
+                if (recipient == null) return null;
 
                 string globalName = recipient["global_name"]?.ToString();
                 string username = recipient["username"]?.ToString();
@@ -123,31 +126,24 @@ namespace Naticord
                                      !string.IsNullOrWhiteSpace(username) ? username : "Unknown";
 
                 ChannelStore.Add(channelId);
-
                 string status = UserStatusStore.GetStatus(userId);
-                FSControl friendControl = new FSControl
+
+                return new FSControl
                 {
                     LText = displayName,
                     SText = status,
                     PFPPic = await GetCachedAvatar(userId, avatarHash, false, false)
                 };
+            }).ToList();
 
-                friendControl.Click += async (sender, e) =>
-                {
-                    if (sender is FSControl control)
-                    {
-                        // Save last DM before closing Naticord
-                        Properties.Settings.Default.lastdmid = channelId;
-                        Properties.Settings.Default.lastdm = displayName;
-                        Properties.Settings.Default.Save();
+            // Wait for all friends to be processed
+            var friendControls = (await Task.WhenAll(friendTasks)).Where(fc => fc != null).ToList();
 
-                        await FriendClicked(control, displayName, userId, channelId);
-                    }
-                };
-
-                friendsPanelList.Controls.Add(friendControl);
-                GC.Collect();
-            }
+            // Update UI on the main thread
+            friendsPanelList.Controls.Clear();
+            friendsPanelList.Controls.AddRange(friendControls.ToArray());
+            Console.WriteLine($"LoadFriendsList - processing took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Stop();
         }
 
         private async Task LoadGroupsList()
@@ -331,7 +327,7 @@ namespace Naticord
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
+                //Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
                 return null;
             }
         }
@@ -627,15 +623,25 @@ namespace Naticord
             }));
 
             RenderPlaceholderMessageBox("Loading the UI, give us a few seconds to load content...");
-            
+
+            Console.WriteLine("setuserinfo is called");
+            Stopwatch stopwatch = Stopwatch.StartNew();
             await SetUserInfo();
-
+            stopwatch.Stop();
+            Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
             Websocket WSClient = new Websocket(this);
-            await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
+            while (WSClient.WSClient.ReadyState != WebSocketSharp.WebSocketState.Open) await Task.Delay(100);
 
+            stopwatch.Restart();
             await LoadFriendsList();
+            Console.WriteLine($"LoadFriendsList took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Restart();
             await LoadGroupsList();
+            Console.WriteLine($"LoadGroupsList took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Restart();
             await LoadServersList();
+            Console.WriteLine($"LoadServersList took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Stop();
 
             RenderPlaceholderMessageBox(string.Empty);
         }
