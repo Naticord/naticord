@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 using static Naticord.Websocket;
+using System.Collections.Generic;
 
 namespace Naticord
 {
@@ -108,13 +109,14 @@ namespace Naticord
             Debug.WriteLine(relationshipList);
 
             friendsPanelList.Controls.Clear();
-            var friendTasks = relationships.Select(async relationship =>
+            List<FSControl> friendcontrols = new List<FSControl>();
+            foreach (var relationship in relationships)
             {
                 string type = relationship["type"]?.ToString();
-                if (type != "1") return null; // Not a friend, skip it.
+                if (type != "1") continue; // Friends (Group chats are type 3, but we can ignore that *for now*)
 
                 var recipient = relationship["recipients"]?.FirstOrDefault();
-                if (recipient == null) return null;
+                if (recipient == null) continue;
 
                 string globalName = recipient["global_name"]?.ToString();
                 string username = recipient["username"]?.ToString();
@@ -128,20 +130,31 @@ namespace Naticord
                 ChannelStore.Add(channelId);
                 string status = UserStatusStore.GetStatus(userId);
 
-                return new FSControl
+                FSControl friendControl = new FSControl
                 {
                     LText = displayName,
                     SText = status,
                     PFPPic = await GetCachedAvatar(userId, avatarHash, false, false)
                 };
-            }).ToList();
+                friendControl.Click += async (sender, e) =>
+                {
+                    if (sender is FSControl control)
+                    {
+                        // Save last DM before closing Naticord
+                        Properties.Settings.Default.lastdmid = channelId;
+                        Properties.Settings.Default.lastdm = displayName;
+                        Properties.Settings.Default.Save();
 
-            // Wait for all friends to be processed
-            var friendControls = (await Task.WhenAll(friendTasks)).Where(fc => fc != null).ToList();
+                        await FriendClicked(control, displayName, userId, channelId);
+                    }
+                };
+                friendcontrols.Add(friendControl);
+            }
+            ;
 
             // Update UI on the main thread
             friendsPanelList.Controls.Clear();
-            friendsPanelList.Controls.AddRange(friendControls.ToArray());
+            friendsPanelList.Controls.AddRange(friendcontrols.ToArray());
             Console.WriteLine($"LoadFriendsList - processing took {stopwatch.ElapsedMilliseconds} ms");
             stopwatch.Stop();
         }
@@ -151,7 +164,7 @@ namespace Naticord
             string groupsList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
             JArray groups = JArray.Parse(groupsList);
             Debug.WriteLine(groups);
-
+            List<FSControl> controls = new();
             foreach (var group in groups)
             {
                 string type = group["type"]?.ToString();
@@ -191,9 +204,9 @@ namespace Naticord
                     }
                 };
 
-                friendsPanelList.Controls.Add(groupControl);
-                GC.Collect();
+                controls.Add(groupControl);
             }
+            friendsPanelList.Controls.AddRange(controls.ToArray());
         }
 
         private async Task LoadServersList()
@@ -203,6 +216,7 @@ namespace Naticord
             Debug.WriteLine(serversList);
 
             serversPanelList.Controls.Clear();
+            List<FSControl> controls = new();
             foreach (var guild in servers)
             {
                 string serverName = guild["name"]?.ToString();
@@ -224,20 +238,22 @@ namespace Naticord
                     }
                 };
 
-                serversPanelList.Controls.Add(serverControl);
-                GC.Collect();
+                controls.Add(serverControl);
             }
+            serversPanelList.Controls.AddRange(controls.ToArray());
         }
 
         private async Task LoadMessages(string userId, string channelId)
         {
-            GC.Collect();
+            Stopwatch sw = Stopwatch.StartNew();
             messagesPanel.Controls.Clear();
             string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=50", HttpMethod.Get, null);
+            Console.WriteLine($"Api call took {sw.ElapsedMilliseconds} ms");
+            sw.Restart();
             JArray messages = JArray.Parse(messageStack);
             messages = new JArray(messages.Reverse());
 
-            foreach (var message in messages)
+            foreach (var message in messages.Reverse())
             {
                 var attachments = message["attachments"] as JArray;
                 string attachmentUrl = attachments?.Count > 0 ? attachments[0]["url"]?.ToString() : null;
@@ -252,9 +268,11 @@ namespace Naticord
                                      !string.IsNullOrWhiteSpace(authorUser) ? authorUser : "Unknown";
 
                 Image attachment = attachmentUrl != null ? await DownloadImage(attachmentUrl) : null;
-
+                Console.WriteLine(content);
                 await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
             }
+            Console.WriteLine($"Processing messages took {sw.ElapsedMilliseconds} ms");
+            sw.Stop();
         }
 
         private async Task SendMessage()
@@ -368,11 +386,11 @@ namespace Naticord
 
         private async Task FriendClicked(FSControl pickedUser, string username, string userID = null, string channelId = null)
         {
+
             foreach (FSControl friend in friendsPanelList.Controls)
             {
                 friend.ClickedDesignChange(false);
             }
-
             pickedUser.ClickedDesignChange(true);
             currentChannelId = channelId;
             await LoadMessages(userID, channelId);
@@ -421,6 +439,7 @@ namespace Naticord
                 }
 
                 messagesPanel.Controls.Add(messageControl);
+                messagesPanel.Controls.SetChildIndex(messageControl, 0);
             }
             catch (Exception ex)
             {
