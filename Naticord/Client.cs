@@ -247,11 +247,8 @@ namespace Naticord
         private async Task LoadMessages(string userId, string channelId)
         {
             List<Message> processedmessages = new();
-            Stopwatch sw = Stopwatch.StartNew();
             messagesPanel.Controls.Clear();
             string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=50", HttpMethod.Get, null);
-            Console.WriteLine($"Api call took {sw.ElapsedMilliseconds} ms");
-            sw.Restart();
             JArray messages = JArray.Parse(messageStack);
 
             for (int i = messages.Count - 1; i >= 0; i--)
@@ -275,8 +272,6 @@ namespace Naticord
             }
             await AddMessagesRange(processedmessages);
             ScrollToBottom();
-            Console.WriteLine($"Processing messages took {sw.ElapsedMilliseconds} ms");
-            sw.Stop();
         }
 
         private async Task SendMessage()
@@ -700,11 +695,10 @@ namespace Naticord
 
             RenderPlaceholderMessageBox("Loading the UI, give us a few seconds to load content...");
 
-            Console.WriteLine("setuserinfo is called");
             Stopwatch stopwatch = Stopwatch.StartNew();
             await SetUserInfo();
             stopwatch.Stop();
-            Console.WriteLine($"Execution Time: {stopwatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"SetUserInfo took {stopwatch.ElapsedMilliseconds} ms");
             Websocket WSClient = new Websocket(this);
             while (WSClient.WSClient.ReadyState != WebSocketSharp.WebSocketState.Open) await Task.Delay(100);
 
