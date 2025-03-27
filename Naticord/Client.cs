@@ -26,6 +26,7 @@ namespace Naticord
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Naticord"
         );
+        private static Dictionary<string, Image> avatarCache = new Dictionary<string, Image>();
         private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
 
         public Client()
@@ -253,7 +254,7 @@ namespace Naticord
             JArray messages = JArray.Parse(messageStack);
             messages = new JArray(messages.Reverse());
 
-            foreach (var message in messages.Reverse())
+            foreach (var message in messages)
             {
                 var attachments = message["attachments"] as JArray;
                 string attachmentUrl = attachments?.Count > 0 ? attachments[0]["url"]?.ToString() : null;
@@ -350,22 +351,43 @@ namespace Naticord
             }
         }
 
+        private void SetMemoryCachedAvatar(string userId, Image avatar)
+        {
+            if (avatarCache.Count >= 10) // cache only last 10 avatars (5 DMs) to save ram
+            {
+                avatarCache.Remove(avatarCache.Keys.First());
+            }
+            if (avatarCache.ContainsKey(userId))
+            {
+                avatarCache[userId].Dispose();
+                avatarCache[userId] = avatar;
+            }
+        }
+        private bool TryGetMemoryCachedAvatar(string userId, out Image avatar) 
+        {
+            return avatarCache.TryGetValue(userId, out avatar);
+        }
+
         public async Task<Image> GetCachedAvatar(string userId, string avatarHash, bool isServer, bool isGC)
         {
             if (string.IsNullOrEmpty(avatarHash))
                 return Properties.Resources.discord_profile;
 
+            if (TryGetMemoryCachedAvatar(userId, out Image avatar)) return avatar;
+
             string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
+            Image retrievedavatar;
             if (File.Exists(avatarFile))
             {
-                return Image.FromFile(avatarFile);
+                retrievedavatar = Image.FromFile(avatarFile);
             }
             else
             {
                 string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer, isGC);
-                var downloadedImage = await DownloadImage(avatarUrl, avatarFile);
-                return downloadedImage;
+                retrievedavatar = await DownloadImage(avatarUrl, avatarFile);
             }
+            SetMemoryCachedAvatar(userId, retrievedavatar);
+            return retrievedavatar;
         }
 
         private string GetAvatarUrl(string Id, string Hash, bool isServer, bool isGC)
@@ -439,7 +461,6 @@ namespace Naticord
                 }
 
                 messagesPanel.Controls.Add(messageControl);
-                messagesPanel.Controls.SetChildIndex(messageControl, 0);
             }
             catch (Exception ex)
             {
