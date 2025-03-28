@@ -115,45 +115,52 @@ namespace Naticord
 
         private string ApplyMarkdownFormatting(ref Font font, string text)
         {
-            if (text.StartsWith("### "))
+            if (text.Length >= 2)
             {
-                font = new Font(Font.FontFamily, Font.Size + 4, FontStyle.Bold);
-                return text.Substring(4);
+                if (text.StartsWith("### ") && text.Length > 4)
+                {
+                    font = new Font(font.FontFamily, font.Size + 8, FontStyle.Bold);
+                    return text.Substring(4);
+                }
+                if (text.StartsWith("## ") && text.Length > 3)
+                {
+                    font = new Font(font.FontFamily, font.Size + 6, FontStyle.Bold);
+                    return text.Substring(3);
+                }
+                if (text.StartsWith("# ") && text.Length > 2)
+                {
+                    font = new Font(font.FontFamily, font.Size + 4, FontStyle.Bold);
+                    return text.Substring(2);
+                }
             }
-            if (text.StartsWith("## "))
+
+            if (text.Length >= 6 && text.StartsWith("***") && text.EndsWith("***"))
             {
-                font = new Font(Font.FontFamily, Font.Size + 6, FontStyle.Bold);
-                return text.Substring(3);
-            }
-            if (text.StartsWith("# "))
-            {
-                font = new Font(Font.FontFamily, Font.Size + 8, FontStyle.Bold);
-                return text.Substring(2);
-            }
-            if (text.StartsWith("***") && text.EndsWith("***"))
-            {
-                font = new Font(Font, FontStyle.Bold | FontStyle.Italic);
+                font = new Font(font, FontStyle.Bold | FontStyle.Italic);
                 return text.Substring(3, text.Length - 6);
             }
-            if (text.StartsWith("**") && text.EndsWith("**"))
+            if (text.Length >= 4)
             {
-                font = new Font(Font, FontStyle.Bold);
-                return text.Substring(2, text.Length - 4);
+                if (text.StartsWith("**") && text.EndsWith("**"))
+                {
+                    font = new Font(font, FontStyle.Bold);
+                    return text.Substring(2, text.Length - 4);
+                }
+                if (text.StartsWith("__") && text.EndsWith("__"))
+                {
+                    font = new Font(font, FontStyle.Underline);
+                    return text.Substring(2, text.Length - 4);
+                }
+                if (text.StartsWith("~~") && text.EndsWith("~~"))
+                {
+                    font = new Font(font, FontStyle.Strikeout);
+                    return text.Substring(2, text.Length - 4);
+                }
             }
-            if (text.StartsWith("*") && text.EndsWith("*"))
+            if (text.Length >= 2 && text.StartsWith("*") && text.EndsWith("*"))
             {
-                font = new Font(Font, FontStyle.Italic);
+                font = new Font(font, FontStyle.Italic);
                 return text.Substring(1, text.Length - 2);
-            }
-            if (text.StartsWith("__") && text.EndsWith("__"))
-            {
-                font = new Font(Font, FontStyle.Underline);
-                return text.Substring(2, text.Length - 4);
-            }
-            if (text.StartsWith("~~") && text.EndsWith("~~"))
-            {
-                font = new Font(Font, FontStyle.Strikeout);
-                return text.Substring(2, text.Length - 4);
             }
 
             return text;

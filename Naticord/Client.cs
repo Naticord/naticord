@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 using static Naticord.Websocket;
+using System.Collections.Generic;
 
 namespace Naticord
 {
@@ -25,6 +26,7 @@ namespace Naticord
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Naticord"
         );
+        private static Dictionary<string, Image> avatarCache = new Dictionary<string, Image>();
         private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
 
         public Client()
@@ -100,11 +102,15 @@ namespace Naticord
 
         private async Task LoadFriendsList()
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             string relationshipList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
+            Console.WriteLine($"LoadFriendsList - API request took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Restart();
             JArray relationships = JArray.Parse(relationshipList);
             Debug.WriteLine(relationshipList);
 
             friendsPanelList.Controls.Clear();
+            List<FSControl> friendcontrols = new List<FSControl>();
             foreach (var relationship in relationships)
             {
                 string type = relationship["type"]?.ToString();
@@ -123,15 +129,14 @@ namespace Naticord
                                      !string.IsNullOrWhiteSpace(username) ? username : "Unknown";
 
                 ChannelStore.Add(channelId);
-
                 string status = UserStatusStore.GetStatus(userId);
+
                 FSControl friendControl = new FSControl
                 {
                     LText = displayName,
                     SText = status,
                     PFPPic = await GetCachedAvatar(userId, avatarHash, false, false)
                 };
-
                 friendControl.Click += async (sender, e) =>
                 {
                     if (sender is FSControl control)
@@ -144,10 +149,15 @@ namespace Naticord
                         await FriendClicked(control, displayName, userId, channelId);
                     }
                 };
-
-                friendsPanelList.Controls.Add(friendControl);
-                GC.Collect();
+                friendcontrols.Add(friendControl);
             }
+            ;
+
+            // Update UI on the main thread
+            friendsPanelList.Controls.Clear();
+            friendsPanelList.Controls.AddRange(friendcontrols.ToArray());
+            Console.WriteLine($"LoadFriendsList - processing took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Stop();
         }
 
         private async Task LoadGroupsList()
@@ -155,7 +165,7 @@ namespace Naticord
             string groupsList = await API.SendAPI(token, "users/@me/channels", HttpMethod.Get, null);
             JArray groups = JArray.Parse(groupsList);
             Debug.WriteLine(groups);
-
+            List<FSControl> controls = new();
             foreach (var group in groups)
             {
                 string type = group["type"]?.ToString();
@@ -195,9 +205,9 @@ namespace Naticord
                     }
                 };
 
-                friendsPanelList.Controls.Add(groupControl);
-                GC.Collect();
+                controls.Add(groupControl);
             }
+            friendsPanelList.Controls.AddRange(controls.ToArray());
         }
 
         private async Task LoadServersList()
@@ -207,6 +217,7 @@ namespace Naticord
             Debug.WriteLine(serversList);
 
             serversPanelList.Controls.Clear();
+            List<FSControl> controls = new();
             foreach (var guild in servers)
             {
                 string serverName = guild["name"]?.ToString();
@@ -228,21 +239,21 @@ namespace Naticord
                     }
                 };
 
-                serversPanelList.Controls.Add(serverControl);
-                GC.Collect();
+                controls.Add(serverControl);
             }
+            serversPanelList.Controls.AddRange(controls.ToArray());
         }
 
         private async Task LoadMessages(string userId, string channelId)
         {
-            GC.Collect();
+            List<Message> processedmessages = new();
             messagesPanel.Controls.Clear();
             string messageStack = await API.SendAPI(token, $"channels/{channelId}/messages?limit=50", HttpMethod.Get, null);
             JArray messages = JArray.Parse(messageStack);
-            messages = new JArray(messages.Reverse());
 
-            foreach (var message in messages)
+            for (int i = messages.Count - 1; i >= 0; i--)
             {
+                JToken message = messages[i];
                 var attachments = message["attachments"] as JArray;
                 string attachmentUrl = attachments?.Count > 0 ? attachments[0]["url"]?.ToString() : null;
 
@@ -256,9 +267,11 @@ namespace Naticord
                                      !string.IsNullOrWhiteSpace(authorUser) ? authorUser : "Unknown";
 
                 Image attachment = attachmentUrl != null ? await DownloadImage(attachmentUrl) : null;
-
-                await AddMessage(displayName, content, authorID, authorPFP, attachment, currentChannelId);
+                //Console.WriteLine(content);
+                processedmessages.Add(await CreateMessage(displayName, content, authorID, authorPFP, attachment));
             }
+            await AddMessagesRange(processedmessages);
+            ScrollToBottom();
         }
 
         private async Task SendMessage()
@@ -331,9 +344,26 @@ namespace Naticord
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
+                //Console.WriteLine($"Failed to download or load image: {ex.Message} URL used: {url}");
                 return null;
             }
+        }
+
+        private void SetMemoryCachedAvatar(string userId, Image avatar)
+        {
+            if (avatarCache.Count >= 10) // cache only last 10 avatars (5 DMs) to save ram
+            {
+                avatarCache.Remove(avatarCache.Keys.First());
+            }
+            if (avatarCache.ContainsKey(userId))
+            {
+                avatarCache[userId].Dispose();
+                avatarCache[userId] = avatar;
+            }
+        }
+        private bool TryGetMemoryCachedAvatar(string userId, out Image avatar) 
+        {
+            return avatarCache.TryGetValue(userId, out avatar);
         }
 
         public async Task<Image> GetCachedAvatar(string userId, string avatarHash, bool isServer, bool isGC)
@@ -341,17 +371,21 @@ namespace Naticord
             if (string.IsNullOrEmpty(avatarHash))
                 return Properties.Resources.discord_profile;
 
+            if (TryGetMemoryCachedAvatar(userId, out Image avatar)) return avatar;
+
             string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
+            Image retrievedavatar;
             if (File.Exists(avatarFile))
             {
-                return Image.FromFile(avatarFile);
+                retrievedavatar = Image.FromFile(avatarFile);
             }
             else
             {
                 string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer, isGC);
-                var downloadedImage = await DownloadImage(avatarUrl, avatarFile);
-                return downloadedImage;
+                retrievedavatar = await DownloadImage(avatarUrl, avatarFile);
             }
+            SetMemoryCachedAvatar(userId, retrievedavatar);
+            return retrievedavatar;
         }
 
         private string GetAvatarUrl(string Id, string Hash, bool isServer, bool isGC)
@@ -372,11 +406,11 @@ namespace Naticord
 
         private async Task FriendClicked(FSControl pickedUser, string username, string userID = null, string channelId = null)
         {
+
             foreach (FSControl friend in friendsPanelList.Controls)
             {
                 friend.ClickedDesignChange(false);
             }
-
             pickedUser.ClickedDesignChange(true);
             currentChannelId = channelId;
             await LoadMessages(userID, channelId);
@@ -407,6 +441,10 @@ namespace Naticord
                 await AddMessageInternal(displayName, content, authorID, authorAvatar, attachment);
             }
         }
+        public async Task AddMessagesRange(List<Message> messages)
+        {
+            AddMessagesRangeInternal(messages);
+        }
 
         public async Task AddMessageInternal(string author, string content, string userId, string avatarHash, Image attachment)
         {
@@ -433,8 +471,37 @@ namespace Naticord
             finally
             {
                 ScrollToBottom();
-                GC.Collect();
             }
+        }
+
+        public async Task<Message> CreateMessage(string author, string content, string userId, string avatarHash, Image attachment)
+        {
+            try
+            {
+                Message messageControl = new Message
+                {
+                    authorText = author,
+                    messageContentText = content,
+                    PFPPicAuthor = await GetCachedAvatar(userId, avatarHash, false, false)
+                };
+
+                if (attachment != null)
+                {
+                    messageControl.attachmentImageDisplay = attachment;
+                }
+
+                return messageControl;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding message: {ex.Message}");
+                return new Message();
+            }
+        }
+
+        public void AddMessagesRangeInternal(List<Message> messages)
+        {
+            messagesPanel.Controls.AddRange(messages.ToArray());
         }
 
         private void ScrollToBottom()
@@ -627,15 +694,24 @@ namespace Naticord
             }));
 
             RenderPlaceholderMessageBox("Loading the UI, give us a few seconds to load content...");
-            
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
             await SetUserInfo();
-
+            stopwatch.Stop();
+            Console.WriteLine($"SetUserInfo took {stopwatch.ElapsedMilliseconds} ms");
             Websocket WSClient = new Websocket(this);
-            await Task.Delay(1500); // Wait for the WS to initialize before actually doing anything
+            while (WSClient.WSClient.ReadyState != WebSocketSharp.WebSocketState.Open) await Task.Delay(100);
 
+            stopwatch.Restart();
             await LoadFriendsList();
+            Console.WriteLine($"LoadFriendsList took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Restart();
             await LoadGroupsList();
+            Console.WriteLine($"LoadGroupsList took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Restart();
             await LoadServersList();
+            Console.WriteLine($"LoadServersList took {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Stop();
 
             RenderPlaceholderMessageBox(string.Empty);
         }
