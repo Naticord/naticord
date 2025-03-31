@@ -1,6 +1,6 @@
-﻿namespace Naticord
+﻿namespace Naticord.Forms
 {
-    partial class CMessageBox
+    partial class TwoFA
     {
         /// <summary>
         /// Required designer variable.
@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CMessageBox));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TwoFA));
             this.messageTitle = new System.Windows.Forms.Label();
             this.messageContent = new System.Windows.Forms.Label();
+            this.authenticationBox = new System.Windows.Forms.TextBox();
             this.okButton = new System.Windows.Forms.Button();
-            this.copyButton = new System.Windows.Forms.Button();
             this.naticordLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.naticordLogo)).BeginInit();
             this.SuspendLayout();
@@ -42,41 +42,42 @@
             this.messageTitle.AutoSize = true;
             this.messageTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.messageTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
-            this.messageTitle.Location = new System.Drawing.Point(67, 15);
+            this.messageTitle.Location = new System.Drawing.Point(67, 11);
             this.messageTitle.Name = "messageTitle";
-            this.messageTitle.Size = new System.Drawing.Size(100, 21);
-            this.messageTitle.TabIndex = 1;
-            this.messageTitle.Text = "messageTitle";
+            this.messageTitle.Size = new System.Drawing.Size(172, 21);
+            this.messageTitle.TabIndex = 2;
+            this.messageTitle.Text = "Authenticate to Discord";
             // 
             // messageContent
             // 
             this.messageContent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageContent.Location = new System.Drawing.Point(68, 36);
+            this.messageContent.Location = new System.Drawing.Point(68, 32);
             this.messageContent.Name = "messageContent";
-            this.messageContent.Size = new System.Drawing.Size(453, 49);
-            this.messageContent.TabIndex = 2;
-            this.messageContent.Text = "messageContent";
+            this.messageContent.Size = new System.Drawing.Size(254, 32);
+            this.messageContent.TabIndex = 3;
+            this.messageContent.Text = "Naticord has detected you have 2FA enabled. Please enter your 2FA code to proceed" +
+    ".";
+            // 
+            // authenticationBox
+            // 
+            this.authenticationBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.authenticationBox.Location = new System.Drawing.Point(71, 68);
+            this.authenticationBox.Name = "authenticationBox";
+            this.authenticationBox.Size = new System.Drawing.Size(251, 23);
+            this.authenticationBox.TabIndex = 4;
+            this.authenticationBox.UseSystemPasswordChar = true;
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(456, 89);
+            this.okButton.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.okButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.okButton.Location = new System.Drawing.Point(226, 104);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(65, 23);
-            this.okButton.TabIndex = 3;
-            this.okButton.Text = "OK";
-            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Size = new System.Drawing.Size(96, 23);
+            this.okButton.TabIndex = 5;
+            this.okButton.Text = "Authenticate";
+            this.okButton.UseVisualStyleBackColor = false;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
-            // 
-            // copyButton
-            // 
-            this.copyButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.copyButton.Location = new System.Drawing.Point(345, 89);
-            this.copyButton.Name = "copyButton";
-            this.copyButton.Size = new System.Drawing.Size(105, 23);
-            this.copyButton.TabIndex = 4;
-            this.copyButton.Text = "Copy message";
-            this.copyButton.UseVisualStyleBackColor = true;
-            this.copyButton.Click += new System.EventHandler(this.copyButton_Click);
             // 
             // naticordLogo
             // 
@@ -85,26 +86,27 @@
             this.naticordLogo.Name = "naticordLogo";
             this.naticordLogo.Size = new System.Drawing.Size(48, 48);
             this.naticordLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.naticordLogo.TabIndex = 0;
+            this.naticordLogo.TabIndex = 1;
             this.naticordLogo.TabStop = false;
             // 
-            // CMessageBox
+            // TwoFA
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(533, 124);
-            this.Controls.Add(this.copyButton);
+            this.ClientSize = new System.Drawing.Size(334, 139);
             this.Controls.Add(this.okButton);
+            this.Controls.Add(this.authenticationBox);
             this.Controls.Add(this.messageContent);
             this.Controls.Add(this.messageTitle);
             this.Controls.Add(this.naticordLogo);
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "CMessageBox";
+            this.Name = "TwoFA";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "CMessageBox";
+            this.Text = "Authentication - Naticord";
             ((System.ComponentModel.ISupportInitialize)(this.naticordLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -116,7 +118,7 @@
         private System.Windows.Forms.PictureBox naticordLogo;
         public System.Windows.Forms.Label messageTitle;
         public System.Windows.Forms.Label messageContent;
+        private System.Windows.Forms.TextBox authenticationBox;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button copyButton;
     }
 }

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Naticord")]
-[assembly: AssemblyCopyright("Licensed under the Apache License 2.0")]
+[assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e3a7011e-b367-49d0-89f7-9fe2d30ccd25")]
+[assembly: Guid("6475d595-19a5-44d8-8ba0-9e70658669a0")]
 
 // Version information for an assembly consists of the following four values:
 //

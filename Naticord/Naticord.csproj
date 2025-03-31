@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E3A7011E-B367-49D0-89F7-9FE2D30CCD25}</ProjectGuid>
+    <ProjectGuid>{6475D595-19A5-44D8-8BA0-9E70658669A0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Naticord</RootNamespace>
     <AssemblyName>Naticord</AssemblyName>
@@ -12,7 +12,9 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,25 +35,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>naticord.ico</ApplicationIcon>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,71 +50,37 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.cs" />
-    <Compile Include="Client.cs">
+    <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Client.Designer.cs">
-      <DependentUpon>Client.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CMessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CMessageBox.Designer.cs">
-      <DependentUpon>CMessageBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FSControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="FSControl.Designer.cs">
-      <DependentUpon>FSControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Login.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Login.Designer.cs">
+    <Compile Include="Forms\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
-    <Compile Include="MDLabel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="MDLabel.Designer.cs">
-      <DependentUpon>MDLabel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Message.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Message.Designer.cs">
-      <DependentUpon>Message.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TwoFA.cs">
+    <Compile Include="Forms\Token.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TwoFA.Designer.cs">
+    <Compile Include="Forms\Token.Designer.cs">
+      <DependentUpon>Token.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TwoFA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TwoFA.Designer.cs">
       <DependentUpon>TwoFA.cs</DependentUpon>
     </Compile>
-    <Compile Include="Websocket.cs" />
-    <EmbeddedResource Include="Client.resx">
-      <DependentUpon>Client.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CMessageBox.resx">
-      <DependentUpon>CMessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FSControl.resx">
-      <DependentUpon>FSControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Login.resx">
+    <Compile Include="Networking\API.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Message.resx">
-      <DependentUpon>Message.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Token.resx">
+      <DependentUpon>Token.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TwoFA.resx">
+      <DependentUpon>TwoFA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -137,10 +92,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="TwoFA.resx">
-      <DependentUpon>TwoFA.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -156,12 +107,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\discord-profile.png" />
-    <None Include="Resources\banner.png" />
-    <None Include="Resources\naticord-logo-64.png" />
+    <Folder Include="Classes\" />
+    <Folder Include="Controls\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="naticord.ico" />
+    <None Include="Resources\nc-banner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\naticord-logo-64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

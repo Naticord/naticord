@@ -2,21 +2,33 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using System.Drawing;
 using Newtonsoft.Json;
 
-namespace Naticord
+namespace Naticord.Forms
 {
     public partial class TwoFA : Form
     {
         private readonly string ticket;
         private readonly Login loginForm;
+        private bool isClassicMode = !Application.RenderWithVisualStyles || !VisualStyleInformation.IsEnabledByUser;
 
         public TwoFA(string ticket, Login loginForm)
         {
             InitializeComponent();
             this.ticket = ticket;
             this.loginForm = loginForm;
-            Debug.WriteLine(ticket);
+            this.AcceptButton = okButton;
+
+            if (isClassicMode)
+            {
+                // Do nothing if Classic is enabled, make it's look ugly.
+            }
+            else
+            {
+                okButton.BackColor = Color.Transparent;
+            }
         }
 
         private void okButton_Click(object sender, EventArgs e)
@@ -60,15 +72,13 @@ namespace Naticord
                 Properties.Settings.Default.token = jsonResponse.token.ToString();
                 Properties.Settings.Default.Save();
 
-                // Continues to the client
-                Client clientForm = new Client();
-                clientForm.Show();
+                // Continue to the client
                 loginForm.Hide();
                 this.Close();
             }
             else
             {
-                new CMessageBox("Authentication failed", "An invalid authentication code has been entered, or Discord has broke the client. If you are sure you entered the right code, please report this to the GitHub.").Show();
+                MessageBox.Show("An invalid authentication code has been entered, or Discord has broke the client. If you are sure you entered the right code, please report this to the GitHub.", "Authentication failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
