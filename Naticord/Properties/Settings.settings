@@ -5,5 +5,8 @@
     <Setting Name="token" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="renderMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mica</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

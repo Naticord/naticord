@@ -1,9 +1,10 @@
 ﻿#nullable enable
+
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using System.Drawing;
 using Newtonsoft.Json;
 
 namespace Naticord.Forms
@@ -20,7 +21,6 @@ namespace Naticord.Forms
             this.ticket = ticket;
             this.loginForm = loginForm;
             this.AcceptButton = okButton;
-
             if (isClassicMode)
             {
                 // Do nothing if Classic is enabled, make it's look ugly.
@@ -72,7 +72,8 @@ namespace Naticord.Forms
                 Properties.Settings.Default.token = jsonResponse.token.ToString();
                 Properties.Settings.Default.Save();
 
-                // Continue to the client
+                Client clientForm = new Client();
+                clientForm.Show();
                 loginForm.Hide();
                 this.Close();
             }

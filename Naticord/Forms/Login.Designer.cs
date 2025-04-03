@@ -59,7 +59,7 @@
             this.headerLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
             this.headerLabel.Location = new System.Drawing.Point(24, 135);
             this.headerLabel.Name = "headerLabel";
-            this.headerLabel.Size = new System.Drawing.Size(162, 21);
+            this.headerLabel.Size = new System.Drawing.Size(161, 21);
             this.headerLabel.TabIndex = 2;
             this.headerLabel.Text = "Welcome to Naticord!";
             // 
@@ -69,7 +69,7 @@
             this.subHeaderLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subHeaderLabel.Location = new System.Drawing.Point(25, 157);
             this.subHeaderLabel.Name = "subHeaderLabel";
-            this.subHeaderLabel.Size = new System.Drawing.Size(321, 15);
+            this.subHeaderLabel.Size = new System.Drawing.Size(320, 15);
             this.subHeaderLabel.TabIndex = 3;
             this.subHeaderLabel.Text = "To get started with Naticord, login to your Discord account.";
             // 
@@ -131,7 +131,7 @@
             this.tokenLogin.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.tokenLogin.Location = new System.Drawing.Point(16, 261);
             this.tokenLogin.Name = "tokenLogin";
-            this.tokenLogin.Size = new System.Drawing.Size(70, 15);
+            this.tokenLogin.Size = new System.Drawing.Size(69, 15);
             this.tokenLogin.TabIndex = 8;
             this.tokenLogin.TabStop = true;
             this.tokenLogin.Text = "Token login";
@@ -159,6 +159,7 @@
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login - Naticord";
+            this.Load += new System.EventHandler(this.Login_Load);
             ((System.ComponentModel.ISupportInitialize)(this.naticordBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

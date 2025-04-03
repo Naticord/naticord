@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net.Http;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Newtonsoft.Json.Linq;
 
 namespace Naticord.Forms
 {
@@ -21,7 +21,6 @@ namespace Naticord.Forms
             APIClient = new API();
             InitializeComponent();
             this.AcceptButton = loginButton;
-
             if (isClassicMode)
             {
                 // Do nothing if Classic is enabled, make it's look ugly.
@@ -77,7 +76,9 @@ namespace Naticord.Forms
                 }
 
                 Debug.WriteLine("[DEBUG] Token value written to setting, continuing to client. (No authentication)");
-                // Continue to the client
+                Client clientForm = new Client();
+                clientForm.Show();
+                this.Hide();
             }
             else if (loginResponse.Contains("\"ticket\"")) // With 2FA
             {
@@ -99,6 +100,25 @@ namespace Naticord.Forms
         {
             Token tokenForm = new Token(this);
             tokenForm.Show();
+        }
+
+        private void CheckIfLoggedIn()
+        {
+            if (Properties.Settings.Default.token != null)
+            {
+                Client clientForm = new Client();
+                clientForm.Show();
+                this.Hide();
+            }
+            else
+            {
+                // Do nothing
+            }
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+            CheckIfLoggedIn();
         }
     }
 }

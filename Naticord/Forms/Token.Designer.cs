@@ -42,11 +42,11 @@ namespace Naticord.Forms
             // 
             this.okButton.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(226, 104);
+            this.okButton.Location = new System.Drawing.Point(257, 104);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(96, 23);
+            this.okButton.Size = new System.Drawing.Size(65, 23);
             this.okButton.TabIndex = 6;
-            this.okButton.Text = "Authenticate";
+            this.okButton.Text = "Login";
             this.okButton.UseVisualStyleBackColor = false;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
@@ -75,7 +75,7 @@ namespace Naticord.Forms
             this.messageTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
             this.messageTitle.Location = new System.Drawing.Point(67, 11);
             this.messageTitle.Name = "messageTitle";
-            this.messageTitle.Size = new System.Drawing.Size(91, 21);
+            this.messageTitle.Size = new System.Drawing.Size(89, 21);
             this.messageTitle.TabIndex = 9;
             this.messageTitle.Text = "Token login";
             // 
