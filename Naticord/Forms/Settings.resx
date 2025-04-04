@@ -117,6 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="aboutNaticordInfo.Text" xml:space="preserve">
+    <value>Naticord is a native Discord client designed to look great on all Windows versions ranging from Windows 7 - 11, looking identical to areas like the Control Panel.
+
+Naticord is not possible without all of your support! I originally started Naticord with the intent of it not even getting to 10 stars, let alone over 150! So thank you all for supporting me on this journey of making this Discord client, and for many more rewrites to come &lt;3</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

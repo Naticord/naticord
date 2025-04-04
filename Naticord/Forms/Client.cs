@@ -83,7 +83,7 @@ namespace Naticord.Forms
                     break;
             }
 
-            Properties.Settings.Default["runDefaults"] = true;
+            Properties.Settings.Default.runDefaults = true;
             Properties.Settings.Default.Save();
         }
 

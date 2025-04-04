@@ -46,7 +46,7 @@
             this.usernameLabel.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.usernameLabel.Size = new System.Drawing.Size(199, 25);
             this.usernameLabel.TabIndex = 3;
-            this.usernameLabel.Text = "patricktbp";
+            this.usernameLabel.Text = "usernameLabel";
             this.usernameLabel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.usernameLabel.TextAlignVertical = System.Windows.Forms.VisualStyles.VerticalAlignment.Center;
             // 
