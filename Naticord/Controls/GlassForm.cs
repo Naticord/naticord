@@ -33,7 +33,7 @@ namespace Naticord.Controls
                     DWMExtTitlebar.DwmMethods.SetWindowAttribute(Handle, DWMExtTitlebar.ParameterTypes.DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, 3);
                     break;
 
-                case "Mica Alt":
+                case "Mica (Alt)":
                     DWMExtTitlebar.DwmMethods.SetWindowAttribute(Handle, DWMExtTitlebar.ParameterTypes.DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE, 4);
                     break;
             }

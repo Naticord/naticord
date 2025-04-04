@@ -7,7 +7,9 @@ namespace Naticord.Forms
 {
     public partial class Settings : Form
     {
+        private string renderMode = Properties.Settings.Default.renderMode;
         private string iconStyle = Properties.Settings.Default.iconStyle;
+        private bool isInitializing = true;
         private Client clientForm;
 
         public Settings(Client clientFormStg)
@@ -19,6 +21,8 @@ namespace Naticord.Forms
 
         private void ReadSettings()
         {
+            isInitializing = true;
+
             osVerBox.SelectedItem = OSVersionHelper.GetWindowsVersion();
             var settings = Properties.Settings.Default;
 
@@ -41,10 +45,14 @@ namespace Naticord.Forms
 
             if (icnStyleBox.Items.Contains(settings.iconStyle))
                 icnStyleBox.SelectedItem = settings.iconStyle;
+
+            isInitializing = false;
         }
 
         private void icnStyleBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isInitializing) return;
+
             var selected = icnStyleBox.SelectedItem?.ToString();
             var settings = Properties.Settings.Default;
 
@@ -74,6 +82,8 @@ namespace Naticord.Forms
 
         private void bdrStyleBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isInitializing) return;
+
             var selected = bdrStyleBox.SelectedItem?.ToString();
             var settings = Properties.Settings.Default;
 
@@ -96,6 +106,65 @@ namespace Naticord.Forms
 
         private void bdStyleBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (isInitializing) return;
+
+            var selected = bdStyleBox.SelectedItem?.ToString();
+            var settings = Properties.Settings.Default;
+
+            if (selected == "Aero")
+            {
+                renderMode = "Aero";
+            }
+            else if (selected == "Acrylic")
+            {
+                renderMode = "Acrylic";
+            }
+            else if (selected == "Mica")
+            {
+                renderMode = "Mica";
+            }
+            else if (selected == "Mica (Alt)")
+            {
+                renderMode = "Mica (Alt)";
+            }
+
+            settings.Save();
+            DialogResult result = MessageBox.Show(
+                "You'll need to restart the app to apply these changes. Would you like to restart now?",
+                "Restart Naticord",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Restart();
+                Environment.Exit(0);
+            }
+        }
+
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            var settings = Properties.Settings.Default;
+
+            settings.runDefaults = false;
+            settings.renderMode = "Mica";
+            settings.iconStyle = "Modern";
+            settings.borderStyle = "Slim";
+            settings.Save();
+
+            DialogResult result = MessageBox.Show(
+                "You'll need to restart the app to apply these changes. Would you like to restart now?",
+                "Restart Naticord",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Restart();
+                Environment.Exit(0);
+            }
         }
     }
 }

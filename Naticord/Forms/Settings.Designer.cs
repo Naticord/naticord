@@ -50,12 +50,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.appearanceQuote = new System.Windows.Forms.Label();
             this.appearanceLabel = new System.Windows.Forms.Label();
+            this.creditsQuote = new System.Windows.Forms.Label();
+            this.creditsLabel = new System.Windows.Forms.Label();
             this.appearanceIcon = new System.Windows.Forms.PictureBox();
             this.catBox = new System.Windows.Forms.PictureBox();
             this.appIcon = new System.Windows.Forms.PictureBox();
-            this.creditsQuote = new System.Windows.Forms.Label();
-            this.creditsLabel = new System.Windows.Forms.Label();
             this.creditsIcon = new System.Windows.Forms.PictureBox();
+            this.clearButton = new System.Windows.Forms.Button();
             this.settingsTB.SuspendLayout();
             this.appearanceTab.SuspendLayout();
             this.aboutTab.SuspendLayout();
@@ -80,6 +81,7 @@
             // 
             // appearanceTab
             // 
+            this.appearanceTab.Controls.Add(this.clearButton);
             this.appearanceTab.Controls.Add(this.appearanceQuote);
             this.appearanceTab.Controls.Add(this.appearanceLabel);
             this.appearanceTab.Controls.Add(this.appearanceIcon);
@@ -312,6 +314,27 @@
             this.appearanceLabel.TabIndex = 9;
             this.appearanceLabel.Text = "Appearance";
             // 
+            // creditsQuote
+            // 
+            this.creditsQuote.AutoSize = true;
+            this.creditsQuote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.creditsQuote.Location = new System.Drawing.Point(71, 39);
+            this.creditsQuote.Name = "creditsQuote";
+            this.creditsQuote.Size = new System.Drawing.Size(209, 15);
+            this.creditsQuote.TabIndex = 14;
+            this.creditsQuote.Text = "People / Projects that helped Naticord!";
+            // 
+            // creditsLabel
+            // 
+            this.creditsLabel.AutoSize = true;
+            this.creditsLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.creditsLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
+            this.creditsLabel.Location = new System.Drawing.Point(70, 16);
+            this.creditsLabel.Name = "creditsLabel";
+            this.creditsLabel.Size = new System.Drawing.Size(59, 21);
+            this.creditsLabel.TabIndex = 13;
+            this.creditsLabel.Text = "Credits";
+            // 
             // appearanceIcon
             // 
             this.appearanceIcon.Image = global::Naticord.Properties.Resources.appearance;
@@ -343,27 +366,6 @@
             this.appIcon.TabIndex = 0;
             this.appIcon.TabStop = false;
             // 
-            // creditsQuote
-            // 
-            this.creditsQuote.AutoSize = true;
-            this.creditsQuote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.creditsQuote.Location = new System.Drawing.Point(71, 39);
-            this.creditsQuote.Name = "creditsQuote";
-            this.creditsQuote.Size = new System.Drawing.Size(209, 15);
-            this.creditsQuote.TabIndex = 14;
-            this.creditsQuote.Text = "People / Projects that helped Naticord!";
-            // 
-            // creditsLabel
-            // 
-            this.creditsLabel.AutoSize = true;
-            this.creditsLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.creditsLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
-            this.creditsLabel.Location = new System.Drawing.Point(70, 16);
-            this.creditsLabel.Name = "creditsLabel";
-            this.creditsLabel.Size = new System.Drawing.Size(59, 21);
-            this.creditsLabel.TabIndex = 13;
-            this.creditsLabel.Text = "Credits";
-            // 
             // creditsIcon
             // 
             this.creditsIcon.Image = global::Naticord.Properties.Resources.credits;
@@ -373,6 +375,16 @@
             this.creditsIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.creditsIcon.TabIndex = 12;
             this.creditsIcon.TabStop = false;
+            // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(245, 201);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(94, 23);
+            this.clearButton.TabIndex = 12;
+            this.clearButton.Text = "Reset settings";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
             // Settings
             // 
@@ -429,5 +441,6 @@
         private System.Windows.Forms.Label creditsQuote;
         private System.Windows.Forms.Label creditsLabel;
         private System.Windows.Forms.PictureBox creditsIcon;
+        private System.Windows.Forms.Button clearButton;
     }
 }

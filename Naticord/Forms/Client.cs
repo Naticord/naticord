@@ -10,6 +10,7 @@ namespace Naticord.Forms
     {
         private string iconStyle = Properties.Settings.Default["iconStyle"]?.ToString() ?? "Unknown";
         private string borderStyle = Properties.Settings.Default["borderStyle"]?.ToString() ?? "Unknown";
+        private string osVersion = OSVersionHelper.GetWindowsVersion();
 
         public Client()
         {
