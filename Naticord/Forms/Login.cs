@@ -106,7 +106,7 @@ namespace Naticord.Forms
 
         private void CheckIfLoggedIn()
         {
-            if (Properties.Settings.Default.token != null)
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.token))
             {
                 Client clientForm = new Client();
                 clientForm.Show();

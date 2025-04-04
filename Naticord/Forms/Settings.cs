@@ -17,6 +17,10 @@ namespace Naticord.Forms
             InitializeComponent();
             ReadSettings();
             SetOSVerEnabledValue();
+
+            appearanceIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
+            appIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
+            creditsIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
         }
 
         private void ReadSettings()
@@ -234,6 +238,19 @@ namespace Naticord.Forms
             {
                 Application.Restart();
                 Environment.Exit(0);
+            }
+        }
+
+        public static void ApplyAntiAliasing(Control control, PaintEventArgs e)
+        {
+            if (control is PictureBox pictureBox && pictureBox.Image != null)
+            {
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                e.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+
+                e.Graphics.DrawImage(pictureBox.Image, new Rectangle(0, 0, pictureBox.Width, pictureBox.Height));
             }
         }
     }
