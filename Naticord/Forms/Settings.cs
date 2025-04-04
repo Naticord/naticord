@@ -7,6 +7,7 @@ namespace Naticord.Forms
 {
     public partial class Settings : Form
     {
+        private string iconStyle = Properties.Settings.Default.iconStyle;
         private Client clientForm;
 
         public Settings(Client clientFormStg)
@@ -20,6 +21,17 @@ namespace Naticord.Forms
         {
             osVerBox.SelectedItem = OSVersionHelper.GetWindowsVersion();
             var settings = Properties.Settings.Default;
+
+            if (iconStyle == "Legacy")
+            {
+                appearanceIcon.Image = Properties.Resources.appearance;
+                creditsIcon.Image = Properties.Resources.credits;
+            }
+            else if (iconStyle == "Modern")
+            {
+                appearanceIcon.Image = Properties.Resources.appearance_modern;
+                creditsIcon.Image = Properties.Resources.credits_modern;
+            }
 
             if (bdStyleBox.Items.Contains(settings.renderMode))
                 bdStyleBox.SelectedItem = settings.renderMode;
@@ -41,6 +53,8 @@ namespace Naticord.Forms
                 clientForm.settingsButton.ButtonIcon = Properties.Resources.settings;
                 clientForm.accountButton.ButtonIcon = Properties.Resources.account;
                 clientForm.ghButton.ButtonIcon = Properties.Resources.github;
+                appearanceIcon.Image = Properties.Resources.appearance;
+                creditsIcon.Image = Properties.Resources.credits;
 
                 settings.iconStyle = "Legacy";
             }
@@ -49,6 +63,8 @@ namespace Naticord.Forms
                 clientForm.settingsButton.ButtonIcon = Properties.Resources.settings_modern;
                 clientForm.accountButton.ButtonIcon = Properties.Resources.account_modern;
                 clientForm.ghButton.ButtonIcon = Properties.Resources.github_modern;
+                appearanceIcon.Image = Properties.Resources.appearance_modern;
+                creditsIcon.Image = Properties.Resources.credits_modern;
 
                 settings.iconStyle = "Modern";
             }

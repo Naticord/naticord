@@ -2,6 +2,7 @@
 using Naticord.Controls;
 using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Naticord.Forms
 {
@@ -14,6 +15,9 @@ namespace Naticord.Forms
         {
             Debug.WriteLine("[DEBUG] Client started");
             InitializeComponent();
+
+            // Set up the app
+            this.FormClosing += (sender, e) => { Application.Exit(); };
 
             // Load the UI
             DecideDefaults();

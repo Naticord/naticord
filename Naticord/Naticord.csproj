@@ -170,6 +170,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="naticord.ico" />
+    <None Include="Resources\credits-modern.png" />
+    <None Include="Resources\appearance-modern.png" />
+    <None Include="Resources\credits.png" />
+    <None Include="Resources\appearance.png" />
     <None Include="Resources\cat.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
