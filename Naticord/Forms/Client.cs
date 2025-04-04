@@ -17,13 +17,12 @@ namespace Naticord.Forms
             InitializeComponent();
 
             // Set up the app
+            DecideDefaults();
+            SetUpTBB();
             this.FormClosing += (sender, e) => { Application.Exit(); };
 
             // Load the UI
-            DecideDefaults();
-            ReadDefaults();
-            SetUpTBB();
-
+            this.Shown += (s, e) => ReadDefaults();
             CenterToScreen();
         }
 

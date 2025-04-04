@@ -50,10 +50,10 @@
             this.buttonLabel.GlowSize = 0;
             this.buttonLabel.Location = new System.Drawing.Point(28, 4);
             this.buttonLabel.Name = "buttonLabel";
-            this.buttonLabel.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.buttonLabel.Size = new System.Drawing.Size(75, 23);
+            this.buttonLabel.Size = new System.Drawing.Size(57, 23);
             this.buttonLabel.TabIndex = 1;
             this.buttonLabel.Text = "Button";
+            this.buttonLabel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.buttonLabel.TextAlignVertical = System.Windows.Forms.VisualStyles.VerticalAlignment.Center;
             // 
             // ExtButton
@@ -62,7 +62,7 @@
             this.Controls.Add(this.buttonLabel);
             this.Controls.Add(this.buttonIcon);
             this.Name = "ExtButton";
-            this.Size = new System.Drawing.Size(109, 30);
+            this.Size = new System.Drawing.Size(88, 30);
             ((System.ComponentModel.ISupportInitialize)(this.buttonIcon)).EndInit();
             this.ResumeLayout(false);
 
