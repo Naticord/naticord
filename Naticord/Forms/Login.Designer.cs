@@ -159,7 +159,6 @@
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login - Naticord";
-            this.Load += new System.EventHandler(this.Login_Load);
             ((System.ComponentModel.ISupportInitialize)(this.naticordBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

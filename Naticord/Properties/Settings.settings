@@ -8,5 +8,14 @@
     <Setting Name="renderMode" Type="System.String" Scope="User">
       <Value Profile="(Default)">Mica</Value>
     </Setting>
+    <Setting Name="iconStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Legacy</Value>
+    </Setting>
+    <Setting Name="borderStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Thick</Value>
+    </Setting>
+    <Setting Name="runDefaults" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,12 +10,18 @@ namespace Naticord.Controls
         private string _buttonLabel;
         private Image _buttonIcon;
 
+        public event EventHandler ButtonClick;
+
         public ExtButton()
         {
             InitializeComponent();
             _buttonLabel = "Button";
             _buttonIcon = null;
             buttonLabel.Text = _buttonLabel;
+
+            this.Click += AllParts_Click;
+            foreach (Control ctrl in Controls)
+                ctrl.Click += AllParts_Click;
 
             buttonIcon.Paint += (s, e) =>
             {
@@ -28,6 +35,11 @@ namespace Naticord.Controls
                     e.Graphics.DrawImage(buttonIcon.Image, new Rectangle(0, 0, buttonIcon.Width, buttonIcon.Height));
                 }
             };
+        }
+
+        private void AllParts_Click(object sender, EventArgs e)
+        {
+            ButtonClick?.Invoke(this, e);
         }
 
         [Browsable(true)]
@@ -55,9 +67,20 @@ namespace Naticord.Controls
                 if (_buttonIcon != value)
                 {
                     _buttonIcon = value;
-                    buttonIcon.Image = _buttonIcon;
+                    buttonIcon.Image = PremultiplyAlpha(_buttonIcon);
                 }
             }
+        }
+
+        private Bitmap PremultiplyAlpha(Image image)
+        {
+            Bitmap bmp = new Bitmap(image.Width, image.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                g.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height));
+            }
+            return bmp;
         }
     }
 }

@@ -29,6 +29,8 @@ namespace Naticord.Forms
             {
                 loginButton.BackColor = Color.Transparent;
             }
+
+            this.Shown += (s, e) => CheckIfLoggedIn();
         }
 
         private void naticordBanner_Click(object sender, EventArgs e)
@@ -114,11 +116,6 @@ namespace Naticord.Forms
             {
                 // Do nothing
             }
-        }
-
-        private void Login_Load(object sender, EventArgs e)
-        {
-            CheckIfLoggedIn();
         }
     }
 }

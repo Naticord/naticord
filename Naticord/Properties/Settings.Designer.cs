@@ -46,5 +46,41 @@ namespace Naticord.Properties {
                 this["renderMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Legacy")]
+        public string iconStyle {
+            get {
+                return ((string)(this["iconStyle"]));
+            }
+            set {
+                this["iconStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Thick")]
+        public string borderStyle {
+            get {
+                return ((string)(this["borderStyle"]));
+            }
+            set {
+                this["borderStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool runDefaults {
+            get {
+                return ((bool)(this["runDefaults"]));
+            }
+            set {
+                this["runDefaults"] = value;
+            }
+        }
     }
 }

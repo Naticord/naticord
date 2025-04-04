@@ -1,44 +1,85 @@
 ﻿using Naticord.Classes;
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Naticord.Forms
 {
     public partial class Settings : Form
     {
-        public Settings()
+        private Client clientForm;
+
+        public Settings(Client clientFormStg)
         {
+            clientForm = clientFormStg;
             InitializeComponent();
-            SetDefaults();
+            ReadSettings();
         }
 
-        private void SetDefaults()
+        private void ReadSettings()
         {
-            string osVersion = OSVersionHelper.GetWindowsVersion();
-            switch (osVersion)
+            osVerBox.SelectedItem = OSVersionHelper.GetWindowsVersion();
+            var settings = Properties.Settings.Default;
+
+            if (bdStyleBox.Items.Contains(settings.renderMode))
+                bdStyleBox.SelectedItem = settings.renderMode;
+
+            if (bdrStyleBox.Items.Contains(settings.borderStyle))
+                bdrStyleBox.SelectedItem = settings.borderStyle;
+
+            if (icnStyleBox.Items.Contains(settings.iconStyle))
+                icnStyleBox.SelectedItem = settings.iconStyle;
+        }
+
+        private void icnStyleBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selected = icnStyleBox.SelectedItem?.ToString();
+            var settings = Properties.Settings.Default;
+
+            if (selected == "Legacy")
             {
-                case "Windows 11":
-                    osVerBox.SelectedItem = "Windows 11";
-                    icnStyleBox.SelectedItem = "Modern";
-                    bdrStyleBox.SelectedItem = "Slim";
-                    bdStyleBox.SelectedItem = "Mica";
-                    break;
+                clientForm.settingsButton.ButtonIcon = Properties.Resources.settings;
+                clientForm.accountButton.ButtonIcon = Properties.Resources.account;
+                clientForm.ghButton.ButtonIcon = Properties.Resources.github;
 
-                case "Windows 10":
-                    osVerBox.SelectedItem = "Windows 10";
-                    icnStyleBox.SelectedItem = "Modern";
-                    bdrStyleBox.SelectedItem = "Slim";
-                    bdStyleBox.SelectedItem = "Acrylic";
-                    break;
-
-                case "Windows 8.1":
-                case "Windows 8":
-                case "Windows 7":
-                    osVerBox.SelectedItem = "Windows 7 - 8.1";
-                    icnStyleBox.SelectedItem = "Legacy";
-                    bdrStyleBox.SelectedItem = "Thick";
-                    bdStyleBox.SelectedItem = "Aero";
-                    break;
+                settings.iconStyle = "Legacy";
             }
+            else
+            {
+                clientForm.settingsButton.ButtonIcon = Properties.Resources.settings_modern;
+                clientForm.accountButton.ButtonIcon = Properties.Resources.account_modern;
+                clientForm.ghButton.ButtonIcon = Properties.Resources.github_modern;
+
+                settings.iconStyle = "Modern";
+            }
+
+            settings.Save();
+        }
+
+        private void bdrStyleBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selected = bdrStyleBox.SelectedItem?.ToString();
+            var settings = Properties.Settings.Default;
+
+            if (selected == "Thick")
+            {
+                clientForm.ChangeElementPos();
+                settings.borderStyle = "Thick";
+            }
+            else
+            {
+                clientForm.usernameLabel.Location = new Point(777, 5);
+                clientForm.profilePictureUser.Location = new Point(981, 4);
+                clientForm.buttonPanel.Location = new Point(8, 2);
+
+                settings.borderStyle = "Slim";
+            }
+
+            settings.Save();
+        }
+
+        private void bdStyleBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }

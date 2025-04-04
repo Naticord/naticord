@@ -32,13 +32,9 @@ namespace Naticord.Classes
                     switch (osVersionInfo.dwMinorVersion)
                     {
                         case 1:
-                            return "Windows 7";
-
                         case 2:
-                            return "Windows 8";
-
                         case 3:
-                            return "Windows 8.1";
+                            return "Windows 7 - 8.1";
                     }
                 }
                 else if (osVersionInfo.dwMajorVersion == 10)

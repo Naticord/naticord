@@ -13,7 +13,7 @@ namespace Naticord
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Forms.Client());
+            Application.Run(new Forms.Login());
         }
     }
 }

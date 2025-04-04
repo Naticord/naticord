@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.appearanceTab = new System.Windows.Forms.TabPage();
             this.bdStyleBox = new System.Windows.Forms.ComboBox();
@@ -83,6 +84,7 @@
             this.bdStyleBox.Name = "bdStyleBox";
             this.bdStyleBox.Size = new System.Drawing.Size(248, 23);
             this.bdStyleBox.TabIndex = 7;
+            this.bdStyleBox.SelectedIndexChanged += new System.EventHandler(this.bdStyleBox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -104,6 +106,7 @@
             this.bdrStyleBox.Name = "bdrStyleBox";
             this.bdrStyleBox.Size = new System.Drawing.Size(248, 23);
             this.bdrStyleBox.TabIndex = 5;
+            this.bdrStyleBox.SelectedIndexChanged += new System.EventHandler(this.bdrStyleBox_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -125,6 +128,7 @@
             this.icnStyleBox.Name = "icnStyleBox";
             this.icnStyleBox.Size = new System.Drawing.Size(248, 23);
             this.icnStyleBox.TabIndex = 3;
+            this.icnStyleBox.SelectedIndexChanged += new System.EventHandler(this.icnStyleBox_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -164,9 +168,10 @@
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(384, 426);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Settings";
+            this.Text = "Settings - Naticord";
             this.tabControl1.ResumeLayout(false);
             this.appearanceTab.ResumeLayout(false);
             this.appearanceTab.PerformLayout();

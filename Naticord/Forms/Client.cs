@@ -7,48 +7,101 @@ namespace Naticord.Forms
 {
     public partial class Client : GlassForm
     {
+        private string iconStyle = Properties.Settings.Default["iconStyle"]?.ToString() ?? "Unknown";
+        private string borderStyle = Properties.Settings.Default["borderStyle"]?.ToString() ?? "Unknown";
+
         public Client()
         {
             Debug.WriteLine("[DEBUG] Client started");
             InitializeComponent();
-            ChangeElementsBasedOnVersion();
+
+            // Load the UI
+            DecideDefaults();
+            ReadDefaults();
+            SetUpTBB();
+
             CenterToScreen();
         }
 
-        private void ChangeElementsBasedOnVersion()
+        private void ReadDefaults()
         {
-            string osVersion = OSVersionHelper.GetWindowsVersion();
+            if (iconStyle == "Legacy")
+            {
+                // Do nothing (Already set)
+            }
+            else if (iconStyle == "Modern")
+            {
+                settingsButton.ButtonIcon = Properties.Resources.settings_modern;
+                accountButton.ButtonIcon = Properties.Resources.account_modern;
+                ghButton.ButtonIcon = Properties.Resources.github_modern;
+            }
+            if (borderStyle == "Slim")
+            {
+                // Do nothing (Already set)
+            }
+            else if (borderStyle == "Thick")
+            {
+                ChangeElementPos();
+            }
+        }
+
+        public void ChangeElementPos()
+        {
             Point defaultUsernameLocation = new Point(785, 5);
             Point defaultProfilePictureLocation = new Point(989, 4);
             Point defaultButtonPanelLocation = new Point(0, 2);
 
-            switch (osVersion)
-            {
-                case "Windows 10":
-                case "Windows 11":
-                    break;
-
-                case "Windows 7":
-                case "Windows 8":
-                case "Windows 8.1":
-                case "Unknown":
-                    usernameLabel.Location = defaultUsernameLocation;
-                    profilePictureUser.Location = defaultProfilePictureLocation;
-                    buttonPanel.Location = defaultButtonPanelLocation;
-                    break;
-
-                default:
-                    usernameLabel.Location = defaultUsernameLocation;
-                    profilePictureUser.Location = defaultProfilePictureLocation;
-                    buttonPanel.Location = defaultButtonPanelLocation;
-                    break;
-            }
+            usernameLabel.Location = defaultUsernameLocation;
+            profilePictureUser.Location = defaultProfilePictureLocation;
+            buttonPanel.Location = defaultButtonPanelLocation;
         }
 
-        private void Client_Load(object sender, System.EventArgs e)
+        private void DecideDefaults()
         {
-            Settings settingsForm = new Settings();
-            settingsForm.Show();
+            if (Properties.Settings.Default.runDefaults)
+                return;
+
+            string osVersion = OSVersionHelper.GetWindowsVersion();
+            switch (osVersion)
+            {
+                case "Windows 11":
+                    Properties.Settings.Default.renderMode = "Mica";
+                    Properties.Settings.Default.iconStyle = "Modern";
+                    Properties.Settings.Default.borderStyle = "Slim";
+                    break;
+
+                case "Windows 10":
+                    Properties.Settings.Default.renderMode = "Acrylic";
+                    Properties.Settings.Default.iconStyle = "Modern";
+                    Properties.Settings.Default.borderStyle = "Slim";
+                    break;
+
+                case "Windows 7 - 8.1":
+                    Properties.Settings.Default.renderMode = "Aero";
+                    Properties.Settings.Default.iconStyle = "Legacy";
+                    Properties.Settings.Default.borderStyle = "Thick";
+                    break;
+            }
+
+            Properties.Settings.Default["runDefaults"] = true;
+            Properties.Settings.Default.Save();
+        }
+
+        private void SetUpTBB()
+        {
+            settingsButton.ButtonClick += (s, e) =>
+            {
+                Settings settingsForm = new Settings(this);
+                settingsForm.Show();
+            };
+            accountButton.ButtonClick += (s, e) =>
+            {
+                // TODO
+            };
+            ghButton.ButtonClick += (s, e) =>
+            {
+                // TODO
+            };
         }
     }
 }
