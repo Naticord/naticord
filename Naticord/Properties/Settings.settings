@@ -6,13 +6,13 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="renderMode" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Mica</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="iconStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Modern</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="borderStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Slim</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="runDefaults" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

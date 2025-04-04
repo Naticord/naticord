@@ -37,7 +37,7 @@ namespace Naticord.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mica")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string renderMode {
             get {
                 return ((string)(this["renderMode"]));
@@ -49,7 +49,7 @@ namespace Naticord.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Modern")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string iconStyle {
             get {
                 return ((string)(this["iconStyle"]));
@@ -61,7 +61,7 @@ namespace Naticord.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Slim")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string borderStyle {
             get {
                 return ((string)(this["borderStyle"]));

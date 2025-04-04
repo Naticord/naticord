@@ -155,6 +155,7 @@ namespace Naticord.Forms
             var settings = Properties.Settings.Default;
 
             settings.runDefaults = false;
+            settings.spoofedOS = null;
             settings.renderMode = "Mica";
             settings.iconStyle = "Modern";
             settings.borderStyle = "Slim";
