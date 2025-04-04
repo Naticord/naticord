@@ -7,7 +7,6 @@ namespace Naticord.Forms
 {
     public partial class Settings : Form
     {
-        private string renderMode = Properties.Settings.Default.renderMode;
         private string iconStyle = Properties.Settings.Default.iconStyle;
         private bool isInitializing = true;
         private Client clientForm;
@@ -17,6 +16,7 @@ namespace Naticord.Forms
             clientForm = clientFormStg;
             InitializeComponent();
             ReadSettings();
+            SetOSVerEnabledValue();
         }
 
         private void ReadSettings()
@@ -36,6 +36,9 @@ namespace Naticord.Forms
                 appearanceIcon.Image = Properties.Resources.appearance_modern;
                 creditsIcon.Image = Properties.Resources.credits_modern;
             }
+
+            if (osVerBox.Items.Contains(settings.spoofedOS))
+                osVerBox.SelectedItem = settings.spoofedOS;
 
             if (bdStyleBox.Items.Contains(settings.renderMode))
                 bdStyleBox.SelectedItem = settings.renderMode;
@@ -113,19 +116,19 @@ namespace Naticord.Forms
 
             if (selected == "Aero")
             {
-                renderMode = "Aero";
+                settings.renderMode = "Aero";
             }
             else if (selected == "Acrylic")
             {
-                renderMode = "Acrylic";
+                settings.renderMode = "Acrylic";
             }
             else if (selected == "Mica")
             {
-                renderMode = "Mica";
+                settings.renderMode = "Mica";
             }
             else if (selected == "Mica (Alt)")
             {
-                renderMode = "Mica (Alt)";
+                settings.renderMode = "Mica (Alt)";
             }
 
             settings.Save();
@@ -154,6 +157,73 @@ namespace Naticord.Forms
             settings.Save();
 
             DialogResult result = MessageBox.Show(
+                "You'll need to restart the app to apply these changes. Would you like to restart now?",
+                "Restart Naticord",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information
+            );
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Restart();
+                Environment.Exit(0);
+            }
+        }
+
+        private void SetOSVerEnabledValue()
+        {
+            var selected = osVerBox.SelectedItem?.ToString().Trim();
+            bool enableControls = selected == "Custom";
+
+            icnStyleBox.Enabled = enableControls;
+            bdrStyleBox.Enabled = enableControls;
+            bdStyleBox.Enabled = enableControls;
+            icnStyleLabel.Enabled = enableControls;
+            bdrStyleLabel.Enabled = enableControls;
+            bdStyleLabel.Enabled = enableControls;
+        }
+
+        private void osVerBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (isInitializing) return;
+
+            var selected = osVerBox.SelectedItem?.ToString().Trim();
+            var settings = Properties.Settings.Default;
+
+            switch (selected)
+            {
+                case "Windows 11":
+                    settings.spoofedOS = "Windows 11";
+                    settings.renderMode = "Mica";
+                    settings.iconStyle = "Modern";
+                    settings.borderStyle = "Slim";
+                    break;
+
+                case "Windows 10":
+                    settings.spoofedOS = "Windows 10";
+                    settings.renderMode = "Acrylic";
+                    settings.iconStyle = "Modern";
+                    settings.borderStyle = "Slim";
+                    break;
+
+                case "Windows 7 - 8.1":
+                    settings.spoofedOS = "Windows 7 - 8.1";
+                    settings.renderMode = "Aero";
+                    settings.iconStyle = "Legacy";
+                    settings.borderStyle = "Thick";
+                    break;
+
+                case "Custom":
+                    settings.spoofedOS = "Custom";
+                    break;
+
+                default:
+                    break;
+            }
+
+            settings.Save();
+
+            var result = MessageBox.Show(
                 "You'll need to restart the app to apply these changes. Would you like to restart now?",
                 "Restart Naticord",
                 MessageBoxButtons.YesNo,

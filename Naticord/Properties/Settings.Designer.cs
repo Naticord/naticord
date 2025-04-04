@@ -82,5 +82,17 @@ namespace Naticord.Properties {
                 this["runDefaults"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string spoofedOS {
+            get {
+                return ((string)(this["spoofedOS"]));
+            }
+            set {
+                this["spoofedOS"] = value;
+            }
+        }
     }
 }

@@ -31,6 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.settingsTB = new System.Windows.Forms.TabControl();
             this.appearanceTab = new System.Windows.Forms.TabPage();
+            this.clearButton = new System.Windows.Forms.Button();
+            this.appearanceQuote = new System.Windows.Forms.Label();
+            this.appearanceLabel = new System.Windows.Forms.Label();
+            this.appearanceIcon = new System.Windows.Forms.PictureBox();
             this.bdStyleBox = new System.Windows.Forms.ComboBox();
             this.bdStyleLabel = new System.Windows.Forms.Label();
             this.bdrStyleBox = new System.Windows.Forms.ComboBox();
@@ -40,30 +44,26 @@
             this.osVerBox = new System.Windows.Forms.ComboBox();
             this.osVerLabel = new System.Windows.Forms.Label();
             this.aboutTab = new System.Windows.Forms.TabPage();
+            this.catBox = new System.Windows.Forms.PictureBox();
             this.ghLink = new System.Windows.Forms.LinkLabel();
             this.aboutNaticordInfo = new System.Windows.Forms.Label();
             this.versionLabel = new System.Windows.Forms.Label();
             this.quoteLabel = new System.Windows.Forms.Label();
             this.authorLabel = new System.Windows.Forms.Label();
             this.appLabel = new System.Windows.Forms.Label();
+            this.appIcon = new System.Windows.Forms.PictureBox();
             this.creditsTab = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.appearanceQuote = new System.Windows.Forms.Label();
-            this.appearanceLabel = new System.Windows.Forms.Label();
             this.creditsQuote = new System.Windows.Forms.Label();
             this.creditsLabel = new System.Windows.Forms.Label();
-            this.appearanceIcon = new System.Windows.Forms.PictureBox();
-            this.catBox = new System.Windows.Forms.PictureBox();
-            this.appIcon = new System.Windows.Forms.PictureBox();
             this.creditsIcon = new System.Windows.Forms.PictureBox();
-            this.clearButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.settingsTB.SuspendLayout();
             this.appearanceTab.SuspendLayout();
-            this.aboutTab.SuspendLayout();
-            this.creditsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).BeginInit();
+            this.aboutTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.catBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appIcon)).BeginInit();
+            this.creditsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creditsIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,6 +100,47 @@
             this.appearanceTab.TabIndex = 0;
             this.appearanceTab.Text = "Appearance";
             this.appearanceTab.UseVisualStyleBackColor = true;
+            // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(245, 201);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(94, 23);
+            this.clearButton.TabIndex = 12;
+            this.clearButton.Text = "Reset settings";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
+            // appearanceQuote
+            // 
+            this.appearanceQuote.AutoSize = true;
+            this.appearanceQuote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.appearanceQuote.Location = new System.Drawing.Point(71, 39);
+            this.appearanceQuote.Name = "appearanceQuote";
+            this.appearanceQuote.Size = new System.Drawing.Size(196, 15);
+            this.appearanceQuote.TabIndex = 11;
+            this.appearanceQuote.Text = "Change the appearance of Naticord";
+            // 
+            // appearanceLabel
+            // 
+            this.appearanceLabel.AutoSize = true;
+            this.appearanceLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.appearanceLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
+            this.appearanceLabel.Location = new System.Drawing.Point(70, 16);
+            this.appearanceLabel.Name = "appearanceLabel";
+            this.appearanceLabel.Size = new System.Drawing.Size(92, 21);
+            this.appearanceLabel.TabIndex = 9;
+            this.appearanceLabel.Text = "Appearance";
+            // 
+            // appearanceIcon
+            // 
+            this.appearanceIcon.Image = global::Naticord.Properties.Resources.appearance;
+            this.appearanceIcon.Location = new System.Drawing.Point(15, 11);
+            this.appearanceIcon.Name = "appearanceIcon";
+            this.appearanceIcon.Size = new System.Drawing.Size(48, 48);
+            this.appearanceIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.appearanceIcon.TabIndex = 8;
+            this.appearanceIcon.TabStop = false;
             // 
             // bdStyleBox
             // 
@@ -176,20 +217,22 @@
             this.osVerBox.Items.AddRange(new object[] {
             "Windows 11",
             "Windows 10",
-            "Windows 7 - 8.1"});
+            "Windows 7 - 8.1",
+            "Custom"});
             this.osVerBox.Location = new System.Drawing.Point(91, 70);
             this.osVerBox.Name = "osVerBox";
             this.osVerBox.Size = new System.Drawing.Size(248, 23);
             this.osVerBox.TabIndex = 1;
+            this.osVerBox.SelectedIndexChanged += new System.EventHandler(this.osVerBox_SelectedIndexChanged);
             // 
             // osVerLabel
             // 
             this.osVerLabel.AutoSize = true;
-            this.osVerLabel.Location = new System.Drawing.Point(22, 73);
+            this.osVerLabel.Location = new System.Drawing.Point(35, 73);
             this.osVerLabel.Name = "osVerLabel";
-            this.osVerLabel.Size = new System.Drawing.Size(63, 15);
+            this.osVerLabel.Size = new System.Drawing.Size(50, 15);
             this.osVerLabel.TabIndex = 0;
-            this.osVerLabel.Text = "OS Version";
+            this.osVerLabel.Text = "OS Style";
             // 
             // aboutTab
             // 
@@ -208,6 +251,17 @@
             this.aboutTab.TabIndex = 1;
             this.aboutTab.Text = "About";
             this.aboutTab.UseVisualStyleBackColor = true;
+            // 
+            // catBox
+            // 
+            this.catBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.catBox.Image = global::Naticord.Properties.Resources.cat;
+            this.catBox.Location = new System.Drawing.Point(18, 213);
+            this.catBox.Name = "catBox";
+            this.catBox.Size = new System.Drawing.Size(319, 119);
+            this.catBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.catBox.TabIndex = 7;
+            this.catBox.TabStop = false;
             // 
             // ghLink
             // 
@@ -270,6 +324,16 @@
             this.appLabel.TabIndex = 1;
             this.appLabel.Text = "Naticord";
             // 
+            // appIcon
+            // 
+            this.appIcon.Image = global::Naticord.Properties.Resources.naticord_logo_64;
+            this.appIcon.Location = new System.Drawing.Point(15, 11);
+            this.appIcon.Name = "appIcon";
+            this.appIcon.Size = new System.Drawing.Size(48, 48);
+            this.appIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.appIcon.TabIndex = 0;
+            this.appIcon.TabStop = false;
+            // 
             // creditsTab
             // 
             this.creditsTab.Controls.Add(this.creditsQuote);
@@ -283,36 +347,6 @@
             this.creditsTab.TabIndex = 2;
             this.creditsTab.Text = "Credits";
             this.creditsTab.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 66);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(304, 195);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
-            // 
-            // appearanceQuote
-            // 
-            this.appearanceQuote.AutoSize = true;
-            this.appearanceQuote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appearanceQuote.Location = new System.Drawing.Point(71, 39);
-            this.appearanceQuote.Name = "appearanceQuote";
-            this.appearanceQuote.Size = new System.Drawing.Size(196, 15);
-            this.appearanceQuote.TabIndex = 11;
-            this.appearanceQuote.Text = "Change the appearance of Naticord";
-            // 
-            // appearanceLabel
-            // 
-            this.appearanceLabel.AutoSize = true;
-            this.appearanceLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appearanceLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
-            this.appearanceLabel.Location = new System.Drawing.Point(70, 16);
-            this.appearanceLabel.Name = "appearanceLabel";
-            this.appearanceLabel.Size = new System.Drawing.Size(92, 21);
-            this.appearanceLabel.TabIndex = 9;
-            this.appearanceLabel.Text = "Appearance";
             // 
             // creditsQuote
             // 
@@ -335,37 +369,6 @@
             this.creditsLabel.TabIndex = 13;
             this.creditsLabel.Text = "Credits";
             // 
-            // appearanceIcon
-            // 
-            this.appearanceIcon.Image = global::Naticord.Properties.Resources.appearance;
-            this.appearanceIcon.Location = new System.Drawing.Point(15, 11);
-            this.appearanceIcon.Name = "appearanceIcon";
-            this.appearanceIcon.Size = new System.Drawing.Size(48, 48);
-            this.appearanceIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.appearanceIcon.TabIndex = 8;
-            this.appearanceIcon.TabStop = false;
-            // 
-            // catBox
-            // 
-            this.catBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.catBox.Image = global::Naticord.Properties.Resources.cat;
-            this.catBox.Location = new System.Drawing.Point(18, 213);
-            this.catBox.Name = "catBox";
-            this.catBox.Size = new System.Drawing.Size(319, 119);
-            this.catBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.catBox.TabIndex = 7;
-            this.catBox.TabStop = false;
-            // 
-            // appIcon
-            // 
-            this.appIcon.Image = global::Naticord.Properties.Resources.naticord_logo_64;
-            this.appIcon.Location = new System.Drawing.Point(15, 11);
-            this.appIcon.Name = "appIcon";
-            this.appIcon.Size = new System.Drawing.Size(48, 48);
-            this.appIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.appIcon.TabIndex = 0;
-            this.appIcon.TabStop = false;
-            // 
             // creditsIcon
             // 
             this.creditsIcon.Image = global::Naticord.Properties.Resources.credits;
@@ -376,15 +379,14 @@
             this.creditsIcon.TabIndex = 12;
             this.creditsIcon.TabStop = false;
             // 
-            // clearButton
+            // label1
             // 
-            this.clearButton.Location = new System.Drawing.Point(245, 201);
-            this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(94, 23);
-            this.clearButton.TabIndex = 12;
-            this.clearButton.Text = "Reset settings";
-            this.clearButton.UseVisualStyleBackColor = true;
-            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 66);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(304, 195);
+            this.label1.TabIndex = 0;
+            this.label1.Text = resources.GetString("label1.Text");
             // 
             // Settings
             // 
@@ -400,13 +402,13 @@
             this.settingsTB.ResumeLayout(false);
             this.appearanceTab.ResumeLayout(false);
             this.appearanceTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).EndInit();
             this.aboutTab.ResumeLayout(false);
             this.aboutTab.PerformLayout();
-            this.creditsTab.ResumeLayout(false);
-            this.creditsTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.catBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.appIcon)).EndInit();
+            this.creditsTab.ResumeLayout(false);
+            this.creditsTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.creditsIcon)).EndInit();
             this.ResumeLayout(false);
 
