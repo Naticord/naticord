@@ -8,56 +8,41 @@ namespace Naticord.Forms
 {
     public partial class Client : GlassForm
     {
-        private string iconStyle = Properties.Settings.Default["iconStyle"]?.ToString() ?? "Unknown";
-        private string borderStyle = Properties.Settings.Default["borderStyle"]?.ToString() ?? "Unknown";
-        private string osVersion = OSVersionHelper.GetWindowsVersion();
+        private readonly string iconStyle = Properties.Settings.Default.iconStyle;
+        private readonly string borderStyle = Properties.Settings.Default.borderStyle;
 
         public Client()
         {
             Debug.WriteLine("[DEBUG] Client started");
             InitializeComponent();
 
-            // Set up the app
             DecideDefaults();
-            SetUpTBB();
-            this.FormClosing += (sender, e) => { Application.Exit(); };
+            SetUpToolbarButtons();
 
-            // Load the UI
-            this.Shown += (s, e) => ReadDefaults();
+            this.FormClosing += (s, e) => Application.Exit();
+            this.Shown += (s, e) => ApplySavedSettings();
+
             CenterToScreen();
         }
 
-        private void ReadDefaults()
+        private void ApplySavedSettings()
         {
-            if (iconStyle == "Legacy")
-            {
-                // Do nothing (Already set)
-            }
-            else if (iconStyle == "Modern")
+            if (iconStyle == "Modern")
             {
                 settingsButton.ButtonIcon = Properties.Resources.settings_modern;
                 accountButton.ButtonIcon = Properties.Resources.account_modern;
                 ghButton.ButtonIcon = Properties.Resources.github_modern;
             }
-            if (borderStyle == "Slim")
-            {
-                // Do nothing (Already set)
-            }
-            else if (borderStyle == "Thick")
-            {
+
+            if (borderStyle == "Thick")
                 ChangeElementPos();
-            }
         }
 
         public void ChangeElementPos()
         {
-            Point defaultUsernameLocation = new Point(785, 5);
-            Point defaultProfilePictureLocation = new Point(989, 4);
-            Point defaultButtonPanelLocation = new Point(0, 2);
-
-            usernameLabel.Location = defaultUsernameLocation;
-            profilePictureUser.Location = defaultProfilePictureLocation;
-            buttonPanel.Location = defaultButtonPanelLocation;
+            usernameLabel.Location = new Point(785, 5);
+            profilePictureUser.Location = new Point(989, 4);
+            buttonPanel.Location = new Point(0, 2);
         }
 
         private void DecideDefaults()
@@ -65,8 +50,7 @@ namespace Naticord.Forms
             if (Properties.Settings.Default.runDefaults)
                 return;
 
-            string osVersion = OSVersionHelper.GetWindowsVersion();
-            switch (osVersion)
+            switch (OSVersionHelper.GetWindowsVersion())
             {
                 case "Windows 11":
                     Properties.Settings.Default.renderMode = "Mica";
@@ -91,17 +75,18 @@ namespace Naticord.Forms
             Properties.Settings.Default.Save();
         }
 
-        private void SetUpTBB()
+        private void SetUpToolbarButtons()
         {
             settingsButton.ButtonClick += (s, e) =>
             {
-                Settings settingsForm = new Settings(this);
-                settingsForm.Show();
+                new Settings(this).Show();
             };
+
             accountButton.ButtonClick += (s, e) =>
             {
                 // TODO
             };
+
             ghButton.ButtonClick += (s, e) =>
             {
                 // TODO

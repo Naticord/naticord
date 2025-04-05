@@ -7,9 +7,8 @@ namespace Naticord.Forms
 {
     public partial class Settings : Form
     {
-        private string iconStyle = Properties.Settings.Default.iconStyle;
+        private readonly Client clientForm;
         private bool isInitializing = true;
-        private Client clientForm;
 
         public Settings(Client clientFormStg)
         {
@@ -27,18 +26,20 @@ namespace Naticord.Forms
         {
             isInitializing = true;
 
-            osVerBox.SelectedItem = OSVersionHelper.GetWindowsVersion();
             var settings = Properties.Settings.Default;
 
-            if (iconStyle == "Legacy")
+            osVerBox.SelectedItem = OSVersionHelper.GetWindowsVersion();
+
+            switch (settings.iconStyle)
             {
-                appearanceIcon.Image = Properties.Resources.appearance;
-                creditsIcon.Image = Properties.Resources.credits;
-            }
-            else if (iconStyle == "Modern")
-            {
-                appearanceIcon.Image = Properties.Resources.appearance_modern;
-                creditsIcon.Image = Properties.Resources.credits_modern;
+                case "Legacy":
+                    appearanceIcon.Image = Properties.Resources.appearance;
+                    creditsIcon.Image = Properties.Resources.credits;
+                    break;
+                case "Modern":
+                    appearanceIcon.Image = Properties.Resources.appearance_modern;
+                    creditsIcon.Image = Properties.Resources.credits_modern;
+                    break;
             }
 
             if (osVerBox.Items.Contains(settings.spoofedOS))
@@ -70,8 +71,6 @@ namespace Naticord.Forms
                 clientForm.ghButton.ButtonIcon = Properties.Resources.github;
                 appearanceIcon.Image = Properties.Resources.appearance;
                 creditsIcon.Image = Properties.Resources.credits;
-
-                settings.iconStyle = "Legacy";
             }
             else
             {
@@ -80,10 +79,9 @@ namespace Naticord.Forms
                 clientForm.ghButton.ButtonIcon = Properties.Resources.github_modern;
                 appearanceIcon.Image = Properties.Resources.appearance_modern;
                 creditsIcon.Image = Properties.Resources.credits_modern;
-
-                settings.iconStyle = "Modern";
             }
 
+            settings.iconStyle = selected;
             settings.Save();
         }
 
@@ -97,17 +95,15 @@ namespace Naticord.Forms
             if (selected == "Thick")
             {
                 clientForm.ChangeElementPos();
-                settings.borderStyle = "Thick";
             }
             else
             {
                 clientForm.usernameLabel.Location = new Point(777, 5);
                 clientForm.profilePictureUser.Location = new Point(981, 4);
                 clientForm.buttonPanel.Location = new Point(8, 2);
-
-                settings.borderStyle = "Slim";
             }
 
+            settings.borderStyle = selected;
             settings.Save();
         }
 
@@ -118,36 +114,10 @@ namespace Naticord.Forms
             var selected = bdStyleBox.SelectedItem?.ToString();
             var settings = Properties.Settings.Default;
 
-            if (selected == "Aero")
-            {
-                settings.renderMode = "Aero";
-            }
-            else if (selected == "Acrylic")
-            {
-                settings.renderMode = "Acrylic";
-            }
-            else if (selected == "Mica")
-            {
-                settings.renderMode = "Mica";
-            }
-            else if (selected == "Mica (Alt)")
-            {
-                settings.renderMode = "Mica (Alt)";
-            }
-
+            settings.renderMode = selected;
             settings.Save();
-            DialogResult result = MessageBox.Show(
-                "You'll need to restart the app to apply these changes. Would you like to restart now?",
-                "Restart Naticord",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Information
-            );
 
-            if (result == DialogResult.Yes)
-            {
-                Application.Restart();
-                Environment.Exit(0);
-            }
+            PromptRestart();
         }
 
         private void clearButton_Click(object sender, EventArgs e)
@@ -161,31 +131,7 @@ namespace Naticord.Forms
             settings.borderStyle = "Slim";
             settings.Save();
 
-            DialogResult result = MessageBox.Show(
-                "You'll need to restart the app to apply these changes. Would you like to restart now?",
-                "Restart Naticord",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Information
-            );
-
-            if (result == DialogResult.Yes)
-            {
-                Application.Restart();
-                Environment.Exit(0);
-            }
-        }
-
-        private void SetOSVerEnabledValue()
-        {
-            var selected = osVerBox.SelectedItem?.ToString().Trim();
-            bool enableControls = selected == "Custom";
-
-            icnStyleBox.Enabled = enableControls;
-            bdrStyleBox.Enabled = enableControls;
-            bdStyleBox.Enabled = enableControls;
-            icnStyleLabel.Enabled = enableControls;
-            bdrStyleLabel.Enabled = enableControls;
-            bdStyleLabel.Enabled = enableControls;
+            PromptRestart();
         }
 
         private void osVerBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -203,31 +149,41 @@ namespace Naticord.Forms
                     settings.iconStyle = "Modern";
                     settings.borderStyle = "Slim";
                     break;
-
                 case "Windows 10":
                     settings.spoofedOS = "Windows 10";
                     settings.renderMode = "Acrylic";
                     settings.iconStyle = "Modern";
                     settings.borderStyle = "Slim";
                     break;
-
                 case "Windows 7 - 8.1":
                     settings.spoofedOS = "Windows 7 - 8.1";
                     settings.renderMode = "Aero";
                     settings.iconStyle = "Legacy";
                     settings.borderStyle = "Thick";
                     break;
-
                 case "Custom":
                     settings.spoofedOS = "Custom";
-                    break;
-
-                default:
                     break;
             }
 
             settings.Save();
+            PromptRestart();
+        }
 
+        private void SetOSVerEnabledValue()
+        {
+            bool enable = osVerBox.SelectedItem?.ToString().Trim() == "Custom";
+
+            icnStyleBox.Enabled = enable;
+            bdrStyleBox.Enabled = enable;
+            bdStyleBox.Enabled = enable;
+            icnStyleLabel.Enabled = enable;
+            bdrStyleLabel.Enabled = enable;
+            bdStyleLabel.Enabled = enable;
+        }
+
+        private void PromptRestart()
+        {
             var result = MessageBox.Show(
                 "You'll need to restart the app to apply these changes. Would you like to restart now?",
                 "Restart Naticord",
