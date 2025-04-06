@@ -150,7 +150,8 @@
             "Aero",
             "Acrylic",
             "Mica",
-            "Mica (Alt)"});
+            "Mica (Alt)",
+            "Composition disabled"});
             this.bdStyleBox.Location = new System.Drawing.Point(91, 172);
             this.bdStyleBox.Name = "bdStyleBox";
             this.bdStyleBox.Size = new System.Drawing.Size(248, 23);
