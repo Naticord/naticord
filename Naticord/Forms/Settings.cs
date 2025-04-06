@@ -94,7 +94,7 @@ namespace Naticord.Forms
 
             if (selected == "Thick")
             {
-                clientForm.ChangeElementPos();
+                clientForm.ChangePos();
             }
             else
             {
@@ -209,6 +209,11 @@ namespace Naticord.Forms
 
                 e.Graphics.DrawImage(pictureBox.Image, new Rectangle(0, 0, pictureBox.Width, pictureBox.Height));
             }
+        }
+
+        private void ghLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
         }
     }
 }

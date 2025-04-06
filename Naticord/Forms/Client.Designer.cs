@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Client));
             this.usernameLabel = new WindowsFormsAero.ThemeLabel();
             this.buttonPanel = new System.Windows.Forms.Panel();
@@ -35,8 +36,18 @@
             this.accountButton = new Naticord.Controls.ExtButton();
             this.settingsButton = new Naticord.Controls.ExtButton();
             this.profilePictureUser = new System.Windows.Forms.PictureBox();
+            this.accountMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.statusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.onlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doNotDisturbToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.idleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.offlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureUser)).BeginInit();
+            this.accountMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // usernameLabel
@@ -102,6 +113,69 @@
             this.profilePictureUser.TabIndex = 0;
             this.profilePictureUser.TabStop = false;
             // 
+            // accountMenu
+            // 
+            this.accountMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusToolStripMenuItem,
+            this.viewProfileToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.logoutToolStripMenuItem});
+            this.accountMenu.Name = "accountMenu";
+            this.accountMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.accountMenu.Size = new System.Drawing.Size(181, 98);
+            // 
+            // statusToolStripMenuItem
+            // 
+            this.statusToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.onlineToolStripMenuItem,
+            this.doNotDisturbToolStripMenuItem,
+            this.idleToolStripMenuItem,
+            this.offlineToolStripMenuItem});
+            this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.statusToolStripMenuItem.Text = "Status";
+            // 
+            // onlineToolStripMenuItem
+            // 
+            this.onlineToolStripMenuItem.Name = "onlineToolStripMenuItem";
+            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.onlineToolStripMenuItem.Text = "Online";
+            // 
+            // doNotDisturbToolStripMenuItem
+            // 
+            this.doNotDisturbToolStripMenuItem.Name = "doNotDisturbToolStripMenuItem";
+            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.doNotDisturbToolStripMenuItem.Text = "Do Not Disturb";
+            // 
+            // idleToolStripMenuItem
+            // 
+            this.idleToolStripMenuItem.Name = "idleToolStripMenuItem";
+            this.idleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.idleToolStripMenuItem.Text = "Idle";
+            // 
+            // offlineToolStripMenuItem
+            // 
+            this.offlineToolStripMenuItem.Name = "offlineToolStripMenuItem";
+            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.offlineToolStripMenuItem.Text = "Offline";
+            // 
+            // viewProfileToolStripMenuItem
+            // 
+            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewProfileToolStripMenuItem.Text = "View profile";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // logoutToolStripMenuItem
+            // 
+            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logoutToolStripMenuItem.Text = "Logout";
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -119,6 +193,7 @@
             this.Text = "Naticord";
             this.buttonPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureUser)).EndInit();
+            this.accountMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -131,5 +206,14 @@
         public System.Windows.Forms.Panel buttonPanel;
         public Controls.ExtButton accountButton;
         public Controls.ExtButton ghButton;
+        private System.Windows.Forms.ContextMenuStrip accountMenu;
+        private System.Windows.Forms.ToolStripMenuItem statusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem onlineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem doNotDisturbToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem idleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem offlineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewProfileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
     }
 }

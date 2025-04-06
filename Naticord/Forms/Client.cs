@@ -1,30 +1,159 @@
 ﻿using Naticord.Classes;
+using Naticord.Networking;
 using Naticord.Controls;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using System.Linq;
+using System;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Naticord.Forms
 {
     public partial class Client : GlassForm
     {
+        private static readonly HttpClient httpClient = new();
+
         private readonly string iconStyle = Properties.Settings.Default.iconStyle;
         private readonly string borderStyle = Properties.Settings.Default.borderStyle;
+        private readonly string token = Properties.Settings.Default.token;
+
+        private static readonly string CachePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Naticord"
+        );
+        private static Dictionary<string, Image> avatarCache = new Dictionary<string, Image>();
+        private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
+
+        private API dcAPI;
 
         public Client()
         {
-            Debug.WriteLine("[DEBUG] Client started");
+            Directory.CreateDirectory(CachePath);
+            Directory.CreateDirectory(AvatarCachePath);
+
+            dcAPI = new API();
             InitializeComponent();
 
-            DecideDefaults();
+            DecideSettings();
             SetUpToolbarButtons();
 
             this.FormClosing += (s, e) => Application.Exit();
             this.Shown += (s, e) => ApplySavedSettings();
 
             CenterToScreen();
+
+            // Actual client
+            SetUserInfo();
         }
 
+        // Discord API related functionality
+        private void SetUserInfo()
+        {
+            try
+            {
+                string userDetails = dcAPI.APISend("users/@me", HttpMethod.Get, null, token, null, null);
+                JObject parsedJson = JObject.Parse(userDetails);
+
+                string userId = parsedJson["id"]?.ToString() ?? "N/A";
+                string globalName = parsedJson["global_name"]?.ToString() ?? "N/A";
+                string username = parsedJson["username"]?.ToString() ?? "N/A";
+                string avatarHash = parsedJson["avatar"]?.ToString();
+
+                profilePictureUser.Image = GetCachedAvatar(userId, avatarHash, false, false);
+                usernameLabel.Text = $"{globalName} ({username})";
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Parse error: {ex.Message}");
+            }
+        }
+
+        // Helper functions
+        public Image DownloadImage(string url, string savePath = null)
+        {
+            try
+            {
+                byte[] imageBytes = httpClient.GetByteArrayAsync(url).GetAwaiter().GetResult();
+                savePath ??= Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
+                File.WriteAllBytes(savePath, imageBytes);
+                using (var ms = new MemoryStream(imageBytes))
+                {
+                    return Image.FromStream(ms);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private void SetMemoryCachedAvatar(string userId, Image avatar)
+        {
+            if (avatarCache.Count >= 10)
+            {
+                avatarCache.Remove(avatarCache.Keys.First());
+            }
+            if (avatarCache.ContainsKey(userId))
+            {
+                avatarCache[userId].Dispose();
+                avatarCache[userId] = avatar;
+            }
+            else
+            {
+                avatarCache[userId] = avatar;
+            }
+        }
+
+        private bool TryGetMemoryCachedAvatar(string userId, out Image avatar)
+        {
+            return avatarCache.TryGetValue(userId, out avatar);
+        }
+
+        public Image GetCachedAvatar(string userId, string avatarHash, bool isServer, bool isGC)
+        {
+            if (string.IsNullOrEmpty(avatarHash))
+                return Properties.Resources.naticord_logo_64;
+
+            if (TryGetMemoryCachedAvatar(userId, out Image avatar))
+                return avatar;
+
+            string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
+            Image retrievedavatar;
+            if (File.Exists(avatarFile))
+            {
+                retrievedavatar = Image.FromFile(avatarFile);
+            }
+            else
+            {
+                string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer, isGC);
+                retrievedavatar = DownloadImage(avatarUrl, avatarFile);
+            }
+
+            SetMemoryCachedAvatar(userId, retrievedavatar);
+            return retrievedavatar;
+        }
+
+        private string GetAvatarUrl(string Id, string Hash, bool isServer, bool isGC)
+        {
+            if (isServer)
+            {
+                return $"https://cdn.discordapp.com/icons/{Id}/{Hash}.png?size=64";
+            }
+            else if (isGC)
+            {
+                return $"https://cdn.discordapp.com/channel-icons/{Id}/{Hash}.png?size=64";
+            }
+            else
+            {
+                return $"https://cdn.discordapp.com/avatars/{Id}/{Hash}.png?size=64";
+            }
+        }
+
+        // UI related functionality
         private void ApplySavedSettings()
         {
             if (iconStyle == "Modern")
@@ -35,17 +164,17 @@ namespace Naticord.Forms
             }
 
             if (borderStyle == "Thick")
-                ChangeElementPos();
+                ChangePos();
         }
 
-        public void ChangeElementPos()
+        public void ChangePos()
         {
             usernameLabel.Location = new Point(785, 5);
             profilePictureUser.Location = new Point(989, 4);
             buttonPanel.Location = new Point(0, 2);
         }
 
-        private void DecideDefaults()
+        private void DecideSettings()
         {
             if (Properties.Settings.Default.runDefaults)
                 return;
@@ -84,7 +213,7 @@ namespace Naticord.Forms
 
             accountButton.ButtonClick += (s, e) =>
             {
-                // TODO
+                accountMenu.Show(accountButton, new Point(0, accountButton.Height));
             };
 
             ghButton.ButtonClick += (s, e) =>

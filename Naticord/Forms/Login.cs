@@ -1,24 +1,27 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using Naticord.Networking;
 using System.Drawing;
 using System.Net.Http;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Threading.Tasks;
 
 namespace Naticord.Forms
 {
     public partial class Login : Form
     {
-        private API APIClient;
+        private API dcAPI;
         private bool isClassicMode = !Application.RenderWithVisualStyles || !VisualStyleInformation.IsEnabledByUser;
-        private static string token = Properties.Settings.Default.token;
+        private string token;
         private string passwordText;
         private string emailText;
 
         public Login()
         {
-            APIClient = new API();
+            token = Properties.Settings.Default.token;
+            dcAPI = new API();
             InitializeComponent();
             this.AcceptButton = loginButton;
             if (isClassicMode)
@@ -30,7 +33,10 @@ namespace Naticord.Forms
                 loginButton.BackColor = Color.Transparent;
             }
 
-            this.Shown += (s, e) => CheckIfLoggedIn();
+            this.Shown += async (s, e) =>
+            {
+                await Task.Run(() => CheckIfLoggedIn());
+            };
         }
 
         private void naticordBanner_Click(object sender, EventArgs e)
@@ -64,7 +70,7 @@ namespace Naticord.Forms
             };
 
             Debug.WriteLine("[DEBUG] SendLogin called");
-            string loginResponse = APIClient.APISend("auth/login", HttpMethod.Post, loginBody, token);
+            string loginResponse = dcAPI.APISend("auth/login", HttpMethod.Post, loginBody, token);
 
             if (loginResponse.Contains("\"token\""))
             {
@@ -108,6 +114,12 @@ namespace Naticord.Forms
         {
             if (!string.IsNullOrEmpty(Properties.Settings.Default.token))
             {
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new Action(CheckIfLoggedIn));
+                    return;
+                }
+
                 Client clientForm = new Client();
                 clientForm.Show();
                 this.Hide();

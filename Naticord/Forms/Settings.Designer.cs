@@ -276,6 +276,7 @@
             this.ghLink.TabStop = true;
             this.ghLink.Text = "View on GitHub";
             this.ghLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.ghLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ghLink_LinkClicked);
             // 
             // aboutNaticordInfo
             // 
