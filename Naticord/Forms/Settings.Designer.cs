@@ -34,7 +34,6 @@
             this.clearButton = new System.Windows.Forms.Button();
             this.appearanceQuote = new System.Windows.Forms.Label();
             this.appearanceLabel = new System.Windows.Forms.Label();
-            this.appearanceIcon = new System.Windows.Forms.PictureBox();
             this.bdStyleBox = new System.Windows.Forms.ComboBox();
             this.bdStyleLabel = new System.Windows.Forms.Label();
             this.bdrStyleBox = new System.Windows.Forms.ComboBox();
@@ -43,35 +42,39 @@
             this.icnStyleLabel = new System.Windows.Forms.Label();
             this.osVerBox = new System.Windows.Forms.ComboBox();
             this.osVerLabel = new System.Windows.Forms.Label();
+            this.updatesTab = new System.Windows.Forms.TabPage();
             this.aboutTab = new System.Windows.Forms.TabPage();
-            this.catBox = new System.Windows.Forms.PictureBox();
             this.ghLink = new System.Windows.Forms.LinkLabel();
             this.aboutNaticordInfo = new System.Windows.Forms.Label();
             this.versionLabel = new System.Windows.Forms.Label();
             this.quoteLabel = new System.Windows.Forms.Label();
             this.authorLabel = new System.Windows.Forms.Label();
             this.appLabel = new System.Windows.Forms.Label();
+            this.appearanceIcon = new System.Windows.Forms.PictureBox();
+            this.updateIcon = new System.Windows.Forms.PictureBox();
+            this.catBox = new System.Windows.Forms.PictureBox();
             this.appIcon = new System.Windows.Forms.PictureBox();
-            this.creditsTab = new System.Windows.Forms.TabPage();
-            this.creditsQuote = new System.Windows.Forms.Label();
-            this.creditsLabel = new System.Windows.Forms.Label();
-            this.creditsIcon = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.updateQuote = new System.Windows.Forms.Label();
+            this.updateLabel = new System.Windows.Forms.Label();
+            this.updProg = new System.Windows.Forms.ProgressBar();
+            this.currentVerLabel = new System.Windows.Forms.Label();
+            this.updateVerLabel = new System.Windows.Forms.Label();
+            this.updateButton = new WindowsFormsAero.Button();
             this.settingsTB.SuspendLayout();
             this.appearanceTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).BeginInit();
+            this.updatesTab.SuspendLayout();
             this.aboutTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updateIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.catBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.appIcon)).BeginInit();
-            this.creditsTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creditsIcon)).BeginInit();
             this.SuspendLayout();
             // 
             // settingsTB
             // 
             this.settingsTB.Controls.Add(this.appearanceTab);
+            this.settingsTB.Controls.Add(this.updatesTab);
             this.settingsTB.Controls.Add(this.aboutTab);
-            this.settingsTB.Controls.Add(this.creditsTab);
             this.settingsTB.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.settingsTB.Location = new System.Drawing.Point(12, 12);
             this.settingsTB.Name = "settingsTB";
@@ -131,16 +134,6 @@
             this.appearanceLabel.Size = new System.Drawing.Size(92, 21);
             this.appearanceLabel.TabIndex = 9;
             this.appearanceLabel.Text = "Appearance";
-            // 
-            // appearanceIcon
-            // 
-            this.appearanceIcon.Image = global::Naticord.Properties.Resources.appearance;
-            this.appearanceIcon.Location = new System.Drawing.Point(15, 11);
-            this.appearanceIcon.Name = "appearanceIcon";
-            this.appearanceIcon.Size = new System.Drawing.Size(48, 48);
-            this.appearanceIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.appearanceIcon.TabIndex = 8;
-            this.appearanceIcon.TabStop = false;
             // 
             // bdStyleBox
             // 
@@ -235,6 +228,23 @@
             this.osVerLabel.TabIndex = 0;
             this.osVerLabel.Text = "OS Style";
             // 
+            // updatesTab
+            // 
+            this.updatesTab.Controls.Add(this.updateButton);
+            this.updatesTab.Controls.Add(this.updateVerLabel);
+            this.updatesTab.Controls.Add(this.currentVerLabel);
+            this.updatesTab.Controls.Add(this.updProg);
+            this.updatesTab.Controls.Add(this.updateQuote);
+            this.updatesTab.Controls.Add(this.updateLabel);
+            this.updatesTab.Controls.Add(this.updateIcon);
+            this.updatesTab.Location = new System.Drawing.Point(4, 24);
+            this.updatesTab.Name = "updatesTab";
+            this.updatesTab.Padding = new System.Windows.Forms.Padding(3);
+            this.updatesTab.Size = new System.Drawing.Size(352, 374);
+            this.updatesTab.TabIndex = 3;
+            this.updatesTab.Text = "Updates";
+            this.updatesTab.UseVisualStyleBackColor = true;
+            // 
             // aboutTab
             // 
             this.aboutTab.Controls.Add(this.catBox);
@@ -252,17 +262,6 @@
             this.aboutTab.TabIndex = 1;
             this.aboutTab.Text = "About";
             this.aboutTab.UseVisualStyleBackColor = true;
-            // 
-            // catBox
-            // 
-            this.catBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.catBox.Image = global::Naticord.Properties.Resources.cat;
-            this.catBox.Location = new System.Drawing.Point(18, 213);
-            this.catBox.Name = "catBox";
-            this.catBox.Size = new System.Drawing.Size(319, 119);
-            this.catBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.catBox.TabIndex = 7;
-            this.catBox.TabStop = false;
             // 
             // ghLink
             // 
@@ -326,6 +325,37 @@
             this.appLabel.TabIndex = 1;
             this.appLabel.Text = "Naticord";
             // 
+            // appearanceIcon
+            // 
+            this.appearanceIcon.Image = global::Naticord.Properties.Resources.appearance;
+            this.appearanceIcon.Location = new System.Drawing.Point(15, 11);
+            this.appearanceIcon.Name = "appearanceIcon";
+            this.appearanceIcon.Size = new System.Drawing.Size(48, 48);
+            this.appearanceIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.appearanceIcon.TabIndex = 8;
+            this.appearanceIcon.TabStop = false;
+            // 
+            // updateIcon
+            // 
+            this.updateIcon.Image = global::Naticord.Properties.Resources.updates;
+            this.updateIcon.Location = new System.Drawing.Point(15, 11);
+            this.updateIcon.Name = "updateIcon";
+            this.updateIcon.Size = new System.Drawing.Size(48, 48);
+            this.updateIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.updateIcon.TabIndex = 9;
+            this.updateIcon.TabStop = false;
+            // 
+            // catBox
+            // 
+            this.catBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.catBox.Image = global::Naticord.Properties.Resources.cat;
+            this.catBox.Location = new System.Drawing.Point(18, 213);
+            this.catBox.Name = "catBox";
+            this.catBox.Size = new System.Drawing.Size(319, 119);
+            this.catBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.catBox.TabIndex = 7;
+            this.catBox.TabStop = false;
+            // 
             // appIcon
             // 
             this.appIcon.Image = global::Naticord.Properties.Resources.naticord_logo_64;
@@ -336,59 +366,62 @@
             this.appIcon.TabIndex = 0;
             this.appIcon.TabStop = false;
             // 
-            // creditsTab
+            // updateQuote
             // 
-            this.creditsTab.Controls.Add(this.creditsQuote);
-            this.creditsTab.Controls.Add(this.creditsLabel);
-            this.creditsTab.Controls.Add(this.creditsIcon);
-            this.creditsTab.Controls.Add(this.label1);
-            this.creditsTab.Location = new System.Drawing.Point(4, 24);
-            this.creditsTab.Name = "creditsTab";
-            this.creditsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.creditsTab.Size = new System.Drawing.Size(352, 374);
-            this.creditsTab.TabIndex = 2;
-            this.creditsTab.Text = "Credits";
-            this.creditsTab.UseVisualStyleBackColor = true;
+            this.updateQuote.AutoSize = true;
+            this.updateQuote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.updateQuote.Location = new System.Drawing.Point(71, 39);
+            this.updateQuote.Name = "updateQuote";
+            this.updateQuote.Size = new System.Drawing.Size(167, 15);
+            this.updateQuote.TabIndex = 13;
+            this.updateQuote.Text = "Check for updates for Naticord";
             // 
-            // creditsQuote
+            // updateLabel
             // 
-            this.creditsQuote.AutoSize = true;
-            this.creditsQuote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.creditsQuote.Location = new System.Drawing.Point(71, 39);
-            this.creditsQuote.Name = "creditsQuote";
-            this.creditsQuote.Size = new System.Drawing.Size(209, 15);
-            this.creditsQuote.TabIndex = 14;
-            this.creditsQuote.Text = "People / Projects that helped Naticord!";
+            this.updateLabel.AutoSize = true;
+            this.updateLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.updateLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
+            this.updateLabel.Location = new System.Drawing.Point(70, 16);
+            this.updateLabel.Name = "updateLabel";
+            this.updateLabel.Size = new System.Drawing.Size(67, 21);
+            this.updateLabel.TabIndex = 12;
+            this.updateLabel.Text = "Updates";
             // 
-            // creditsLabel
+            // updProg
             // 
-            this.creditsLabel.AutoSize = true;
-            this.creditsLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.creditsLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
-            this.creditsLabel.Location = new System.Drawing.Point(70, 16);
-            this.creditsLabel.Name = "creditsLabel";
-            this.creditsLabel.Size = new System.Drawing.Size(59, 21);
-            this.creditsLabel.TabIndex = 13;
-            this.creditsLabel.Text = "Credits";
+            this.updProg.Location = new System.Drawing.Point(15, 69);
+            this.updProg.Name = "updProg";
+            this.updProg.Size = new System.Drawing.Size(322, 23);
+            this.updProg.TabIndex = 14;
             // 
-            // creditsIcon
+            // currentVerLabel
             // 
-            this.creditsIcon.Image = global::Naticord.Properties.Resources.credits;
-            this.creditsIcon.Location = new System.Drawing.Point(15, 11);
-            this.creditsIcon.Name = "creditsIcon";
-            this.creditsIcon.Size = new System.Drawing.Size(48, 48);
-            this.creditsIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.creditsIcon.TabIndex = 12;
-            this.creditsIcon.TabStop = false;
+            this.currentVerLabel.AutoSize = true;
+            this.currentVerLabel.Location = new System.Drawing.Point(12, 97);
+            this.currentVerLabel.Name = "currentVerLabel";
+            this.currentVerLabel.Size = new System.Drawing.Size(131, 15);
+            this.currentVerLabel.TabIndex = 15;
+            this.currentVerLabel.Text = "Current version: 1.0.0b2";
             // 
-            // label1
+            // updateVerLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 66);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(304, 195);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            this.updateVerLabel.AutoSize = true;
+            this.updateVerLabel.Location = new System.Drawing.Point(181, 97);
+            this.updateVerLabel.Name = "updateVerLabel";
+            this.updateVerLabel.Size = new System.Drawing.Size(156, 15);
+            this.updateVerLabel.TabIndex = 16;
+            this.updateVerLabel.Text = "Version to update to: 1.0.0b3";
+            this.updateVerLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updateButton
+            // 
+            this.updateButton.Location = new System.Drawing.Point(215, 117);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(122, 23);
+            this.updateButton.TabIndex = 17;
+            this.updateButton.Text = "Check for updates";
+            this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
             // Settings
             // 
@@ -404,14 +437,14 @@
             this.settingsTB.ResumeLayout(false);
             this.appearanceTab.ResumeLayout(false);
             this.appearanceTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).EndInit();
+            this.updatesTab.ResumeLayout(false);
+            this.updatesTab.PerformLayout();
             this.aboutTab.ResumeLayout(false);
             this.aboutTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.appearanceIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updateIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.catBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.appIcon)).EndInit();
-            this.creditsTab.ResumeLayout(false);
-            this.creditsTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.creditsIcon)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -437,14 +470,17 @@
         private System.Windows.Forms.Label versionLabel;
         private System.Windows.Forms.LinkLabel ghLink;
         private System.Windows.Forms.PictureBox catBox;
-        private System.Windows.Forms.TabPage creditsTab;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label appearanceQuote;
         private System.Windows.Forms.Label appearanceLabel;
         private System.Windows.Forms.PictureBox appearanceIcon;
-        private System.Windows.Forms.Label creditsQuote;
-        private System.Windows.Forms.Label creditsLabel;
-        private System.Windows.Forms.PictureBox creditsIcon;
         private System.Windows.Forms.Button clearButton;
+        private System.Windows.Forms.TabPage updatesTab;
+        private System.Windows.Forms.PictureBox updateIcon;
+        private System.Windows.Forms.Label updateQuote;
+        private System.Windows.Forms.Label updateLabel;
+        private WindowsFormsAero.Button updateButton;
+        private System.Windows.Forms.Label updateVerLabel;
+        private System.Windows.Forms.Label currentVerLabel;
+        private System.Windows.Forms.ProgressBar updProg;
     }
 }

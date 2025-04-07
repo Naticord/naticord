@@ -200,8 +200,6 @@ namespace Naticord.Controls
                     _formatFlags
                 );
             }
-
-            System.Diagnostics.Debug.WriteLine("ThemedText.Draw");
         }
 
         private IntPtr _textHdc = IntPtr.Zero;

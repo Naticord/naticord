@@ -213,10 +213,13 @@ namespace Naticord.Classes
         WM_APP = 0x8000,
 
         #region Button Control
+
         BM_SETIMAGE = 0x00F7,
-        #endregion
+
+        #endregion Button Control
 
         #region List View
+
         LVM_FIRST = 0x1000,
         LVM_GETBKCOLOR = LVM_FIRST + 0,
         LVM_SETBKCOLOR = LVM_FIRST + 1,
@@ -224,14 +227,17 @@ namespace Naticord.Classes
         LVM_SETIMAGELIST = LVM_FIRST + 3,
         LVM_GETITEMCOUNT = LVM_FIRST + 4,
         LVM_SETEXTENDEDLISTVIEWSTYLE = LVM_FIRST + 54,
-        #endregion
+
+        #endregion List View
 
         #region Tree View
+
         TV_FIRST = 0x1100,
         TVM_SETEXTENDEDSTYLE = TV_FIRST + 44,
         TVM_GETEXTENDEDSTYLE = TV_FIRST + 45,
         TVM_SETAUTOSCROLLINFO = TV_FIRST + 59,
-        #endregion
+
+        #endregion Tree View
 
         HDM_FIRST = 0x1200,
         TCM_FIRST = 0x1300,
@@ -247,6 +253,7 @@ namespace Naticord.Classes
         EM_TAKEFOCUS = ECM_FIRST + 8,
 
         #region Button
+
         BCM_FIRST = 0x1600,
         BCM_SETDROPDOWNSTATE = BCM_FIRST + 0x0006,
         BCM_SETSPLITINFO = BCM_FIRST + 0x0007,
@@ -255,24 +262,28 @@ namespace Naticord.Classes
         BCM_GETNOTE = BCM_FIRST + 0x000A,
         BCM_GETNOTELENGTH = BCM_FIRST + 0x000B,
         BCM_SETSHIELD = BCM_FIRST + 0x000C,
-        #endregion
+
+        #endregion Button
 
         #region Combo Box
+
         CBM_FIRST = 0x1700,
         CB_SETMINVISIBLE = CBM_FIRST + 1,
         CB_GETMINVISIBLE = CBM_FIRST + 2,
         CB_SETCUEBANNER = CBM_FIRST + 3,
         CB_GETCUEBANNER = CBM_FIRST + 4,
-        #endregion
+
+        #endregion Combo Box
 
         CCM_FIRST = 0x2000,
 
         #region ProgressBar
+
         PBM_SETSTATE = WM_USER + 16,
         PBM_SETPOS = WM_USER + 2,
         PBM_GETRANGE = WM_USER + 7,
         PBM_SETRANGE32 = WM_USER + 6,
-        #endregion
+
+        #endregion ProgressBar
     }
 }
-

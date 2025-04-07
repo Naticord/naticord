@@ -3,9 +3,11 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Naticord.Classes {
+namespace Naticord.Classes
+{
     [StructLayout(LayoutKind.Sequential)]
-    internal struct DttOpts {
+    internal struct DttOpts
+    {
         public int dwSize;
         public DttOptsFlags dwFlags;
         public int crText;

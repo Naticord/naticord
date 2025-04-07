@@ -185,6 +185,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="naticord.ico" />
+    <None Include="Resources\updates.png" />
+    <None Include="Resources\updates-modern.png" />
     <None Include="Resources\credits-modern.png" />
     <None Include="Resources\appearance-modern.png" />
     <None Include="Resources\credits.png" />

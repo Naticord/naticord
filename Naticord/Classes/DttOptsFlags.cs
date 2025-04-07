@@ -2,9 +2,11 @@
 
 using System;
 
-namespace Naticord.Classes {
+namespace Naticord.Classes
+{
     [Flags]
-    internal enum DttOptsFlags : int {
+    internal enum DttOptsFlags : int
+    {
         DTT_TEXTCOLOR = 1,
         DTT_BORDERCOLOR = 2,
         DTT_SHADOWCOLOR = 4,

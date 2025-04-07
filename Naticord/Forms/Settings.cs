@@ -18,8 +18,8 @@ namespace Naticord.Forms
             SetOSVerEnabledValue();
 
             appearanceIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
+            updateIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
             appIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
-            creditsIcon.Paint += (s, e) => ApplyAntiAliasing(s as Control, e);
         }
 
         private void ReadSettings()
@@ -34,11 +34,11 @@ namespace Naticord.Forms
             {
                 case "Legacy":
                     appearanceIcon.Image = Properties.Resources.appearance;
-                    creditsIcon.Image = Properties.Resources.credits;
+                    updateIcon.Image = Properties.Resources.updates;
                     break;
                 case "Modern":
                     appearanceIcon.Image = Properties.Resources.appearance_modern;
-                    creditsIcon.Image = Properties.Resources.credits_modern;
+                    updateIcon.Image = Properties.Resources.updates_modern;
                     break;
             }
 
@@ -70,7 +70,7 @@ namespace Naticord.Forms
                 clientForm.accountButton.ButtonIcon = Properties.Resources.account;
                 clientForm.ghButton.ButtonIcon = Properties.Resources.github;
                 appearanceIcon.Image = Properties.Resources.appearance;
-                creditsIcon.Image = Properties.Resources.credits;
+                updateIcon.Image = Properties.Resources.updates;
             }
             else
             {
@@ -78,7 +78,7 @@ namespace Naticord.Forms
                 clientForm.accountButton.ButtonIcon = Properties.Resources.account_modern;
                 clientForm.ghButton.ButtonIcon = Properties.Resources.github_modern;
                 appearanceIcon.Image = Properties.Resources.appearance_modern;
-                creditsIcon.Image = Properties.Resources.credits_modern;
+                updateIcon.Image = Properties.Resources.updates_modern;
             }
 
             settings.iconStyle = selected;
@@ -213,7 +213,16 @@ namespace Naticord.Forms
 
         private void ghLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            System.Diagnostics.Process.Start("https://github.com/Naticord/naticord");
+        }
 
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            updProg.MarqueeAnimationSpeed = 30;
+
+            updProg.Style = ProgressBarStyle.Marquee;
+            MessageBox.Show("Failed to check for updates.", "Update error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            updProg.Style = ProgressBarStyle.Continuous;
         }
     }
 }

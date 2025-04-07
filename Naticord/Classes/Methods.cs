@@ -3,13 +3,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Naticord.Classes {
-
-    internal static class Methods {
+namespace Naticord.Classes
+{
+    internal static class Methods
+    {
         #region Window manager
 
         [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
-        public extern static int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+        public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
 
         [DllImport("uxtheme.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern int DrawThemeTextEx(IntPtr hTheme, IntPtr hdc,
@@ -39,11 +40,14 @@ namespace Naticord.Classes {
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
-        public static IntPtr GetWindowLong(this IntPtr hWnd, WindowLong i) {
-            if (IntPtr.Size == 8) {
+        public static IntPtr GetWindowLong(this IntPtr hWnd, WindowLong i)
+        {
+            if (IntPtr.Size == 8)
+            {
                 return GetWindowLongPtr64(hWnd, (int)i);
             }
-            else {
+            else
+            {
                 return new IntPtr(GetWindowLong32(hWnd, (int)i));
             }
         }
@@ -54,11 +58,14 @@ namespace Naticord.Classes {
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
         private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
 
-        public static IntPtr GetClassLongPtr(this IntPtr hWnd, ClassLong i) {
-            if (IntPtr.Size == 8) {
+        public static IntPtr GetClassLongPtr(this IntPtr hWnd, ClassLong i)
+        {
+            if (IntPtr.Size == 8)
+            {
                 return GetClassLong64(hWnd, (int)i);
             }
-            else {
+            else
+            {
                 return new IntPtr(GetClassLong32(hWnd, (int)i));
             }
         }
@@ -69,7 +76,7 @@ namespace Naticord.Classes {
         [DllImport("user32.dll", EntryPoint = "GetClassLongW")]
         private static extern int GetClassLong32(IntPtr hWnd, int nIndex);
 
-        #endregion
+        #endregion Window manager
 
         #region GDI, DC and Blitting
 
@@ -99,7 +106,6 @@ namespace Naticord.Classes {
         [DllImport("gdi32.dll", ExactSpelling = true)]
         public static extern bool DeleteObject(IntPtr hObject);
 
-        #endregion
-
+        #endregion GDI, DC and Blitting
     }
 }

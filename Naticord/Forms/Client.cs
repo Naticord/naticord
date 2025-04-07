@@ -218,7 +218,7 @@ namespace Naticord.Forms
 
             ghButton.ButtonClick += (s, e) =>
             {
-                // TODO
+                System.Diagnostics.Process.Start("https://github.com/Naticord/naticord");
             };
         }
     }
