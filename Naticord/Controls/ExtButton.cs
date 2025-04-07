@@ -9,6 +9,7 @@ namespace Naticord.Controls
     {
         private string _buttonLabel;
         private Image _buttonIcon;
+        private bool _compositionDisabled;
 
         public event EventHandler ButtonClick;
 
@@ -17,6 +18,7 @@ namespace Naticord.Controls
             InitializeComponent();
             _buttonLabel = "Button";
             _buttonIcon = null;
+            _compositionDisabled = false;
             buttonLabel.Text = _buttonLabel;
 
             this.Click += AllParts_Click;
@@ -68,6 +70,23 @@ namespace Naticord.Controls
                 {
                     _buttonIcon = value;
                     buttonIcon.Image = PremultiplyAlpha(_buttonIcon);
+                }
+            }
+        }
+
+        [Browsable(true)]
+        [Category("Appearance")]
+        [Description("Disables composition on the button label text.")]
+        public bool CompositionDisabled
+        {
+            get => _compositionDisabled;
+            set
+            {
+                if (_compositionDisabled != value)
+                {
+                    _compositionDisabled = value;
+                    buttonLabel.CompositionDisabled = _compositionDisabled;
+                    buttonLabel.Invalidate();
                 }
             }
         }

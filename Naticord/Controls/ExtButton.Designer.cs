@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.buttonIcon = new System.Windows.Forms.PictureBox();
-            this.buttonLabel = new WindowsFormsAero.ThemeLabel();
+            this.buttonLabel = new Naticord.Controls.AeroLabel();
             ((System.ComponentModel.ISupportInitialize)(this.buttonIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,8 +46,8 @@
             // 
             // buttonLabel
             // 
+            this.buttonLabel.Cursor = System.Windows.Forms.Cursors.Default;
             this.buttonLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonLabel.GlowSize = 0;
             this.buttonLabel.Location = new System.Drawing.Point(28, 4);
             this.buttonLabel.Name = "buttonLabel";
             this.buttonLabel.Size = new System.Drawing.Size(57, 23);
@@ -71,6 +71,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox buttonIcon;
-        private WindowsFormsAero.ThemeLabel buttonLabel;
+        private AeroLabel buttonLabel;
     }
 }
+    

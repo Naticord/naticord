@@ -169,9 +169,9 @@ namespace Naticord.Forms
 
         public void ChangePos()
         {
-            usernameLabel.Location = new Point(785, 5);
-            profilePictureUser.Location = new Point(989, 4);
-            buttonPanel.Location = new Point(0, 2);
+            usernameLabel.Location = new System.Drawing.Point(785, 5);
+            profilePictureUser.Location = new System.Drawing.Point(989, 4);
+            buttonPanel.Location = new System.Drawing.Point(0, 2);
         }
 
         private void DecideSettings()
@@ -213,7 +213,7 @@ namespace Naticord.Forms
 
             accountButton.ButtonClick += (s, e) =>
             {
-                accountMenu.Show(accountButton, new Point(0, accountButton.Height));
+                accountMenu.Show(accountButton, new System.Drawing.Point(0, accountButton.Height));
             };
 
             ghButton.ButtonClick += (s, e) =>

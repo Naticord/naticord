@@ -98,9 +98,9 @@ namespace Naticord.Forms
             }
             else
             {
-                clientForm.usernameLabel.Location = new Point(777, 5);
-                clientForm.profilePictureUser.Location = new Point(981, 4);
-                clientForm.buttonPanel.Location = new Point(8, 2);
+                clientForm.usernameLabel.Location = new System.Drawing.Point(777, 5);
+                clientForm.profilePictureUser.Location = new System.Drawing.Point(981, 4);
+                clientForm.buttonPanel.Location = new System.Drawing.Point(8, 2);
             }
 
             settings.borderStyle = selected;

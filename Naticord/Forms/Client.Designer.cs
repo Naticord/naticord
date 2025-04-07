@@ -1,4 +1,6 @@
-﻿namespace Naticord.Forms
+﻿using Naticord.Controls;
+
+namespace Naticord.Forms
 {
     partial class Client
     {
@@ -30,7 +32,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Client));
-            this.usernameLabel = new WindowsFormsAero.ThemeLabel();
+            this.usernameLabel = new Naticord.Controls.AeroLabel();
             this.buttonPanel = new System.Windows.Forms.Panel();
             this.ghButton = new Naticord.Controls.ExtButton();
             this.accountButton = new Naticord.Controls.ExtButton();
@@ -122,7 +124,7 @@
             this.logoutToolStripMenuItem});
             this.accountMenu.Name = "accountMenu";
             this.accountMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.accountMenu.Size = new System.Drawing.Size(181, 98);
+            this.accountMenu.Size = new System.Drawing.Size(137, 76);
             // 
             // statusToolStripMenuItem
             // 
@@ -132,48 +134,48 @@
             this.idleToolStripMenuItem,
             this.offlineToolStripMenuItem});
             this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-            this.statusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.statusToolStripMenuItem.Text = "Status";
             // 
             // onlineToolStripMenuItem
             // 
             this.onlineToolStripMenuItem.Name = "onlineToolStripMenuItem";
-            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.onlineToolStripMenuItem.Text = "Online";
             // 
             // doNotDisturbToolStripMenuItem
             // 
             this.doNotDisturbToolStripMenuItem.Name = "doNotDisturbToolStripMenuItem";
-            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.doNotDisturbToolStripMenuItem.Text = "Do Not Disturb";
             // 
             // idleToolStripMenuItem
             // 
             this.idleToolStripMenuItem.Name = "idleToolStripMenuItem";
-            this.idleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.idleToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.idleToolStripMenuItem.Text = "Idle";
             // 
             // offlineToolStripMenuItem
             // 
             this.offlineToolStripMenuItem.Name = "offlineToolStripMenuItem";
-            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.offlineToolStripMenuItem.Text = "Offline";
             // 
             // viewProfileToolStripMenuItem
             // 
             this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.viewProfileToolStripMenuItem.Text = "View profile";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // Client
@@ -202,7 +204,7 @@
 
         public System.Windows.Forms.PictureBox profilePictureUser;
         public Controls.ExtButton settingsButton;
-        public WindowsFormsAero.ThemeLabel usernameLabel;
+        public AeroLabel usernameLabel;
         public System.Windows.Forms.Panel buttonPanel;
         public Controls.ExtButton accountButton;
         public Controls.ExtButton ghButton;

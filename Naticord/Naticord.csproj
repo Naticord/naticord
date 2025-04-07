@@ -58,7 +58,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\BitBlpOp.cs" />
+    <Compile Include="Classes\BitmapInfo.cs" />
+    <Compile Include="Classes\ClassLong.cs" />
+    <Compile Include="Classes\DttOpts.cs" />
+    <Compile Include="Classes\DttOptsFlags.cs" />
     <Compile Include="Classes\DWMExtTitlebar.cs" />
+    <Compile Include="Classes\HitTest.cs" />
+    <Compile Include="Classes\Methods.cs" />
+    <Compile Include="Classes\Point.cs" />
+    <Compile Include="Classes\Rect.cs" />
+    <Compile Include="Classes\WindowLong.cs" />
+    <Compile Include="Classes\WindowMessage.cs" />
+    <Compile Include="Controls\AeroLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\ExtButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -68,6 +82,7 @@
     <Compile Include="Controls\GlassForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Controls\ThemedText.cs" />
     <Compile Include="Forms\Client.cs">
       <SubType>Form</SubType>
     </Compile>
