@@ -38,11 +38,9 @@ namespace Naticord.Forms
             dcAPI = new API();
             InitializeComponent();
 
-            // This is a fix for Windows 10toXP and other older operating system skins so it looks great on all of them
-            SetSysFontForAllCont(this);
-
             DecideSettings();
             SetUpToolbarButtons();
+            DrawPBBorder(profilePictureUser);
 
             this.FormClosing += (s, e) => Application.Exit();
             this.Shown += (s, e) => ApplySavedSettings();
@@ -225,22 +223,18 @@ namespace Naticord.Forms
             };
         }
 
-        private void SetSysFontForAllCont(Form form)
+        void DrawPBBorder(PictureBox pictureBox)
         {
-            Font systemFont = SystemFonts.MenuFont;
-            foreach (Control control in form.Controls)
+            pictureBox.Paint += (s, e) =>
             {
-                SetControlFont(control, systemFont);
-            }
-        }
-
-        private void SetControlFont(Control control, Font font)
-        {
-            control.Font = font;
-            foreach (Control childControl in control.Controls)
-            {
-                SetControlFont(childControl, font);
-            }
+                using (Pen pen = new Pen(Color.FromArgb(255, 35, 35, 35), 1))
+                {
+                    pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
+                    e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    e.Graphics.DrawRectangle(pen, 0, 0, pictureBox.Width - 1, pictureBox.Height - 1);
+                }
+            };
+            pictureBox.Invalidate();
         }
     }
 }

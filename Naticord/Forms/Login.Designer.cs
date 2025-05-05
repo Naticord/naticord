@@ -46,7 +46,7 @@
             this.naticordBanner.Image = global::Naticord.Properties.Resources.nc_banner;
             this.naticordBanner.Location = new System.Drawing.Point(-1, -3);
             this.naticordBanner.Name = "naticordBanner";
-            this.naticordBanner.Size = new System.Drawing.Size(502, 129);
+            this.naticordBanner.Size = new System.Drawing.Size(413, 100);
             this.naticordBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.naticordBanner.TabIndex = 0;
             this.naticordBanner.TabStop = false;
@@ -57,7 +57,7 @@
             this.headerLabel.AutoSize = true;
             this.headerLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.headerLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(42)))), ((int)(((byte)(158)))));
-            this.headerLabel.Location = new System.Drawing.Point(24, 135);
+            this.headerLabel.Location = new System.Drawing.Point(19, 109);
             this.headerLabel.Name = "headerLabel";
             this.headerLabel.Size = new System.Drawing.Size(161, 21);
             this.headerLabel.TabIndex = 2;
@@ -67,25 +67,25 @@
             // 
             this.subHeaderLabel.AutoSize = true;
             this.subHeaderLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subHeaderLabel.Location = new System.Drawing.Point(25, 157);
+            this.subHeaderLabel.Location = new System.Drawing.Point(20, 131);
             this.subHeaderLabel.Name = "subHeaderLabel";
-            this.subHeaderLabel.Size = new System.Drawing.Size(320, 15);
+            this.subHeaderLabel.Size = new System.Drawing.Size(319, 15);
             this.subHeaderLabel.TabIndex = 3;
             this.subHeaderLabel.Text = "To get started with Naticord, login to your Discord account.";
             // 
             // emailBox
             // 
             this.emailBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.emailBox.Location = new System.Drawing.Point(112, 181);
+            this.emailBox.Location = new System.Drawing.Point(107, 155);
             this.emailBox.Name = "emailBox";
-            this.emailBox.Size = new System.Drawing.Size(367, 23);
+            this.emailBox.Size = new System.Drawing.Size(285, 23);
             this.emailBox.TabIndex = 4;
             // 
             // loginButton
             // 
             this.loginButton.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.loginButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loginButton.Location = new System.Drawing.Point(413, 257);
+            this.loginButton.Location = new System.Drawing.Point(317, 223);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(75, 23);
             this.loginButton.TabIndex = 1;
@@ -97,7 +97,7 @@
             // 
             this.emailLabel.AutoSize = true;
             this.emailLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.emailLabel.Location = new System.Drawing.Point(25, 184);
+            this.emailLabel.Location = new System.Drawing.Point(20, 158);
             this.emailLabel.Name = "emailLabel";
             this.emailLabel.Size = new System.Drawing.Size(81, 15);
             this.emailLabel.TabIndex = 5;
@@ -107,7 +107,7 @@
             // 
             this.passwordLabel.AutoSize = true;
             this.passwordLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordLabel.Location = new System.Drawing.Point(49, 211);
+            this.passwordLabel.Location = new System.Drawing.Point(44, 185);
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(57, 15);
             this.passwordLabel.TabIndex = 7;
@@ -116,9 +116,9 @@
             // passwordBox
             // 
             this.passwordBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordBox.Location = new System.Drawing.Point(112, 211);
+            this.passwordBox.Location = new System.Drawing.Point(107, 185);
             this.passwordBox.Name = "passwordBox";
-            this.passwordBox.Size = new System.Drawing.Size(367, 23);
+            this.passwordBox.Size = new System.Drawing.Size(285, 23);
             this.passwordBox.TabIndex = 6;
             this.passwordBox.UseSystemPasswordChar = true;
             // 
@@ -129,9 +129,9 @@
             this.tokenLogin.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tokenLogin.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.tokenLogin.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
-            this.tokenLogin.Location = new System.Drawing.Point(16, 261);
+            this.tokenLogin.Location = new System.Drawing.Point(20, 227);
             this.tokenLogin.Name = "tokenLogin";
-            this.tokenLogin.Size = new System.Drawing.Size(69, 15);
+            this.tokenLogin.Size = new System.Drawing.Size(68, 15);
             this.tokenLogin.TabIndex = 8;
             this.tokenLogin.TabStop = true;
             this.tokenLogin.Text = "Token login";
@@ -143,7 +143,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(500, 292);
+            this.ClientSize = new System.Drawing.Size(411, 260);
             this.Controls.Add(this.tokenLogin);
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.passwordBox);
@@ -159,6 +159,7 @@
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login - Naticord";
+            this.Load += new System.EventHandler(this.Login_Load);
             ((System.ComponentModel.ISupportInitialize)(this.naticordBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

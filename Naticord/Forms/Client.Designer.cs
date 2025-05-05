@@ -49,10 +49,17 @@ namespace Naticord.Forms
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.attachLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.dmsTabControl = new System.Windows.Forms.TabControl();
+            this.dmsTab = new System.Windows.Forms.TabPage();
+            this.servTab = new System.Windows.Forms.TabPage();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureUser)).BeginInit();
             this.accountMenu.SuspendLayout();
             this.statusBar.SuspendLayout();
+            this.dmsTabControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // usernameLabel
@@ -81,7 +88,7 @@ namespace Naticord.Forms
             // ghButton
             // 
             this.ghButton.BackColor = System.Drawing.Color.Black;
-            this.ghButton.ButtonIcon = global::Naticord.Properties.Resources.github;
+            this.ghButton.ButtonIcon = ((System.Drawing.Image)(resources.GetObject("ghButton.ButtonIcon")));
             this.ghButton.ButtonLabel = "GitHub";
             this.ghButton.CompositionDisabled = false;
             this.ghButton.Location = new System.Drawing.Point(183, 0);
@@ -92,7 +99,7 @@ namespace Naticord.Forms
             // accountButton
             // 
             this.accountButton.BackColor = System.Drawing.Color.Black;
-            this.accountButton.ButtonIcon = global::Naticord.Properties.Resources.account;
+            this.accountButton.ButtonIcon = ((System.Drawing.Image)(resources.GetObject("accountButton.ButtonIcon")));
             this.accountButton.ButtonLabel = "Account";
             this.accountButton.CompositionDisabled = false;
             this.accountButton.Location = new System.Drawing.Point(92, 0);
@@ -103,7 +110,7 @@ namespace Naticord.Forms
             // settingsButton
             // 
             this.settingsButton.BackColor = System.Drawing.Color.Black;
-            this.settingsButton.ButtonIcon = global::Naticord.Properties.Resources.settings;
+            this.settingsButton.ButtonIcon = ((System.Drawing.Image)(resources.GetObject("settingsButton.ButtonIcon")));
             this.settingsButton.ButtonLabel = "Settings";
             this.settingsButton.CompositionDisabled = false;
             this.settingsButton.Location = new System.Drawing.Point(1, 0);
@@ -114,7 +121,7 @@ namespace Naticord.Forms
             // profilePictureUser
             // 
             this.profilePictureUser.BackColor = System.Drawing.Color.Black;
-            this.profilePictureUser.Image = global::Naticord.Properties.Resources.naticord_logo_64;
+            this.profilePictureUser.Image = ((System.Drawing.Image)(resources.GetObject("profilePictureUser.Image")));
             this.profilePictureUser.Location = new System.Drawing.Point(981, 4);
             this.profilePictureUser.Name = "profilePictureUser";
             this.profilePictureUser.Size = new System.Drawing.Size(25, 25);
@@ -204,11 +211,70 @@ namespace Naticord.Forms
             this.attachLabel.Size = new System.Drawing.Size(117, 17);
             this.attachLabel.Text = "No file was attached.";
             // 
+            // dmsTabControl
+            // 
+            this.dmsTabControl.Controls.Add(this.dmsTab);
+            this.dmsTabControl.Controls.Add(this.servTab);
+            this.dmsTabControl.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dmsTabControl.Location = new System.Drawing.Point(16, 40);
+            this.dmsTabControl.Name = "dmsTabControl";
+            this.dmsTabControl.SelectedIndex = 0;
+            this.dmsTabControl.Size = new System.Drawing.Size(200, 515);
+            this.dmsTabControl.TabIndex = 6;
+            // 
+            // dmsTab
+            // 
+            this.dmsTab.Location = new System.Drawing.Point(4, 24);
+            this.dmsTab.Name = "dmsTab";
+            this.dmsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.dmsTab.Size = new System.Drawing.Size(192, 487);
+            this.dmsTab.TabIndex = 0;
+            this.dmsTab.Text = "Direct Messages";
+            this.dmsTab.UseVisualStyleBackColor = true;
+            // 
+            // servTab
+            // 
+            this.servTab.Location = new System.Drawing.Point(4, 22);
+            this.servTab.Name = "servTab";
+            this.servTab.Padding = new System.Windows.Forms.Padding(3);
+            this.servTab.Size = new System.Drawing.Size(192, 494);
+            this.servTab.TabIndex = 1;
+            this.servTab.Text = "Servers";
+            this.servTab.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(222, 40);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(776, 488);
+            this.flowLayoutPanel1.TabIndex = 7;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(296, 532);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(702, 21);
+            this.textBox1.TabIndex = 8;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(222, 532);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(68, 21);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Upload";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // Client
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1014, 591);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.dmsTabControl);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.buttonPanel);
             this.Controls.Add(this.usernameLabel);
@@ -218,12 +284,13 @@ namespace Naticord.Forms
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Client";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Naticord";
+            this.Text = "Chats - Naticord";
             this.buttonPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureUser)).EndInit();
             this.accountMenu.ResumeLayout(false);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
+            this.dmsTabControl.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -248,5 +315,11 @@ namespace Naticord.Forms
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel attachLabel;
+        private System.Windows.Forms.TabControl dmsTabControl;
+        private System.Windows.Forms.TabPage dmsTab;
+        private System.Windows.Forms.TabPage servTab;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -129,5 +129,10 @@ namespace Naticord.Forms
                 // Do nothing
             }
         }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
