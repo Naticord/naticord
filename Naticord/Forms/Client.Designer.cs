@@ -57,6 +57,7 @@ namespace Naticord.Forms
             // 
             // usernameLabel
             // 
+            this.usernameLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.usernameLabel.Location = new System.Drawing.Point(776, 4);
             this.usernameLabel.Name = "usernameLabel";
             this.usernameLabel.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
@@ -130,7 +131,7 @@ namespace Naticord.Forms
             this.logoutToolStripMenuItem});
             this.accountMenu.Name = "accountMenu";
             this.accountMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.accountMenu.Size = new System.Drawing.Size(137, 76);
+            this.accountMenu.Size = new System.Drawing.Size(130, 76);
             // 
             // statusToolStripMenuItem
             // 
@@ -140,48 +141,48 @@ namespace Naticord.Forms
             this.idleToolStripMenuItem,
             this.offlineToolStripMenuItem});
             this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-            this.statusToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.statusToolStripMenuItem.Text = "Status";
             // 
             // onlineToolStripMenuItem
             // 
             this.onlineToolStripMenuItem.Name = "onlineToolStripMenuItem";
-            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.onlineToolStripMenuItem.Text = "Online";
             // 
             // doNotDisturbToolStripMenuItem
             // 
             this.doNotDisturbToolStripMenuItem.Name = "doNotDisturbToolStripMenuItem";
-            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.doNotDisturbToolStripMenuItem.Text = "Do Not Disturb";
             // 
             // idleToolStripMenuItem
             // 
             this.idleToolStripMenuItem.Name = "idleToolStripMenuItem";
-            this.idleToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.idleToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.idleToolStripMenuItem.Text = "Idle";
             // 
             // offlineToolStripMenuItem
             // 
             this.offlineToolStripMenuItem.Name = "offlineToolStripMenuItem";
-            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.offlineToolStripMenuItem.Text = "Offline";
             // 
             // viewProfileToolStripMenuItem
             // 
             this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.viewProfileToolStripMenuItem.Text = "View profile";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(126, 6);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // statusBar
@@ -198,14 +199,14 @@ namespace Naticord.Forms
             // attachLabel
             // 
             this.attachLabel.BackColor = System.Drawing.Color.Transparent;
+            this.attachLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.attachLabel.Name = "attachLabel";
             this.attachLabel.Size = new System.Drawing.Size(117, 17);
             this.attachLabel.Text = "No file was attached.";
             // 
             // Client
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1014, 591);
             this.Controls.Add(this.statusBar);

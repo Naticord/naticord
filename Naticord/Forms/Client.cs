@@ -38,6 +38,9 @@ namespace Naticord.Forms
             dcAPI = new API();
             InitializeComponent();
 
+            // This is a fix for Windows 10toXP and other older operating system skins so it looks great on all of them
+            SetSysFontForAllCont(this);
+
             DecideSettings();
             SetUpToolbarButtons();
 
@@ -220,6 +223,24 @@ namespace Naticord.Forms
             {
                 System.Diagnostics.Process.Start("https://github.com/Naticord/naticord");
             };
+        }
+
+        private void SetSysFontForAllCont(Form form)
+        {
+            Font systemFont = SystemFonts.MenuFont;
+            foreach (Control control in form.Controls)
+            {
+                SetControlFont(control, systemFont);
+            }
+        }
+
+        private void SetControlFont(Control control, Font font)
+        {
+            control.Font = font;
+            foreach (Control childControl in control.Controls)
+            {
+                SetControlFont(childControl, font);
+            }
         }
     }
 }
