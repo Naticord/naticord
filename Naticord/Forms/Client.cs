@@ -4,6 +4,7 @@ using Naticord.Controls;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Naticord.Forms
         private readonly string iconStyle = Properties.Settings.Default.iconStyle;
         private readonly string borderStyle = Properties.Settings.Default.borderStyle;
         private readonly string token = Properties.Settings.Default.token;
+        private readonly bool isCompDisabled = !Application.RenderWithVisualStyles;
 
         private static readonly string CachePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -40,6 +42,8 @@ namespace Naticord.Forms
 
             DecideSettings();
             SetUpToolbarButtons();
+
+            chatPanel.Paint += XPPanelBDPaint;
             DrawPBBorder(profilePictureUser);
 
             this.FormClosing += (s, e) => Application.Exit();
@@ -180,22 +184,28 @@ namespace Naticord.Forms
             if (Properties.Settings.Default.runDefaults)
                 return;
 
+            if (isCompDisabled == true)
+                Properties.Settings.Default.renderMode = "Composition disabled";
+
             switch (OSVersionHelper.GetWindowsVersion())
             {
                 case "Windows 11":
-                    Properties.Settings.Default.renderMode = "Mica";
+                    if (isCompDisabled == false)
+                        Properties.Settings.Default.renderMode = "Mica";
                     Properties.Settings.Default.iconStyle = "Modern";
                     Properties.Settings.Default.borderStyle = "Slim";
                     break;
 
                 case "Windows 10":
-                    Properties.Settings.Default.renderMode = "Acrylic";
+                    if (isCompDisabled == false)
+                        Properties.Settings.Default.renderMode = "Acrylic";
                     Properties.Settings.Default.iconStyle = "Modern";
                     Properties.Settings.Default.borderStyle = "Slim";
                     break;
 
                 case "Windows 7 - 8.1":
-                    Properties.Settings.Default.renderMode = "Aero";
+                    if (isCompDisabled == false)
+                        Properties.Settings.Default.renderMode = "Aero";
                     Properties.Settings.Default.iconStyle = "Legacy";
                     Properties.Settings.Default.borderStyle = "Thick";
                     break;
@@ -236,5 +246,16 @@ namespace Naticord.Forms
             };
             pictureBox.Invalidate();
         }
+
+        private void XPPanelBDPaint(object sender, PaintEventArgs e)
+        {
+            Color borderColor = Color.FromArgb(127, 157, 185);
+            Control panel = (Control)sender;
+            using (Pen pen = new Pen(borderColor))
+            {
+                e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+            }
+        }
+
     }
 }
