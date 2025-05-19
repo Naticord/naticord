@@ -48,7 +48,6 @@ namespace Naticord.Forms
 
             this.FormClosing += (s, e) => Application.Exit();
             this.Shown += (s, e) => ApplySavedSettings();
-            this.DoubleBuffered = true;
 
             CenterToScreen();
 
