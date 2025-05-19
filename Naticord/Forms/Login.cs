@@ -14,6 +14,7 @@ namespace Naticord.Forms
     {
         private API dcAPI;
         private bool isClassicMode = !Application.RenderWithVisualStyles || !VisualStyleInformation.IsEnabledByUser;
+        private bool showPass = false;
         private string token;
         private string passwordText;
         private string emailText;
@@ -130,9 +131,30 @@ namespace Naticord.Forms
             }
         }
 
-        private void Login_Load(object sender, EventArgs e)
+        private void showButton_Click(object sender, EventArgs e)
         {
+            if (showPass == false)
+            {
+                ShowPassword();
+                showPass = true;
+            }
+            else
+            {
+                HidePassword();
+                showPass = false;
+            }
+        }
 
+        private void ShowPassword()
+        {
+            passwordBox.UseSystemPasswordChar = false;
+            showButton.Text = "Hide";
+        }
+
+        private void HidePassword()
+        {
+            passwordBox.UseSystemPasswordChar = true;
+            showButton.Text = "Show";
         }
     }
 }

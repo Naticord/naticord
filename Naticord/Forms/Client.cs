@@ -48,6 +48,7 @@ namespace Naticord.Forms
 
             this.FormClosing += (s, e) => Application.Exit();
             this.Shown += (s, e) => ApplySavedSettings();
+            this.DoubleBuffered = true;
 
             CenterToScreen();
 
@@ -183,7 +184,6 @@ namespace Naticord.Forms
         {
             if (Properties.Settings.Default.runDefaults)
                 return;
-
             if (isCompDisabled == true)
                 Properties.Settings.Default.renderMode = "Composition disabled";
 
@@ -213,6 +213,7 @@ namespace Naticord.Forms
 
             Properties.Settings.Default.runDefaults = true;
             Properties.Settings.Default.Save();
+            Application.Restart(); // This applies all the settings
         }
 
         private void SetUpToolbarButtons()
@@ -256,6 +257,5 @@ namespace Naticord.Forms
                 e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
             }
         }
-
     }
 }

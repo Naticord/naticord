@@ -38,6 +38,8 @@
             this.passwordLabel = new System.Windows.Forms.Label();
             this.passwordBox = new System.Windows.Forms.TextBox();
             this.tokenLogin = new System.Windows.Forms.LinkLabel();
+            this.showButton = new WindowsFormsAero.Button();
+            this.otherSettingsLink = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.naticordBanner)).BeginInit();
             this.SuspendLayout();
             // 
@@ -107,7 +109,7 @@
             // 
             this.passwordLabel.AutoSize = true;
             this.passwordLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordLabel.Location = new System.Drawing.Point(44, 185);
+            this.passwordLabel.Location = new System.Drawing.Point(44, 187);
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(57, 15);
             this.passwordLabel.TabIndex = 7;
@@ -116,9 +118,9 @@
             // passwordBox
             // 
             this.passwordBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passwordBox.Location = new System.Drawing.Point(107, 185);
+            this.passwordBox.Location = new System.Drawing.Point(107, 184);
             this.passwordBox.Name = "passwordBox";
-            this.passwordBox.Size = new System.Drawing.Size(285, 23);
+            this.passwordBox.Size = new System.Drawing.Size(219, 23);
             this.passwordBox.TabIndex = 6;
             this.passwordBox.UseSystemPasswordChar = true;
             // 
@@ -138,12 +140,40 @@
             this.tokenLogin.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.tokenLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.tokenLogin_LinkClicked);
             // 
+            // showButton
+            // 
+            this.showButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showButton.Location = new System.Drawing.Point(332, 184);
+            this.showButton.Name = "showButton";
+            this.showButton.Size = new System.Drawing.Size(60, 24);
+            this.showButton.TabIndex = 9;
+            this.showButton.Text = "Show";
+            this.showButton.UseVisualStyleBackColor = true;
+            this.showButton.Click += new System.EventHandler(this.showButton_Click);
+            // 
+            // otherSettingsLink
+            // 
+            this.otherSettingsLink.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.otherSettingsLink.AutoSize = true;
+            this.otherSettingsLink.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.otherSettingsLink.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.otherSettingsLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            this.otherSettingsLink.Location = new System.Drawing.Point(94, 227);
+            this.otherSettingsLink.Name = "otherSettingsLink";
+            this.otherSettingsLink.Size = new System.Drawing.Size(81, 15);
+            this.otherSettingsLink.TabIndex = 10;
+            this.otherSettingsLink.TabStop = true;
+            this.otherSettingsLink.Text = "Other settings";
+            this.otherSettingsLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(411, 260);
+            this.Controls.Add(this.otherSettingsLink);
+            this.Controls.Add(this.showButton);
             this.Controls.Add(this.tokenLogin);
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.passwordBox);
@@ -159,7 +189,6 @@
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login - Naticord";
-            this.Load += new System.EventHandler(this.Login_Load);
             ((System.ComponentModel.ISupportInitialize)(this.naticordBanner)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -177,6 +206,8 @@
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.TextBox passwordBox;
         private System.Windows.Forms.LinkLabel tokenLogin;
+        private WindowsFormsAero.Button showButton;
+        private System.Windows.Forms.LinkLabel otherSettingsLink;
     }
 }
 
