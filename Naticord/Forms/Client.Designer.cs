@@ -141,7 +141,7 @@ namespace Naticord.Forms
             this.logoutToolStripMenuItem});
             this.accountMenu.Name = "accountMenu";
             this.accountMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.accountMenu.Size = new System.Drawing.Size(130, 76);
+            this.accountMenu.Size = new System.Drawing.Size(137, 76);
             // 
             // statusToolStripMenuItem
             // 
@@ -151,48 +151,48 @@ namespace Naticord.Forms
             this.idleToolStripMenuItem,
             this.offlineToolStripMenuItem});
             this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-            this.statusToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.statusToolStripMenuItem.Text = "Status";
             // 
             // onlineToolStripMenuItem
             // 
             this.onlineToolStripMenuItem.Name = "onlineToolStripMenuItem";
-            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.onlineToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.onlineToolStripMenuItem.Text = "Online";
             // 
             // doNotDisturbToolStripMenuItem
             // 
             this.doNotDisturbToolStripMenuItem.Name = "doNotDisturbToolStripMenuItem";
-            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.doNotDisturbToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.doNotDisturbToolStripMenuItem.Text = "Do Not Disturb";
             // 
             // idleToolStripMenuItem
             // 
             this.idleToolStripMenuItem.Name = "idleToolStripMenuItem";
-            this.idleToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.idleToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.idleToolStripMenuItem.Text = "Idle";
             // 
             // offlineToolStripMenuItem
             // 
             this.offlineToolStripMenuItem.Name = "offlineToolStripMenuItem";
-            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.offlineToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.offlineToolStripMenuItem.Text = "Offline";
             // 
             // viewProfileToolStripMenuItem
             // 
             this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.viewProfileToolStripMenuItem.Text = "View profile";
             // 
             // toolSeparatorAccMenu
             // 
             this.toolSeparatorAccMenu.Name = "toolSeparatorAccMenu";
-            this.toolSeparatorAccMenu.Size = new System.Drawing.Size(126, 6);
+            this.toolSeparatorAccMenu.Size = new System.Drawing.Size(133, 6);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // statusBar
@@ -296,6 +296,7 @@ namespace Naticord.Forms
             this.Name = "Client";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Chats - Naticord";
+            this.Load += new System.EventHandler(this.Client_Load);
             this.buttonPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.profilePictureUser)).EndInit();
             this.accountMenu.ResumeLayout(false);

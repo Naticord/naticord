@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Naticord.Networking;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
-using Naticord.Networking;
 using System.Drawing;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using System.Threading.Tasks;
 
 namespace Naticord.Forms
 {
@@ -45,7 +45,7 @@ namespace Naticord.Forms
             MessageBox.Show("Made with <3 by patricktbp!", "Easter egg", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
+        private async void loginButton_Click(object sender, EventArgs e)
         {
             emailText = emailBox.Text;
             passwordText = passwordBox.Text;
@@ -57,11 +57,11 @@ namespace Naticord.Forms
             }
             else
             {
-                SendLogin(emailText, passwordText);
+                await SendLogin(emailText, passwordText);
             }
         }
 
-        private void SendLogin(string email, string password)
+        private async Task SendLogin(string email, string password)
         {
             var loginBody = new
             {
@@ -71,7 +71,7 @@ namespace Naticord.Forms
             };
 
             Debug.WriteLine("[DEBUG] SendLogin called");
-            string loginResponse = dcAPI.APISend("auth/login", HttpMethod.Post, loginBody, token);
+            string loginResponse = await dcAPI.SendAPI("auth/login", HttpMethod.Post, token, loginBody);
 
             if (loginResponse.Contains("\"token\""))
             {

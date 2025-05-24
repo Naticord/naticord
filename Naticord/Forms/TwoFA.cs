@@ -1,11 +1,11 @@
 ﻿#nullable enable
 
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Newtonsoft.Json;
 
 namespace Naticord.Forms
 {

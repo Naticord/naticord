@@ -53,7 +53,7 @@ namespace Naticord.Controls
 
         private void CompSet(bool setComp)
         {
-            if (setComp == true) 
+            if (setComp == true)
             {
                 clientForm.buttonPanel.BackColor = System.Drawing.Color.White;
                 clientForm.settingsButton.BackColor = System.Drawing.Color.White;

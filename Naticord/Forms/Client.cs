@@ -1,16 +1,16 @@
 ﻿using Naticord.Classes;
-using Naticord.Networking;
 using Naticord.Controls;
+using Naticord.Networking;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using System.Net.Http;
-using Newtonsoft.Json.Linq;
-using System.Linq;
-using System;
 using System.IO;
-using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Naticord.Forms
 {
@@ -27,6 +27,7 @@ namespace Naticord.Forms
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Naticord"
         );
+
         private static Dictionary<string, Image> avatarCache = new Dictionary<string, Image>();
         private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
 
@@ -50,17 +51,14 @@ namespace Naticord.Forms
             this.Shown += (s, e) => ApplySavedSettings();
 
             CenterToScreen();
-
-            // Actual client
-            SetUserInfo();
         }
 
         // Discord API related functionality
-        private void SetUserInfo()
+        private async Task SetUserInfo()
         {
             try
             {
-                string userDetails = dcAPI.APISend("users/@me", HttpMethod.Get, null, token, null, null);
+                string userDetails = await dcAPI.SendAPI("users/@me", HttpMethod.Get, token, null, null, null);
                 JObject parsedJson = JObject.Parse(userDetails);
 
                 string userId = parsedJson["id"]?.ToString() ?? "N/A";
@@ -74,6 +72,33 @@ namespace Naticord.Forms
             catch (Exception ex)
             {
                 Debug.WriteLine($"Parse error: {ex.Message}");
+            }
+        }
+
+        private async Task LoadFriendsList()
+        {
+            try
+            {
+                string friendList = await dcAPI.SendAPI("users/@me/relationships", HttpMethod.Get, token, null, null, null);
+                JArray parsedJson = JArray.Parse(friendList);
+                Debug.WriteLine(parsedJson);
+
+                foreach (var friend in parsedJson)
+                {
+                    string friendId = friend["id"]?.ToString() ?? "N/A";
+                    string friendGlobalName = friend["user"]["global_name"]?.ToString() ?? "N/A";
+                    string friendUsername = friend["user"]["username"]?.ToString() ?? "N/A";
+                    string friendAvatarHash = friend["user"]["avatar"]?.ToString();
+                    string friendClanTag = "N/A";
+                    if (friend["user"]["clan"] is JObject clanObject)
+                    {
+                        friendClanTag = clanObject["tag"]?.ToString() ?? "N/A";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading friend list: {ex.Message}");
             }
         }
 
@@ -233,7 +258,7 @@ namespace Naticord.Forms
             };
         }
 
-        void DrawPBBorder(PictureBox pictureBox)
+        private void DrawPBBorder(PictureBox pictureBox)
         {
             pictureBox.Paint += (s, e) =>
             {
@@ -255,6 +280,12 @@ namespace Naticord.Forms
             {
                 e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
             }
+        }
+
+        private async void Client_Load(object sender, EventArgs e)
+        {
+            await SetUserInfo();
+            await LoadFriendsList();
         }
     }
 }

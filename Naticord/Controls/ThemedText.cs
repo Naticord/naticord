@@ -1,17 +1,16 @@
 ﻿// Taken from WindowsFormsAero
 
+using Naticord.Classes;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Naticord.Classes;
 
 namespace Naticord.Controls
 {
     internal class ThemedText : IDisposable
     {
-
         private static int _win32Black = ColorTranslator.ToWin32(Color.Black);
 
         private static VisualStyleRenderer GetRenderer()
@@ -24,9 +23,9 @@ namespace Naticord.Controls
 
             return null;
         }
+
         public ThemedText()
         {
-
         }
 
         private bool _invalidated = true;
@@ -155,7 +154,7 @@ namespace Naticord.Controls
             GC.SuppressFinalize(this);
         }
 
-        #endregion
+        #endregion IDisposable Members
 
         public void Draw(Graphics g, System.Drawing.Point location, System.Drawing.Size size)
         {
@@ -291,7 +290,5 @@ namespace Naticord.Controls
 
             return _textHdc;
         }
-
     }
-
 }

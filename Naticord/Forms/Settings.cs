@@ -36,6 +36,7 @@ namespace Naticord.Forms
                     appearanceIcon.Image = Properties.Resources.appearance;
                     updateIcon.Image = Properties.Resources.updates;
                     break;
+
                 case "Modern":
                     appearanceIcon.Image = Properties.Resources.appearance_modern;
                     updateIcon.Image = Properties.Resources.updates_modern;
@@ -149,18 +150,21 @@ namespace Naticord.Forms
                     settings.iconStyle = "Modern";
                     settings.borderStyle = "Slim";
                     break;
+
                 case "Windows 10":
                     settings.spoofedOS = "Windows 10";
                     settings.renderMode = "Acrylic";
                     settings.iconStyle = "Modern";
                     settings.borderStyle = "Slim";
                     break;
+
                 case "Windows 7 - 8.1":
                     settings.spoofedOS = "Windows 7 - 8.1";
                     settings.renderMode = "Aero";
                     settings.iconStyle = "Legacy";
                     settings.borderStyle = "Thick";
                     break;
+
                 case "Custom":
                     settings.spoofedOS = "Custom";
                     break;

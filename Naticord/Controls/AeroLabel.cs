@@ -1,11 +1,11 @@
 ﻿// Taken from WindowsFormsAero
 
+using Naticord.Classes;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Naticord.Classes;
 
 namespace Naticord.Controls
 {
