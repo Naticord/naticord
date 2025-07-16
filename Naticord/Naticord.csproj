@@ -166,6 +166,15 @@
     <None Include="Resources\naticord-logo-64.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\account.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\github.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\account-modern.png" />
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +185,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="naticord.ico" />
-    <None Include="Resources\account.png" />
-    <None Include="Resources\github.png" />
-    <None Include="Resources\settings.png" />
     <None Include="Resources\updates.png" />
     <None Include="Resources\updates-modern.png" />
     <None Include="Resources\credits-modern.png" />
