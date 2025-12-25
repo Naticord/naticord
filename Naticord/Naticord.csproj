@@ -113,6 +113,12 @@
     <Compile Include="Forms\TwoFA.Designer.cs">
       <DependentUpon>TwoFA.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UserViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UserViewer.Designer.cs">
+      <DependentUpon>UserViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Networking\API.cs" />
     <Compile Include="Classes\OSVersionHelper.cs" />
     <Compile Include="Program.cs" />
@@ -134,6 +140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TwoFA.resx">
       <DependentUpon>TwoFA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserViewer.resx">
+      <DependentUpon>UserViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

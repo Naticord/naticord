@@ -141,7 +141,7 @@ namespace Naticord.Forms
             this.logoutToolStripMenuItem});
             this.accountMenu.Name = "accountMenu";
             this.accountMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.accountMenu.Size = new System.Drawing.Size(137, 76);
+            this.accountMenu.Size = new System.Drawing.Size(181, 98);
             // 
             // statusToolStripMenuItem
             // 
@@ -151,7 +151,7 @@ namespace Naticord.Forms
             this.idleToolStripMenuItem,
             this.offlineToolStripMenuItem});
             this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-            this.statusToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.statusToolStripMenuItem.Text = "Status";
             // 
             // onlineToolStripMenuItem
@@ -181,18 +181,19 @@ namespace Naticord.Forms
             // viewProfileToolStripMenuItem
             // 
             this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.viewProfileToolStripMenuItem.Text = "View profile";
+            this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
             // 
             // toolSeparatorAccMenu
             // 
             this.toolSeparatorAccMenu.Name = "toolSeparatorAccMenu";
-            this.toolSeparatorAccMenu.Size = new System.Drawing.Size(133, 6);
+            this.toolSeparatorAccMenu.Size = new System.Drawing.Size(177, 6);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // statusBar

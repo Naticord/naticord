@@ -31,6 +31,7 @@ namespace Naticord.Forms
         private static Dictionary<string, Image> avatarCache = new Dictionary<string, Image>();
         private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
 
+        private string userIdViewer;
         private API dcAPI;
 
         public Client()
@@ -66,6 +67,7 @@ namespace Naticord.Forms
                 string username = parsedJson["username"]?.ToString() ?? "N/A";
                 string avatarHash = parsedJson["avatar"]?.ToString();
 
+                userIdViewer = userId;
                 profilePictureUser.Image = GetCachedAvatar(userId, avatarHash, false, false);
                 usernameLabel.Text = $"{globalName} ({username})";
             }
@@ -286,6 +288,11 @@ namespace Naticord.Forms
         {
             await SetUserInfo();
             await LoadFriendsList();
+        }
+
+        private void viewProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new UserViewer(userIdViewer).Show();
         }
     }
 }
