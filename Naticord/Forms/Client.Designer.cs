@@ -35,7 +35,6 @@ namespace Naticord.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Client));
             this.usernameLabel = new Naticord.Controls.AeroLabel();
             this.buttonPanel = new System.Windows.Forms.Panel();
-            this.ghButton = new Naticord.Controls.ExtButton();
             this.accountButton = new Naticord.Controls.ExtButton();
             this.settingsButton = new Naticord.Controls.ExtButton();
             this.profilePictureUser = new System.Windows.Forms.PictureBox();
@@ -79,24 +78,12 @@ namespace Naticord.Forms
             // buttonPanel
             // 
             this.buttonPanel.BackColor = System.Drawing.Color.Black;
-            this.buttonPanel.Controls.Add(this.ghButton);
             this.buttonPanel.Controls.Add(this.accountButton);
             this.buttonPanel.Controls.Add(this.settingsButton);
             this.buttonPanel.Location = new System.Drawing.Point(8, 2);
             this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Size = new System.Drawing.Size(300, 30);
+            this.buttonPanel.Size = new System.Drawing.Size(208, 30);
             this.buttonPanel.TabIndex = 4;
-            // 
-            // ghButton
-            // 
-            this.ghButton.BackColor = System.Drawing.Color.Black;
-            this.ghButton.ButtonIcon = ((System.Drawing.Image)(resources.GetObject("ghButton.ButtonIcon")));
-            this.ghButton.ButtonLabel = "GitHub";
-            this.ghButton.CompositionDisabled = false;
-            this.ghButton.Location = new System.Drawing.Point(183, 0);
-            this.ghButton.Name = "ghButton";
-            this.ghButton.Size = new System.Drawing.Size(85, 30);
-            this.ghButton.TabIndex = 4;
             // 
             // accountButton
             // 
@@ -141,7 +128,7 @@ namespace Naticord.Forms
             this.logoutToolStripMenuItem});
             this.accountMenu.Name = "accountMenu";
             this.accountMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.accountMenu.Size = new System.Drawing.Size(181, 98);
+            this.accountMenu.Size = new System.Drawing.Size(137, 76);
             // 
             // statusToolStripMenuItem
             // 
@@ -151,7 +138,7 @@ namespace Naticord.Forms
             this.idleToolStripMenuItem,
             this.offlineToolStripMenuItem});
             this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-            this.statusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.statusToolStripMenuItem.Text = "Status";
             // 
             // onlineToolStripMenuItem
@@ -181,19 +168,19 @@ namespace Naticord.Forms
             // viewProfileToolStripMenuItem
             // 
             this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.viewProfileToolStripMenuItem.Text = "View profile";
             this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
             // 
             // toolSeparatorAccMenu
             // 
             this.toolSeparatorAccMenu.Name = "toolSeparatorAccMenu";
-            this.toolSeparatorAccMenu.Size = new System.Drawing.Size(177, 6);
+            this.toolSeparatorAccMenu.Size = new System.Drawing.Size(133, 6);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // statusBar
@@ -253,6 +240,7 @@ namespace Naticord.Forms
             this.chatPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.chatPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.chatPanel.Location = new System.Drawing.Point(222, 49);
             this.chatPanel.Name = "chatPanel";
             this.chatPanel.Size = new System.Drawing.Size(776, 474);
@@ -316,7 +304,6 @@ namespace Naticord.Forms
         public AeroLabel usernameLabel;
         public System.Windows.Forms.Panel buttonPanel;
         public Controls.ExtButton accountButton;
-        public Controls.ExtButton ghButton;
         private System.Windows.Forms.ContextMenuStrip accountMenu;
         private System.Windows.Forms.ToolStripMenuItem statusToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem onlineToolStripMenuItem;

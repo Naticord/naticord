@@ -40,6 +40,7 @@ namespace Naticord.Forms
             // 
             // userPicture
             // 
+            this.userPicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.userPicture.Location = new System.Drawing.Point(16, 12);
             this.userPicture.Name = "userPicture";
             this.userPicture.Size = new System.Drawing.Size(48, 48);
@@ -102,8 +103,12 @@ namespace Naticord.Forms
             this.Controls.Add(this.userExtraInfo);
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.userPicture);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "UserViewer";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "(USERNAME) - Naticord";
             ((System.ComponentModel.ISupportInitialize)(this.userPicture)).EndInit();
             this.ResumeLayout(false);

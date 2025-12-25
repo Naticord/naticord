@@ -181,13 +181,7 @@
     <None Include="Resources\account.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\github.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\account-modern.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\github-modern.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\settings-modern.png" />

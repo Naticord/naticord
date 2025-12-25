@@ -45,9 +45,6 @@ namespace Naticord.Forms
             DecideSettings();
             SetUpToolbarButtons();
 
-            chatPanel.Paint += XPPanelBDPaint;
-            DrawPBBorder(profilePictureUser);
-
             this.FormClosing += (s, e) => Application.Exit();
             this.Shown += (s, e) => ApplySavedSettings();
 
@@ -192,7 +189,6 @@ namespace Naticord.Forms
             {
                 settingsButton.ButtonIcon = Properties.Resources.settings_modern;
                 accountButton.ButtonIcon = Properties.Resources.account_modern;
-                ghButton.ButtonIcon = Properties.Resources.github_modern;
             }
 
             if (borderStyle == "Thick")
@@ -253,35 +249,6 @@ namespace Naticord.Forms
             {
                 accountMenu.Show(accountButton, new System.Drawing.Point(0, accountButton.Height));
             };
-
-            ghButton.ButtonClick += (s, e) =>
-            {
-                System.Diagnostics.Process.Start("https://github.com/Naticord/naticord");
-            };
-        }
-
-        private void DrawPBBorder(PictureBox pictureBox)
-        {
-            pictureBox.Paint += (s, e) =>
-            {
-                using (Pen pen = new Pen(Color.FromArgb(255, 35, 35, 35), 1))
-                {
-                    pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
-                    e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    e.Graphics.DrawRectangle(pen, 0, 0, pictureBox.Width - 1, pictureBox.Height - 1);
-                }
-            };
-            pictureBox.Invalidate();
-        }
-
-        private void XPPanelBDPaint(object sender, PaintEventArgs e)
-        {
-            Color borderColor = Color.FromArgb(127, 157, 185);
-            Control panel = (Control)sender;
-            using (Pen pen = new Pen(borderColor))
-            {
-                e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
-            }
         }
 
         private async void Client_Load(object sender, EventArgs e)

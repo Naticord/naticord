@@ -58,20 +58,17 @@ namespace Naticord.Controls
                 clientForm.buttonPanel.BackColor = System.Drawing.Color.White;
                 clientForm.settingsButton.BackColor = System.Drawing.Color.White;
                 clientForm.accountButton.BackColor = System.Drawing.Color.White;
-                clientForm.ghButton.BackColor = System.Drawing.Color.White;
             }
             else
             {
                 clientForm.buttonPanel.BackColor = System.Drawing.Color.Black;
                 clientForm.settingsButton.BackColor = System.Drawing.Color.Black;
                 clientForm.accountButton.BackColor = System.Drawing.Color.Black;
-                clientForm.ghButton.BackColor = System.Drawing.Color.Black;
             }
 
             clientForm.usernameLabel.CompositionDisabled = setComp;
             clientForm.settingsButton.CompositionDisabled = setComp;
             clientForm.accountButton.CompositionDisabled = setComp;
-            clientForm.ghButton.CompositionDisabled = setComp;
         }
 
         protected override void OnShown(EventArgs e)

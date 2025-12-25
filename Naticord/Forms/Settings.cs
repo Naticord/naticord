@@ -69,7 +69,6 @@ namespace Naticord.Forms
             {
                 clientForm.settingsButton.ButtonIcon = Properties.Resources.settings;
                 clientForm.accountButton.ButtonIcon = Properties.Resources.account;
-                clientForm.ghButton.ButtonIcon = Properties.Resources.github;
                 appearanceIcon.Image = Properties.Resources.appearance;
                 updateIcon.Image = Properties.Resources.updates;
             }
@@ -77,7 +76,6 @@ namespace Naticord.Forms
             {
                 clientForm.settingsButton.ButtonIcon = Properties.Resources.settings_modern;
                 clientForm.accountButton.ButtonIcon = Properties.Resources.account_modern;
-                clientForm.ghButton.ButtonIcon = Properties.Resources.github_modern;
                 appearanceIcon.Image = Properties.Resources.appearance_modern;
                 updateIcon.Image = Properties.Resources.updates_modern;
             }
