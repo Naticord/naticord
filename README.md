@@ -18,7 +18,7 @@ Naticord uses DirectUI and Windows Forms, both bringing a native look to the cli
 - Authentication
   - Signing in using a token: ✔️
   - Signing in using a QR code: ✔️
-  - Signing in using e-mail and password: ❌ ([See why...]())
+  - Signing in using e-mail and password: ❌ ([See why...](https://github.com/Naticord/naticord/tree/dev#why-cant-you-login-in-using-an-e-mail-and-password))
 - Client
   - User interface: ➖ (Work-in-progress)
   - Discord functionality: ➖ (Work-in-progress)
