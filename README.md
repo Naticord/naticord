@@ -32,3 +32,7 @@ Naticord uses DirectUI and Windows Forms, both bringing a native look to the cli
 Discord uses intense security measures to prevent custom clients from signing in using an e-mail and password, meaning there is no reliable way to sign in with this method without getting banned on a custom client. This is why Naticord is moving away from this approach and using easier methods instead like using a QR code to sign in.
 
 This feature will not be coming in the future as it is a pain to maintain and I am not willing to fight through the pain of just getting to sign in.
+# Credits
+Naticord would have not been possible without these wonderful people!
+- [Skymu](https://skymu.app) - Discord library used in Naticord (Also made by me!)
+- [UnderscoreAngel](https://underscoreangel.neocities.org/) - Creating the current Naticord logo!
