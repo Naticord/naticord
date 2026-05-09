@@ -2,22 +2,28 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Naticord.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="token" Type="System.String" Scope="User">
+    <Setting Name="dscToken" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="renderMode" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="iconStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="borderStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="runDefaults" Type="System.Boolean" Scope="User">
+    <Setting Name="hasCompletedSetup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="spoofedOS" Type="System.String" Scope="User">
+    <Setting Name="iconStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Skeuomorphic</Value>
+    </Setting>
+    <Setting Name="layoutMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="disableGitHubButton" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="dscUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="dscUid" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

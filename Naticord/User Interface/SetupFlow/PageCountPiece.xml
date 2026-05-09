@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="pageCountSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+			<Edit transparent="true" themedborder="true" font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+			<CCPushButton font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+			
+			<if id="atom(pageCountText)">
+				<element foreground="argb(255, 135, 135, 135)" background="buttonface" />
+			</if> 
+
+			<if class="pageCountPiece">
+				<element background="buttonface"
+						borderthickness="rect(0rp,0rp,0rp,1rp)"
+						bordercolor="threedlightshadow"
+						padding="rect(8rp,8rp,8rp,8rp)"/>
+			</if>
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="pageCountPieceMain" id="atom(root)" layout="borderlayout()" sheet="pageCountSheet">
+
+        <element layoutpos="top" class="pageCountPiece" height="35rp" layout="flowlayout(0,2,2)">
+            <element id="atom(pageCountText)" content="Introduction - Page 1 out of 3" />
+        </element>
+	
+	</HWNDElement>
+</duixml>

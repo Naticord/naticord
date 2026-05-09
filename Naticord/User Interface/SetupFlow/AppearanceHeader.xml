@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="appearanceSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="appearanceMain" id="atom(root)" layout="borderlayout()" sheet="appearanceSheet">
+	
+		<element layoutpos="client" layout="verticalflowlayout(0, 0, 0)" padding="rect(20rp,16rp,20rp,0rp)">
+			<element contentalign="wrapleft" 
+					margin="rect(0rp, 0rp, 0rp, 2rp)"
+					foreground="gtc(CONTROLPANELSTYLE, 5, 0, 3803)" 
+					font="gtf(CONTROLPANELSTYLE, 5, 0)"
+					content="Make Naticord yours!"/>
+		
+			<element contentalign="wrapleft" content="Customize Naticord to your liking, this allows for a modern look, or go old-school and use skeuomorphic icons instead! The choice is yours." />
+		</element>
+	
+	</HWNDElement>
+</duixml>

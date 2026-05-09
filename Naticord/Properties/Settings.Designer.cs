@@ -12,7 +12,7 @@ namespace Naticord.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,12 +26,12 @@ namespace Naticord.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string token {
+        public string dscToken {
             get {
-                return ((string)(this["token"]));
+                return ((string)(this["dscToken"]));
             }
             set {
-                this["token"] = value;
+                this["dscToken"] = value;
             }
         }
         
@@ -49,7 +49,19 @@ namespace Naticord.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool hasCompletedSetup {
+            get {
+                return ((bool)(this["hasCompletedSetup"]));
+            }
+            set {
+                this["hasCompletedSetup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Skeuomorphic")]
         public string iconStyle {
             get {
                 return ((string)(this["iconStyle"]));
@@ -62,36 +74,48 @@ namespace Naticord.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string borderStyle {
+        public string layoutMode {
             get {
-                return ((string)(this["borderStyle"]));
+                return ((string)(this["layoutMode"]));
             }
             set {
-                this["borderStyle"] = value;
+                this["layoutMode"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool runDefaults {
+        public bool disableGitHubButton {
             get {
-                return ((bool)(this["runDefaults"]));
+                return ((bool)(this["disableGitHubButton"]));
             }
             set {
-                this["runDefaults"] = value;
+                this["disableGitHubButton"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string spoofedOS {
+        public string dscUsername {
             get {
-                return ((string)(this["spoofedOS"]));
+                return ((string)(this["dscUsername"]));
             }
             set {
-                this["spoofedOS"] = value;
+                this["dscUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string dscUid {
+            get {
+                return ((string)(this["dscUid"]));
+            }
+            set {
+                this["dscUid"] = value;
             }
         }
     }

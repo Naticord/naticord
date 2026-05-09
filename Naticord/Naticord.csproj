@@ -1,20 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6475D595-19A5-44D8-8BA0-9E70658669A0}</ProjectGuid>
+    <ProjectGuid>{76EC6933-B196-428C-A12C-15A08BF6ADC5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Naticord</RootNamespace>
     <AssemblyName>Naticord</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LangVersion>latest</LangVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,15 +34,88 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>naticord.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>packages\BouncyCastle.Cryptography.2.6.2\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="DirectUI.Net, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>SharpLibraries\DirectUI.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.10.0.7\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Pipelines, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Pipelines.10.0.7\lib\net462\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.10.0.7\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=10.0.0.7, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.10.0.7\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,95 +126,130 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsFormsAero, Version=3.1.1.0, Culture=neutral, PublicKeyToken=1e7518d9b51ece33, processorArchitecture=MSIL">
-      <HintPath>packages\Windows-Forms-Aero.3.1.1\lib\net40\WindowsFormsAero.dll</HintPath>
+      <HintPath>packages\Windows-Forms-Aero.3.1.1\lib\net461\WindowsFormsAero.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing, Version=0.16.11.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>packages\ZXing.Net.0.16.11\lib\net48\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.11.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>packages\ZXing.Net.0.16.11\lib\net48\zxing.presentation.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\BitBlpOp.cs" />
-    <Compile Include="Classes\BitmapInfo.cs" />
-    <Compile Include="Classes\ClassLong.cs" />
-    <Compile Include="Classes\DttOpts.cs" />
-    <Compile Include="Classes\DttOptsFlags.cs" />
-    <Compile Include="Classes\DWMExtTitlebar.cs" />
-    <Compile Include="Classes\HitTest.cs" />
-    <Compile Include="Classes\Methods.cs" />
-    <Compile Include="Classes\Point.cs" />
-    <Compile Include="Classes\Rect.cs" />
-    <Compile Include="Classes\WindowLong.cs" />
-    <Compile Include="Classes\WindowMessage.cs" />
-    <Compile Include="Controls\AeroLabel.cs">
+    <Compile Include="Classes\AvatarCache.cs" />
+    <Compile Include="Classes\ConfigMgr.cs" />
+    <Compile Include="Classes\ExtendedGlass\DetectDwmStatus.cs" />
+    <Compile Include="Classes\DetectOSVersion.cs" />
+    <Compile Include="Classes\ExtendedGlass\GlassInvoke.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\BitBlpOp.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\BitmapInfo.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\ClassLong.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\DttOpts.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\DttOptsFlags.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\HitTest.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\Methods.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\Point.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\Rect.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\WindowLong.cs" />
+    <Compile Include="Classes\ExtendedGlass\WindowsFormsAero\WindowMessage.cs" />
+    <Compile Include="Classes\NativeContextGenerator.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\ExtButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ExtButton.Designer.cs">
-      <DependentUpon>ExtButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\GlassForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\ThemedText.cs" />
     <Compile Include="Forms\Client.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Client.Designer.cs">
       <DependentUpon>Client.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Login.cs">
+    <Compile Include="Forms\ClientFlows\StatusPage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Login.Designer.cs">
+    <Compile Include="Forms\ClientFlows\StatusPage.Designer.cs">
+      <DependentUpon>StatusPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoginFlows\Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoginFlows\Login.Designer.cs">
       <DependentUpon>Login.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Settings.cs">
+    <Compile Include="Forms\LoginFlows\QRLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <Compile Include="Forms\LoginFlows\QRLogin.Designer.cs">
+      <DependentUpon>QRLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Token.cs">
+    <Compile Include="Forms\SettingsFlows\SettingsFlowPiece.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Token.Designer.cs">
-      <DependentUpon>Token.cs</DependentUpon>
+    <Compile Include="Forms\SettingsFlows\SettingsFlowPiece.Designer.cs">
+      <DependentUpon>SettingsFlowPiece.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TwoFA.cs">
+    <Compile Include="Forms\SetupFlows\AppearancePage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\TwoFA.Designer.cs">
-      <DependentUpon>TwoFA.cs</DependentUpon>
+    <Compile Include="Forms\SetupFlows\AppearancePage.Designer.cs">
+      <DependentUpon>AppearancePage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\UserViewer.cs">
+    <Compile Include="Forms\SetupFlows\FinishedPage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\UserViewer.Designer.cs">
-      <DependentUpon>UserViewer.cs</DependentUpon>
+    <Compile Include="Forms\SetupFlows\FinishedPage.Designer.cs">
+      <DependentUpon>FinishedPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SetupFlows\IntroductionPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SetupFlows\IntroductionPage.Designer.cs">
+      <DependentUpon>IntroductionPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SetupFlows\SetupFlowPiece.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SetupFlows\SetupFlowPiece.Designer.cs">
+      <DependentUpon>SetupFlowPiece.cs</DependentUpon>
     </Compile>
     <Compile Include="Networking\API.cs" />
-    <Compile Include="Classes\OSVersionHelper.cs" />
+    <Compile Include="Networking\WebSockets\AuthSocket.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Controls\ExtButton.resx">
-      <DependentUpon>ExtButton.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="UserControls\DuiListItem.cs" />
+    <Compile Include="UserControls\ExtendedGlass\Controls\AeroLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\ExtendedGlass\Controls\GlassExtendedButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ExtendedGlass\Controls\GlassExtendedButton.Designer.cs">
+      <DependentUpon>GlassExtendedButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ExtendedGlass\Controls\ThemedText.cs" />
+    <Compile Include="UserControls\ExtendedGlass\GlassForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Forms\Client.resx">
       <DependentUpon>Client.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Login.resx">
+    <EmbeddedResource Include="Forms\LoginFlows\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\LoginFlows\QRLogin.resx">
+      <DependentUpon>QRLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Token.resx">
-      <DependentUpon>Token.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SettingsFlows\SettingsFlowPiece.resx">
+      <DependentUpon>SettingsFlowPiece.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TwoFA.resx">
-      <DependentUpon>TwoFA.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SetupFlows\AppearancePage.resx">
+      <DependentUpon>AppearancePage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserViewer.resx">
-      <DependentUpon>UserViewer.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SetupFlows\FinishedPage.resx">
+      <DependentUpon>FinishedPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SetupFlows\IntroductionPage.resx">
+      <DependentUpon>IntroductionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SetupFlows\SetupFlowPiece.resx">
+      <DependentUpon>SetupFlowPiece.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -154,6 +261,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UserControls\ExtendedGlass\Controls\GlassExtendedButton.resx">
+      <DependentUpon>GlassExtendedButton.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -169,32 +279,50 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\nc-banner.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\naticord-logo-64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\account.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\account-modern.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\settings-modern.png" />
+    <None Include="Resources\naticord-banner.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="naticord.ico" />
-    <None Include="Resources\updates.png" />
-    <None Include="Resources\updates-modern.png" />
-    <None Include="Resources\credits-modern.png" />
-    <None Include="Resources\appearance-modern.png" />
-    <None Include="Resources\credits.png" />
-    <None Include="Resources\appearance.png" />
-    <None Include="Resources\cat.png" />
+    <None Include="Resources\online-skeuo.png" />
+    <None Include="Resources\online.png" />
+    <None Include="Resources\offline-skeuo.png" />
+    <None Include="Resources\offline.png" />
+    <None Include="Resources\idle-skeuo.png" />
+    <None Include="Resources\idle.png" />
+    <None Include="Resources\busy-skeuo.png" />
+    <None Include="Resources\busy.png" />
+    <None Include="Resources\user-silhouette-skeuo.png" />
+    <None Include="Resources\servers-skeuo.png" />
+    <None Include="Resources\dm-skeuo.png" />
+    <None Include="Resources\account.png" />
+    <None Include="Resources\arrow-back.png" />
+    <None Include="Resources\arrow-forward.png" />
+    <None Include="Resources\cog.png" />
+    <None Include="Resources\dm.png" />
+    <None Include="Resources\github.png" />
+    <None Include="Resources\servers.png" />
+    <None Include="Resources\light-bulb-skeuo.png" />
+    <None Include="Resources\github-skeuo.png" />
+    <None Include="Resources\cog-skeuo.png" />
+    <None Include="Resources\arrow-forward-skeuo.png" />
+    <None Include="Resources\arrow-back-skeuo.png" />
+    <None Include="Resources\account-skeuo.png" />
+    <None Include="Resources\qr-loading.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets" Condition="Exists('packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.ValueTuple.4.6.2\build\net471\System.ValueTuple.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(ProjectDir)ExtResources" "$(TargetDir)ExtResources\" /E /I /Y
+
+xcopy "$(ProjectDir)User Interface" "$(TargetDir)User Interface\" /E /I /Y
+
+xcopy "$(ProjectDir)Libraries" "$(TargetDir)Libraries\" /E /I /Y</PreBuildEvent>
+  </PropertyGroup>
 </Project>

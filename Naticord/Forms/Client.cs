@@ -1,14 +1,15 @@
-﻿using Naticord.Classes;
-using Naticord.Controls;
+using Naticord.Classes.ExtendedGlass;
+using Naticord.Forms.ClientFlows;
+using Naticord.Forms.SettingsFlows;
 using Naticord.Networking;
-using Newtonsoft.Json.Linq;
+using Naticord.UserControls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,250 +17,219 @@ namespace Naticord.Forms
 {
     public partial class Client : GlassForm
     {
-        private static readonly HttpClient httpClient = new();
+        private string dscToken = Properties.Settings.Default.dscToken;
 
-        private readonly string iconStyle = Properties.Settings.Default.iconStyle;
-        private readonly string borderStyle = Properties.Settings.Default.borderStyle;
-        private readonly string token = Properties.Settings.Default.token;
-        private readonly bool isCompDisabled = !Application.RenderWithVisualStyles;
+        private string WINDOWS_11 = "Windows 11 - 10";
+        private string WINDOWS_8DOT1 = "Windows 8.1 - 7";
 
-        private static readonly string CachePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "Naticord"
-        );
+        private readonly List<DuiListItem> _friendItems = new List<DuiListItem>();
 
-        private static Dictionary<string, Image> avatarCache = new Dictionary<string, Image>();
-        private static readonly string AvatarCachePath = Path.Combine(CachePath, "Avatars");
+        private IntPtr _hDmIcon;
+        private IntPtr _hServerIcon;
 
-        private string userIdViewer;
-        private API dcAPI;
+        [DllImport("gdi32.dll")]
+        private static extern bool DeleteObject(IntPtr hObject);
+
+        public void LoadFormIntoPanel(Form form)
+        {
+            foreach (Control c in contentPanel.Controls)
+            {
+                c.Dispose();
+            }
+            contentPanel.Controls.Clear();
+
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Dock = DockStyle.Fill;
+
+            contentPanel.Controls.Add(form);
+            form.Show();
+        }
+
+        private void SetSidebarIcon(string baseName, string elementId, ref IntPtr hCache)
+        {
+            if (hCache != IntPtr.Zero) { DeleteObject(hCache); hCache = IntPtr.Zero; }
+
+            string suffix = string.Equals(Properties.Settings.Default.iconStyle, "Skeuomorphic", StringComparison.OrdinalIgnoreCase) ? "-skeuo" : "";
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ExtResources", $"{baseName}{suffix}.bmp");
+
+            if (File.Exists(path))
+            {
+                using (var src = Image.FromFile(path))
+                using (var bmp = new Bitmap(src))
+                    hCache = bmp.GetHbitmap(Color.Black);
+            }
+
+            sidebarRenderer.DuiWindow?.SetContentBitmap(elementId, hCache);
+        }
+
+        internal DuiListItem AddFriendItem(string username, string statusText, Bitmap avatar, int id, int statusCode, int extraStatusCode = 5)
+        {
+            var duiWin = sidebarRenderer.DuiWindow;
+            if (duiWin == null) return null;
+
+            var listItem = new DuiListItem(id);
+
+            using (duiWin.BeginDefer())
+            {
+                listItem.Mount(duiWin, "friendList");
+                _friendItems.Add(listItem);
+
+                listItem.SetUsername(username);
+                listItem.SetStatus(statusText);
+
+                if (avatar != null) listItem.SetProfilePicture(avatar);
+                listItem.SetStatusIcon(statusCode, extraStatusCode);
+            }
+
+            return listItem;
+        }
 
         public Client()
         {
-            Directory.CreateDirectory(CachePath);
-            Directory.CreateDirectory(AvatarCachePath);
-
-            dcAPI = new API();
             InitializeComponent();
+            MinimumSize = new Size(800, 500);
 
-            DecideSettings();
-            SetUpToolbarButtons();
-
-            this.FormClosing += (s, e) => Application.Exit();
-            this.Shown += (s, e) => ApplySavedSettings();
-
-            CenterToScreen();
+            // Apply the correct composition to the window!
+            CompSet(DetectDwmStatus.IsDwmEnabled(), false, null, this);
+            // Apply the toolbar layout to the buttonPanel, like in SetupFlowPiece
+            if (Properties.Settings.Default.layoutMode == WINDOWS_11) { buttonPanel.Width -= 16; buttonPanel.Left += 8; }
         }
 
-        // Discord API related functionality
-        private async Task SetUserInfo()
+        private async void OnLoad(object sender, EventArgs e)
         {
-            try
-            {
-                string userDetails = await dcAPI.SendAPI("users/@me", HttpMethod.Get, token, null, null, null);
-                JObject parsedJson = JObject.Parse(userDetails);
+            // Load the StatusPage into the contentPanel
+            StatusPage statusPage = new StatusPage();
+            LoadFormIntoPanel(statusPage);
 
-                string userId = parsedJson["id"]?.ToString() ?? "N/A";
-                string globalName = parsedJson["global_name"]?.ToString() ?? "N/A";
-                string username = parsedJson["username"]?.ToString() ?? "N/A";
-                string avatarHash = parsedJson["avatar"]?.ToString();
-
-                userIdViewer = userId;
-                profilePictureUser.Image = GetCachedAvatar(userId, avatarHash, false, false);
-                usernameLabel.Text = $"{globalName} ({username})";
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Parse error: {ex.Message}");
-            }
+            await SetUserInformation();
         }
 
-        private async Task LoadFriendsList()
+        protected override void OnShown(EventArgs e)
         {
-            try
-            {
-                string friendList = await dcAPI.SendAPI("users/@me/relationships", HttpMethod.Get, token, null, null, null);
-                JArray parsedJson = JArray.Parse(friendList);
-                Debug.WriteLine(parsedJson);
+            base.OnShown(e);
 
-                foreach (var friend in parsedJson)
+            // (If enabled!) Disable the GitHub button on the toolbar
+            if (Properties.Settings.Default.disableGitHubButton) { githubButton.Visible = false; }
+
+            // Configure the user interface to look nice on all different system metric sizes
+            sidebarRenderer.SetCueBanner("searchBox", "Search...");
+            sidebarRenderer.SetCueBannerItalic("searchBox");
+
+            var screen = Screen.FromPoint(Cursor.Position).WorkingArea;
+            this.Location = new Point(
+                screen.Left + (screen.Width - this.Width) / 2,
+                screen.Top + (screen.Height - this.Height) / 2
+            );
+
+            if (DetectDwmStatus.IsDwmEnabled())
+            {
+                buttonPanel.Top = 0;
+                sidebarRenderer.Top = glassMargin.Top;
+            }
+            else
+            {
+                buttonPanel.Top = 0;
+                sidebarRenderer.Top = buttonPanel.Bottom;
+            }
+
+            int panelTop = sidebarRenderer.Top;
+
+            contentPanel.Top = panelTop;
+            sidebarRenderer.Height = ClientSize.Height - panelTop;
+            contentPanel.Height = ClientSize.Height - panelTop;
+
+            AddFriendItem("Placeholder username", "Listening to a song", null, 0, 1, 1);
+
+            SetSidebarIcon("dm", "dmPic", ref _hDmIcon);
+            SetSidebarIcon("servers", "serverPic", ref _hServerIcon);
+        }
+
+        private async Task SetUserInformation()
+        {
+            // Use saved details first before actually loading data from Discord
+            usernameLabel.Text = Properties.Settings.Default.dscUsername;
+
+            string userInfo = await API.Instance.SendAPI("users/@me", HttpMethod.Get, dscToken, null, null, null, null);
+            if (userInfo != null)
+            {
+                if (userInfo.Contains("Unauthorized"))
                 {
-                    string friendId = friend["id"]?.ToString() ?? "N/A";
-                    string friendGlobalName = friend["user"]["global_name"]?.ToString() ?? "N/A";
-                    string friendUsername = friend["user"]["username"]?.ToString() ?? "N/A";
-                    string friendAvatarHash = friend["user"]["avatar"]?.ToString();
-                    string friendClanTag = "N/A";
-                    if (friend["user"]["clan"] is JObject clanObject)
-                    {
-                        friendClanTag = clanObject["tag"]?.ToString() ?? "N/A";
-                    }
+                    MessageBox.Show("Your token has expired or is invalid. Naticord will sign you out and you will need to sign in again.", "Naticord", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    // Wipe all Discord properties
+                    Properties.Settings.Default.dscToken = null;
+                    Properties.Settings.Default.dscUsername = null;
+                    Properties.Settings.Default.dscUid = null;
+                    Properties.Settings.Default.Save();
+
+                    Application.Restart();
+                }
+                else
+                {
+                    var parsedUser = JsonNode.Parse(userInfo).AsObject();
+
+                    string userId = parsedUser["id"]?.GetValue<string>();
+                    string dscUsername = parsedUser["username"]?.GetValue<string>() ?? "anonymous_user";
+                    string displayName = parsedUser["global_name"]?.GetValue<string>() ?? dscUsername;
+                    string avatarHash = parsedUser["avatar"]?.GetValue<string>();
+
+                    // Save properties to settings for use!
+                    Properties.Settings.Default.dscUsername = displayName;
+                    Properties.Settings.Default.dscUid = userId;
+                    Properties.Settings.Default.Save();
+
+                    usernameLabel.Text = displayName;
+                    // TODO: Add avatar support
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error loading friend list: {ex.Message}");
-            }
         }
 
-        // Helper functions
-        public Image DownloadImage(string url, string savePath = null)
+        protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            try
-            {
-                byte[] imageBytes = httpClient.GetByteArrayAsync(url).GetAwaiter().GetResult();
-                savePath ??= Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
-                File.WriteAllBytes(savePath, imageBytes);
-                using (var ms = new MemoryStream(imageBytes))
-                {
-                    return Image.FromStream(ms);
-                }
-            }
-            catch
-            {
-                return null;
-            }
+            if (_hDmIcon != IntPtr.Zero) { DeleteObject(_hDmIcon); _hDmIcon = IntPtr.Zero; }
+            if (_hServerIcon != IntPtr.Zero) { DeleteObject(_hServerIcon); _hServerIcon = IntPtr.Zero; }
+
+            base.OnFormClosed(e);
         }
 
-        private void SetMemoryCachedAvatar(string userId, Image avatar)
+        private void accountButton_ButtonClick(object sender, EventArgs e)
         {
-            if (avatarCache.Count >= 10)
-            {
-                avatarCache.Remove(avatarCache.Keys.First());
-            }
-            if (avatarCache.ContainsKey(userId))
-            {
-                avatarCache[userId].Dispose();
-                avatarCache[userId] = avatar;
-            }
-            else
-            {
-                avatarCache[userId] = avatar;
-            }
+            accountContext.Show(accountButton, new System.Drawing.Point(0, accountButton.Height));
         }
 
-        private bool TryGetMemoryCachedAvatar(string userId, out Image avatar)
+        private void settingsButton_ButtonClick(object sender, EventArgs e)
         {
-            return avatarCache.TryGetValue(userId, out avatar);
+            SettingsFlowPiece settingsPiece = new SettingsFlowPiece();
+            settingsPiece.ShowDialog();
         }
 
-        public Image GetCachedAvatar(string userId, string avatarHash, bool isServer, bool isGC)
+        private void logOutStripItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(avatarHash))
-                return Properties.Resources.naticord_logo_64;
-
-            if (TryGetMemoryCachedAvatar(userId, out Image avatar))
-                return avatar;
-
-            string avatarFile = Path.Combine(AvatarCachePath, $"{avatarHash}-{userId}.png");
-            Image retrievedavatar;
-            if (File.Exists(avatarFile))
-            {
-                retrievedavatar = Image.FromFile(avatarFile);
-            }
-            else
-            {
-                string avatarUrl = GetAvatarUrl(userId, avatarHash, isServer, isGC);
-                retrievedavatar = DownloadImage(avatarUrl, avatarFile);
-            }
-
-            SetMemoryCachedAvatar(userId, retrievedavatar);
-            return retrievedavatar;
-        }
-
-        private string GetAvatarUrl(string Id, string Hash, bool isServer, bool isGC)
-        {
-            if (isServer)
-            {
-                return $"https://cdn.discordapp.com/icons/{Id}/{Hash}.png?size=64";
-            }
-            else if (isGC)
-            {
-                return $"https://cdn.discordapp.com/channel-icons/{Id}/{Hash}.png?size=64";
-            }
-            else
-            {
-                return $"https://cdn.discordapp.com/avatars/{Id}/{Hash}.png?size=64";
-            }
-        }
-
-        // UI related functionality
-        private void ApplySavedSettings()
-        {
-            if (iconStyle == "Modern")
-            {
-                settingsButton.ButtonIcon = Properties.Resources.settings_modern;
-                accountButton.ButtonIcon = Properties.Resources.account_modern;
-            }
-
-            if (borderStyle == "Thick")
-                ChangePos();
-        }
-
-        public void ChangePos()
-        {
-            usernameLabel.Location = new System.Drawing.Point(785, 5);
-            profilePictureUser.Location = new System.Drawing.Point(989, 4);
-            buttonPanel.Location = new System.Drawing.Point(0, 2);
-        }
-
-        private void DecideSettings()
-        {
-            if (Properties.Settings.Default.runDefaults)
-                return;
-            if (isCompDisabled == true)
-                Properties.Settings.Default.renderMode = "Composition disabled";
-
-            switch (OSVersionHelper.GetWindowsVersion())
-            {
-                case "Windows 11":
-                    if (isCompDisabled == false)
-                        Properties.Settings.Default.renderMode = "Mica";
-                    Properties.Settings.Default.iconStyle = "Modern";
-                    Properties.Settings.Default.borderStyle = "Slim";
-                    break;
-
-                case "Windows 10":
-                    if (isCompDisabled == false)
-                        Properties.Settings.Default.renderMode = "Acrylic";
-                    Properties.Settings.Default.iconStyle = "Modern";
-                    Properties.Settings.Default.borderStyle = "Slim";
-                    break;
-
-                case "Windows 7 - 8.1":
-                    if (isCompDisabled == false)
-                        Properties.Settings.Default.renderMode = "Aero";
-                    Properties.Settings.Default.iconStyle = "Legacy";
-                    Properties.Settings.Default.borderStyle = "Thick";
-                    break;
-            }
-
-            Properties.Settings.Default.runDefaults = true;
+            // Wipe all Discord properties
+            Properties.Settings.Default.dscToken = null;
+            Properties.Settings.Default.dscUsername = null;
+            Properties.Settings.Default.dscUid = null;
             Properties.Settings.Default.Save();
-            Application.Restart(); // This applies all the settings
-        }
 
-        private void SetUpToolbarButtons()
-        {
-            settingsButton.ButtonClick += (s, e) =>
+            var resetAllDlg = MessageBox.Show("Do you want to reset all of your Naticord preferences too?", "Naticord", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (resetAllDlg == DialogResult.Yes)
             {
-                new Settings(this).Show();
-            };
-
-            accountButton.ButtonClick += (s, e) =>
+                // Wipe all of the Naticord settings to their defaults
+                Properties.Settings.Default.renderMode = null;
+                Properties.Settings.Default.hasCompletedSetup = false;
+                Properties.Settings.Default.iconStyle = "Skeuomorphic";
+                Properties.Settings.Default.layoutMode = null;
+                Properties.Settings.Default.disableGitHubButton = false;
+                Properties.Settings.Default.Save();
+            }
+            else
             {
-                accountMenu.Show(accountButton, new System.Drawing.Point(0, accountButton.Height));
-            };
-        }
+                // Do nothing...
+            }
 
-        private async void Client_Load(object sender, EventArgs e)
-        {
-            await SetUserInfo();
-            await LoadFriendsList();
-        }
-
-        private void viewProfileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new UserViewer(userIdViewer).Show();
+            Properties.Settings.Default.Save();
+            Application.Restart();
         }
     }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="introSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="introMain" id="atom(root)" layout="borderlayout()" sheet="introSheet">
+	
+		<element layoutpos="client" layout="verticalflowlayout(0, 0, 0)" padding="rect(20rp,16rp,20rp,16rp)">
+			<element contentalign="wrapleft" 
+					margin="rect(0rp, 0rp, 0rp, 2rp)"
+					foreground="gtc(CONTROLPANELSTYLE, 5, 0, 3803)" 
+					font="gtf(CONTROLPANELSTYLE, 5, 0)"
+					content="Introducing Naticord..."/>
+		
+			<element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="Welcome to Naticord! We'll get your appearance settings setup, how you'd like to client to function and various other things!" />
+            <element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="Naticord is based off of Windows Forms and DirectUI, allowing for neat animations and aesthetically pleasing elements to be done natively. DirectUI is a markup language by Microsoft, similar to the likes of WPF or Silverlight, which never saw the light of day." />
+
+			<element layout="borderlayout()">
+				<element layoutpos="left" width="20rp" contentalign="topcenter"
+						content="icon(99, sysmetric(49), sysmetric(50), library(imageres.dll))" />
+				<element layoutpos="client" contentalign="wrapleft"
+						margin="rect(6rp,0rp,0rp,0rp)"
+						content="You may get banned for using Naticord, however it is an extremely low chance, and it most likely won't happen. Naticord gets frequent updates to prevent this from happening." />
+			</element>
+		</element>
+	
+	</HWNDElement>
+</duixml>

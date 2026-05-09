@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="loginSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+			<Edit transparent="true" themedborder="true" font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+			<CCPushButton font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+			
+			<if id="atom(labelMuted)">
+				<element foreground="argb(255, 135, 135, 135)" />
+			</if>
+
+			<if id="atom(labelVersionMuted)">
+				<element foreground="argb(255, 135, 135, 135)" background="buttonface" />
+			</if>
+
+			<if class="loginFooter">
+				<element background="buttonface"
+						borderthickness="rect(0rp,1rp,0rp,0rp)"
+						bordercolor="threedlightshadow"
+						padding="rect(8rp,8rp,8rp,8rp)"/>
+			</if>
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="loginMain" id="atom(root)" layout="borderlayout()" sheet="loginSheet">
+	
+		<element layoutpos="client" layout="verticalflowlayout(0, 0, 0)" padding="rect(20rp,16rp,20rp,16rp)">
+			<element contentalign="wrapleft" 
+					margin="rect(0rp, 0rp, 0rp, 2rp)"
+					foreground="gtc(CONTROLPANELSTYLE, 5, 0, 3803)" 
+					font="gtf(CONTROLPANELSTYLE, 5, 0)"
+					content="Welcome to Naticord!"/>
+		
+			<element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="Once you sign into Discord, we'll continue from there." />
+			
+			<element layout="borderlayout()" height="20rp" margin="rect(0rp, 0rp, 0rp, 8rp)">
+				<element id="atom(labelMuted)" layoutpos="left" height="20rp"
+					contentalign="middleleft" content="Discord token:" />
+				<edit id="atom(editToken)" layoutpos="client" height="20rp" margin="rect(4rp, 0rp, 0rp, 0rp)"
+					accessible="true" accrole="text" accname="Discord token" />
+			</element>
+
+			<element layout="borderlayout()">
+				<element layoutpos="left" width="20rp" contentalign="topcenter"
+						content="icon(99, sysmetric(49), sysmetric(50), library(imageres.dll))" />
+				<element layoutpos="client" contentalign="wrapleft"
+						margin="rect(6rp,0rp,0rp,0rp)"
+						content="Naticord is completely safe to use, your token and data is only sent to Discord's servers." />
+			</element>
+		</element>
+
+		<element layoutpos="bottom" class="loginFooter" layout="borderlayout()">
+			<element id="atom(labelVersionMuted)" layoutpos="left"
+					contentalign="middleleft" content="Version 1.0.0b1"/>
+			<CCPushButton id="atom(btnSignIn)" layoutpos="right"
+					content="Sign into Naticord!"
+					accessible="true" shortcut="auto"/>
+			<CCPushButton id="atom(btnQrLaunch)" layoutpos="right"
+					content="Use QR instead"
+					accessible="true" shortcut="auto"/>
+		</element>
+	
+	</HWNDElement>
+</duixml>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="statusSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />	
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="statusMain" id="atom(root)" layout="borderlayout()" sheet="statusSheet">
+	
+		<element layoutpos="client" layout="flowlayout(0, 2, 2)">
+			<element layout="verticalflowlayout(0, 2, 2)">
+				<element layoutpos="left" width="32rp" height="32rp" margin="rect(0rp, 0rp, 0rp, 4rp)"
+						content="icon(81, 32rp, 32rp, library(imageres.dll))" />
+
+				<element contentalign="wrapleft" 
+						margin="rect(0rp, 0rp, 0rp, 2rp)"
+						foreground="gtc(CONTROLPANELSTYLE, 5, 0, 3803)" 
+						font="gtf(CONTROLPANELSTYLE, 5, 0)"
+						content="Hold on!"/>
+			
+				<element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="Naticord is still loading... You'll see status updates here!" />
+			</element>
+		</element>
+	
+	</HWNDElement>
+</duixml>

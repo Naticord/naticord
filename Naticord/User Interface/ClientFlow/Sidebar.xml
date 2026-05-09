@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="sidebarSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+            <Edit transparent="true" themedborder="true" font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+
+			<if class="sidebarPiece">
+				<element borderthickness="rect(0rp,0rp,1rp,0rp)"
+						bordercolor="threedlightshadow" />
+			</if>
+
+            <if class="sidebarPieceHeader">
+				<element borderthickness="rect(0rp,0rp,0rp,1rp)"
+						bordercolor="threedlightshadow" />
+			</if>
+
+            <if class="sidebarPieceSearch">
+				<element borderthickness="rect(0rp,0rp,0rp,1rp)"
+						bordercolor="threedlightshadow" />
+			</if>
+
+            <if class="sidebarFirstPieceDirect">
+				<element borderthickness="rect(0rp,0rp,1rp,0rp)"
+						bordercolor="threedlightshadow" />
+			</if>
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="sidebarPieceMain" id="atom(root)" layout="borderlayout()" sheet="sidebarSheet">
+
+        <element layoutpos="client" class="sidebarPiece" layout="borderlayout()">
+            <element layoutpos="top" class="sidebarPieceHeader" height="30rp" layout="borderlayout()">
+
+                <element layoutpos="left" width="250rp" layout="borderlayout()">
+                    <element layoutpos="left" class="sidebarFirstPieceDirect" layout="flowlayout(0,2,4)" padding="rect(8rp, 0rp, 8rp, 0rp)" width="125rp">
+                        <element id="atom(dmPic)" width="16rp" height="16rp" />
+                        <element layoutpos="left" padding="rect(4rp, 0rp, 0rp, 0rp)" content="Messages" />
+                   </element>
+                    <element layoutpos="client" class="sidebarSecondPieceServers" layout="flowlayout(0,2,4)" padding="rect(8rp, 0rp, 8rp, 0rp)" width="125rp">
+                        <element id="atom(serverPic)" width="16rp" height="16rp" />
+                        <element layoutpos="left" padding="rect(4rp, 0rp, 0rp, 0rp)" content="Servers" />
+                   </element>
+                </element>
+
+            </element>
+            <element layoutpos="top" class="sidebarPieceSearch" height="30rp" layout="borderlayout()">
+
+                <element layoutpos="client" padding="rect(8rp, 5rp, 8rp, 5rp)" layout="borderlayout()">
+                    <edit id="atom(searchBox)" layoutpos="client"
+					    accessible="true" accrole="text" accname="Search bar for Naticord" />
+                </element>
+
+            </element>
+
+            <element layoutpos="client" id="atom(friendList)" layout="verticalflowlayout()" />
+        </element>
+
+	</HWNDElement>
+</duixml>

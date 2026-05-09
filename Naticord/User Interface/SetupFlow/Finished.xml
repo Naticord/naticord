@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="finishSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="finishMain" id="atom(root)" layout="borderlayout()" sheet="finishSheet">
+	
+		<element layoutpos="client" layout="verticalflowlayout(0, 0, 0)" padding="rect(20rp,16rp,20rp,16rp)">
+			<element contentalign="wrapleft" 
+					margin="rect(0rp, 0rp, 0rp, 2rp)"
+					foreground="gtc(CONTROLPANELSTYLE, 5, 0, 3803)" 
+					font="gtf(CONTROLPANELSTYLE, 5, 0)"
+					content="You're all set!"/>
+		            
+			<element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="You have finished setting up Naticord! You can now proceed to the client to use Naticord." />
+            <element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="We hope you enjoy using Naticord! If you have any suggestions, feel free to ask us on our GitHub page! We try to replicate most of Discord, including some quality-of-life features." />
+		</element>
+	
+	</HWNDElement>
+</duixml>

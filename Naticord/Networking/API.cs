@@ -1,83 +1,120 @@
-﻿using Newtonsoft.Json;
+﻿using Naticord.Classes;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Naticord.Networking
 {
     internal class API
     {
-        // Re-used client (Less memory usage)
-        private static readonly HttpClient client = new HttpClient();
+        private readonly ConfigMgr configMgr = new ConfigMgr();
 
-        // Configuration (Firefox 137 on Windows 10)
-        private static readonly string XSuperProperties = "eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRmlyZWZveCIsImRldmljZSI6IiIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImhhc19jbGllbnRfbW9kcyI6ZmFsc2UsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQ7IHJ2OjEzNy4wKSBHZWNrby8yMDEwMDEwMSBGaXJlZm94LzEzNy4wIiwiYnJvd3Nlcl92ZXJzaW9uIjoiMTM3LjAiLCJvc192ZXJzaW9uIjoiMTAiLCJyZWZlcnJlciI6IiIsInJlZmVycmluZ19kb21haW4iOiIiLCJyZWZlcnJlcl9jdXJyZW50IjoiIiwicmVmZXJyaW5nX2RvbWFpbl9jdXJyZW50IjoiIiwicmVsZWFzZV9jaGFubmVsIjoic3RhYmxlIiwiY2xpZW50X2J1aWxkX251bWJlciI6Mzg2NDMyLCJjbGllbnRfZXZlbnRfc291cmNlIjpudWxsfQ==";
+        // Singleton, so we don't create multiple HttpClient clients
+        private static readonly Lazy<API> _instance = new Lazy<API>(() => new API());
+        public static API Instance => _instance.Value;
 
-        private static readonly string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0";
+        // Reuse the HttpClient throughout the API
+        internal readonly HttpClient InternalHttpClient;
 
-        static API()
+        // Current Discord API version (v9, has been for a while!)
+        private const int API_VERSION = 9;
+
+        // Configuration (Firefox 115 ESR on Windows 10)
+        public string XSuperProperties = null;
+        public const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0";
+
+        private API()
         {
-            // Forcefully use TLS 1.2 (Adds back Windows 7 support)
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+            var compressionHandler = new HttpClientHandler
+            {
+                // Possibly add Brotli and zstd compression in the future?
+                AutomaticDecompression =
+                    DecompressionMethods.GZip |
+                    DecompressionMethods.Deflate
+            };
+
+            ServicePointManager.DefaultConnectionLimit = 10;
+            InternalHttpClient = new HttpClient(compressionHandler);
+
+            // Set default headers through out the system
+            InternalHttpClient.DefaultRequestHeaders.Add("Accept", "*/*");
+            InternalHttpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
+
+            // Required for endpoints like /users/@me/remote-auth/login - Discord rejects
+            // the request (returning an error JSON without encrypted_token) when Origin is absent
+            InternalHttpClient.DefaultRequestHeaders.Add("Origin", "https://discord.com");
+
+            XSuperProperties = configMgr.GetXSPJson();
+            InternalHttpClient.DefaultRequestHeaders.Add("X-Super-Properties", XSuperProperties);
         }
 
-        public async Task<string> SendAPI(string endpoint, HttpMethod httpMethod, string token = null, object data = null, byte[] fileData = null, string fileName = null)
+        public async Task<string> SendAPI(string endpoint, HttpMethod httpMethod, string token = null, object data = null, byte[] fileData = null, string fileName = null, Dictionary<string, string> headers = null)
         {
-            string url = $"https://discord.com/api/v9/{endpoint}";
-            var request = new HttpRequestMessage(httpMethod, url);
-
-            if (!string.IsNullOrEmpty(token))
+            string url = "https://discord.com/api/v" + API_VERSION + "/" + endpoint.TrimStart('/');
+            using (var request = new HttpRequestMessage(httpMethod, url))
             {
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(token);
-            }
 
-            if (fileData != null && !string.IsNullOrEmpty(fileName))
-            {
-                var content = new MultipartFormDataContent
+                if (!string.IsNullOrEmpty(token))
                 {
-                    { new ByteArrayContent(fileData) { Headers = { { "Content-Type", "application/octet-stream" } } }, "file", fileName }
-                };
-
-                if (data != null)
-                {
-                    string jsonData = JsonConvert.SerializeObject(data);
-                    content.Add(new StringContent(jsonData, Encoding.UTF8, "application/json"), "payload_json");
+                    try
+                    {
+                        request.Headers.TryAddWithoutValidation("Authorization", token);
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"[API/ParseError] An error occurred while sending the request: {ex.Message}\n\n$\"[API] URL used when the error occurred: {{url}}";
+                    }
                 }
 
-                request.Content = content;
-            }
-            else if ((httpMethod == HttpMethod.Post || httpMethod == HttpMethod.Put) && data != null)
-            {
-                string jsonData = JsonConvert.SerializeObject(data);
-                request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            }
-
-            request.Headers.Add("User-Agent", UserAgent);
-            request.Headers.Add("X-Super-Properties", XSuperProperties);
-
-            try
-            {
-                HttpResponseMessage response = await client.SendAsync(request);
-
-                if (response.IsSuccessStatusCode)
+                if (headers != null)
                 {
-                    return await response.Content.ReadAsStringAsync();
+                    foreach (var kvp in headers)
+                    {
+                        request.Headers.TryAddWithoutValidation(kvp.Key, kvp.Value);
+                    }
                 }
-                else
-                {
-                    string errorResponse = await response.Content.ReadAsStringAsync();
-                    Debug.WriteLine($"[DEBUG] Request failed: {response.StatusCode} - {errorResponse}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[DEBUG] An error occurred while sending the request: {ex.Message}");
-                Debug.WriteLine($"[DEBUG] URL used: {url}");
-            }
 
-            return string.Empty;
+                if (fileData != null && !string.IsNullOrEmpty(fileName))
+                {
+                    var content = new MultipartFormDataContent
+                    {
+                        { new ByteArrayContent(fileData) { Headers = { { "Content-Type", "application/octet-stream" } } }, "file", fileName }
+                    };
+
+                    if (data != null)
+                    {
+                        string jsonData = JsonSerializer.Serialize(data);
+                        content.Add(new StringContent(jsonData, Encoding.UTF8, "application/json"), "payload_json");
+                    }
+
+                    request.Content = content;
+                }
+                else if ((httpMethod != HttpMethod.Get) && data != null)
+                {
+                    string jsonData = JsonSerializer.Serialize(data);
+                    request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                }
+
+                try
+                {
+                    using (HttpResponseMessage response = await InternalHttpClient.SendAsync(request))
+                    {
+                        return await response.Content.ReadAsStringAsync();
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    return $"[API/RequestError]{ex.Message}\nURL: {url}";
+                }
+            }
         }
     }
 }

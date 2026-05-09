@@ -19,7 +19,7 @@ namespace Naticord.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -73,9 +73,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap account_modern {
+        internal static System.Drawing.Bitmap account_skeuo {
             get {
-                object obj = ResourceManager.GetObject("account-modern", resourceCulture);
+                object obj = ResourceManager.GetObject("account-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap appearance {
+        internal static System.Drawing.Bitmap arrow_back {
             get {
-                object obj = ResourceManager.GetObject("appearance", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow-back", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap appearance_modern {
+        internal static System.Drawing.Bitmap arrow_back_skeuo {
             get {
-                object obj = ResourceManager.GetObject("appearance-modern", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow-back-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cat {
+        internal static System.Drawing.Bitmap arrow_forward {
             get {
-                object obj = ResourceManager.GetObject("cat", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow-forward", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap credits {
+        internal static System.Drawing.Bitmap arrow_forward_skeuo {
             get {
-                object obj = ResourceManager.GetObject("credits", resourceCulture);
+                object obj = ResourceManager.GetObject("arrow-forward-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +123,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap credits_modern {
+        internal static System.Drawing.Bitmap busy {
             get {
-                object obj = ResourceManager.GetObject("credits-modern", resourceCulture);
+                object obj = ResourceManager.GetObject("busy", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +133,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap naticord_logo_64 {
+        internal static System.Drawing.Bitmap busy_skeuo {
             get {
-                object obj = ResourceManager.GetObject("naticord-logo-64", resourceCulture);
+                object obj = ResourceManager.GetObject("busy-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +143,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap nc_banner {
+        internal static System.Drawing.Bitmap cog {
             get {
-                object obj = ResourceManager.GetObject("nc-banner", resourceCulture);
+                object obj = ResourceManager.GetObject("cog", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +153,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settings {
+        internal static System.Drawing.Bitmap cog_skeuo {
             get {
-                object obj = ResourceManager.GetObject("settings", resourceCulture);
+                object obj = ResourceManager.GetObject("cog-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,9 +163,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap settings_modern {
+        internal static System.Drawing.Bitmap dm {
             get {
-                object obj = ResourceManager.GetObject("settings-modern", resourceCulture);
+                object obj = ResourceManager.GetObject("dm", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -173,9 +173,9 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap updates {
+        internal static System.Drawing.Bitmap dm_skeuo {
             get {
-                object obj = ResourceManager.GetObject("updates", resourceCulture);
+                object obj = ResourceManager.GetObject("dm-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,9 +183,139 @@ namespace Naticord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap updates_modern {
+        internal static System.Drawing.Bitmap github {
             get {
-                object obj = ResourceManager.GetObject("updates-modern", resourceCulture);
+                object obj = ResourceManager.GetObject("github", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap github_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("github-skeuo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap idle {
+            get {
+                object obj = ResourceManager.GetObject("idle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap idle_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("idle-skeuo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap light_bulb_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("light-bulb-skeuo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap naticord_banner {
+            get {
+                object obj = ResourceManager.GetObject("naticord-banner", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap offline {
+            get {
+                object obj = ResourceManager.GetObject("offline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap offline_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("offline-skeuo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap online {
+            get {
+                object obj = ResourceManager.GetObject("online", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap online_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("online-skeuo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap qr_loading {
+            get {
+                object obj = ResourceManager.GetObject("qr-loading", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap servers {
+            get {
+                object obj = ResourceManager.GetObject("servers", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap servers_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("servers-skeuo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap user_silhouette_skeuo {
+            get {
+                object obj = ResourceManager.GetObject("user-silhouette-skeuo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="qrSheet">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+			<Edit transparent="true" themedborder="true" font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+			<CCPushButton font="gtf(TEXTSTYLE, 4, 0)" foreground="windowtext" />
+			
+			<if id="atom(labelMuted)">
+				<element foreground="argb(255, 135, 135, 135)" />
+			</if> 
+
+			<if class="qrFooter">
+				<element background="buttonface"
+						borderthickness="rect(0rp,1rp,0rp,0rp)"
+						bordercolor="threedlightshadow"
+						padding="rect(8rp,8rp,8rp,8rp)"/>
+			</if>
+		</style>
+	</stylesheets>
+	
+	<HWNDElement resid="qrMain" id="atom(root)" layout="borderlayout()" sheet="qrSheet">
+	
+		<element layoutpos="client" layout="verticalflowlayout(0, 0, 0)" padding="rect(20rp,16rp,20rp,16rp)">
+			<element contentalign="wrapleft" 
+					margin="rect(0rp, 0rp, 0rp, 2rp)"
+					foreground="gtc(CONTROLPANELSTYLE, 5, 0, 3803)" 
+					font="gtf(CONTROLPANELSTYLE, 5, 0)"
+					content="Sign in using a QR code"/>
+		
+			<element contentalign="wrapleft" margin="rect(0rp, 0rp, 0rp, 8rp)" content="You'll see a QR code pop up, scan it in the mobile app to sign into Naticord!" />
+			<element id="atom(qrImage)" width="280rp" height="280rp" />
+		</element>
+
+		<element layoutpos="bottom" class="qrFooter" layout="borderlayout()">
+			<CCPushButton id="atom(btnCancelQr)" layoutpos="right"
+					content="Exit" accessible="true" shortcut="auto"/>
+		</element>
+	
+	</HWNDElement>
+</duixml>

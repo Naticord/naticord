@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<duixml>
+	<stylesheets>
+		<style resid="listItemSheet_{N}">
+			<element font="gtf(TEXTSTYLE, 4, 0)" background="window" />
+
+			<if id="atom(listItemStatus_{N})">
+				<element foreground="argb(255, 135, 135, 135)" />
+			</if>
+
+			<if class="listItemRow">
+				<element background="window" />
+				<if mousewithin="true">
+					<element background="themeable(dtb(explorer::listview, 1, 2), highlight)" />
+				</if>
+			</if>
+		</style>
+	</stylesheets>
+
+	<element resid="listItemMain_{N}" id="atom(listItemRoot_{N})" class="listItemRow"
+			 sheet="listItemSheet_{N}" active="mouseandkeyboard"
+			 layoutpos="top" layout="borderlayout()" height="56rp" width="250rp"
+			 background="window" accessible="true" accrole="listitem"
+			 padding="rect(8rp,8rp,8rp,8rp)">
+
+		<element layoutpos="left" id="atom(listItemAvatar_{N})" width="40rp" height="40rp" />
+		<element layoutpos="client" layout="verticalflowlayout(0,0,0,2)" padding="rect(8rp,0rp,0rp,0rp)">
+
+			<element layout="flowlayout(0,0,2,4)" margin="rect(0rp, 0rp, 0rp, 2rp)">
+				<element id="atom(listItemName_{N})" content="Placeholder" contentalign="middleleft|endellipsis" />
+				<element id="atom(listItemBadge_{N})" width="16rp" height="16rp" />
+			</element>
+			<element layout="flowlayout(0,0,2,4)">
+				<element id="atom(listItemStatusIcon_{N})" width="16rp" height="16rp" />
+				<element id="atom(listItemStatus_{N})" padding="rect(2rp, 0rp, 0rp, 0rp)" content="Placeholder" contentalign="middleleft|endellipsis" />
+			</element>
+
+		</element>
+
+	</element>
+</duixml>
