@@ -34,5 +34,5 @@ Discord uses intense security measures to prevent custom clients from signing in
 This feature will not be coming in the future as it is a pain to maintain and I am not willing to fight through the pain of just getting to sign in.
 # Credits
 Naticord would have not been possible without these wonderful people!
-- [Skymu](https://skymu.app) - Discord library used in Naticord (Also made by me!)
+- [Skymu](https://skymu.app) - Discord library used in Naticord (Partially made by me!)
 - [UnderscoreAngel](https://underscoreangel.neocities.org/) - Creating the current Naticord logo!
